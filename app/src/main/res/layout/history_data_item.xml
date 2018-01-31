@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.cassie.myvolts.MainActivity">
+
+    <TextView
+        android:id="@+id/item_name"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_weight="1"
+        android:drawablePadding="4dp"
+        android:hint="Item"
+        android:padding="8dp"
+        android:gravity="center_vertical"
+        android:singleLine="true">
+    </TextView>
+
+    <ImageView
+        android:id="@+id/del"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:padding="8dp"
+        android:gravity="center_vertical"
+        android:src="@drawable/delete_icon">
+    </ImageView>
+
+</LinearLayout>
