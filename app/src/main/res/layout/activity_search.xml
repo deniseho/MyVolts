@@ -78,200 +78,200 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="vertical" >-->
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:background="@android:color/white"
-            android:orientation="horizontal" >
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:background="@android:color/white"-->
+            <!--android:orientation="horizontal" >-->
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="6dp"
-                android:paddingTop="10dp"
-                android:src="@drawable/fav_icon" />
+            <!--<ImageView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:paddingBottom="10dp"-->
+                <!--android:paddingLeft="10dp"-->
+                <!--android:paddingRight="6dp"-->
+                <!--android:paddingTop="10dp"-->
+                <!--android:src="@drawable/fav_icon" />-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Hot Brand"
-                android:textColor="#666666"
-                android:textSize="13sp" />
-        </LinearLayout>
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Hot Brand"-->
+                <!--android:textColor="#666666"-->
+                <!--android:textSize="13sp" />-->
+        <!--</LinearLayout>-->
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#ADADAD"
-            android:orientation="horizontal"
-            android:paddingBottom="0.1dp" >
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="#ADADAD"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:paddingBottom="0.1dp" >-->
 
-            <TextView
-                android:id="@+id/hot_text1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="0.2dp"
-                android:layout_weight="1"
-                android:background="@drawable/my_tab_background"
-                android:gravity="center"
-                android:paddingBottom="11dp"
-                android:paddingTop="11dp"
-                android:singleLine="true"
-                android:text="Sony" />
+            <!--<TextView-->
+                <!--android:id="@+id/hot_text1"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginRight="0.2dp"-->
+                <!--android:layout_weight="1"-->
+                <!--android:background="@drawable/my_tab_background"-->
+                <!--android:gravity="center"-->
+                <!--android:paddingBottom="11dp"-->
+                <!--android:paddingTop="11dp"-->
+                <!--android:singleLine="true"-->
+                <!--android:text="Sony" />-->
 
-            <TextView
-                android:id="@+id/hot_text2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="0.2dp"
-                android:layout_weight="1"
-                android:background="@drawable/my_tab_background"
-                android:gravity="center"
-                android:paddingBottom="11dp"
-                android:paddingTop="11dp"
-                android:singleLine="true"
-                android:text="Acer" />
+            <!--<TextView-->
+                <!--android:id="@+id/hot_text2"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginRight="0.2dp"-->
+                <!--android:layout_weight="1"-->
+                <!--android:background="@drawable/my_tab_background"-->
+                <!--android:gravity="center"-->
+                <!--android:paddingBottom="11dp"-->
+                <!--android:paddingTop="11dp"-->
+                <!--android:singleLine="true"-->
+                <!--android:text="Acer" />-->
 
-            <TextView
-                android:id="@+id/hot_text3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="0.2dp"
-                android:layout_weight="1"
-                android:background="@drawable/my_tab_background"
-                android:gravity="center"
-                android:paddingBottom="11dp"
-                android:paddingTop="11dp"
-                android:singleLine="true"
-                android:text="ATMT" />
+            <!--<TextView-->
+                <!--android:id="@+id/hot_text3"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginRight="0.2dp"-->
+                <!--android:layout_weight="1"-->
+                <!--android:background="@drawable/my_tab_background"-->
+                <!--android:gravity="center"-->
+                <!--android:paddingBottom="11dp"-->
+                <!--android:paddingTop="11dp"-->
+                <!--android:singleLine="true"-->
+                <!--android:text="ATMT" />-->
 
-            <TextView
-                android:id="@+id/hot_text4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/my_tab_background"
-                android:gravity="center"
-                android:paddingBottom="11dp"
-                android:paddingTop="11dp"
-                android:singleLine="true"
-                android:text="2Wire" />
-        </LinearLayout>
+            <!--<TextView-->
+                <!--android:id="@+id/hot_text4"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:background="@drawable/my_tab_background"-->
+                <!--android:gravity="center"-->
+                <!--android:paddingBottom="11dp"-->
+                <!--android:paddingTop="11dp"-->
+                <!--android:singleLine="true"-->
+                <!--android:text="2Wire" />-->
+        <!--</LinearLayout>-->
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#ADADAD"
-            android:orientation="horizontal"
-            android:paddingBottom="0.1dp" >
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="#ADADAD"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:paddingBottom="0.1dp" >-->
 
-            <TextView
-                android:id="@+id/hot_text5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="0.2dp"
-                android:layout_weight="1"
-                android:background="@drawable/my_tab_background"
-                android:gravity="center"
-                android:paddingBottom="11dp"
-                android:paddingTop="11dp"
-                android:singleLine="true"
-                android:text="Bose" />
+            <!--<TextView-->
+                <!--android:id="@+id/hot_text5"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginRight="0.2dp"-->
+                <!--android:layout_weight="1"-->
+                <!--android:background="@drawable/my_tab_background"-->
+                <!--android:gravity="center"-->
+                <!--android:paddingBottom="11dp"-->
+                <!--android:paddingTop="11dp"-->
+                <!--android:singleLine="true"-->
+                <!--android:text="Bose" />-->
 
-            <TextView
-                android:id="@+id/hot_text6"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="0.2dp"
-                android:layout_weight="1"
-                android:background="@drawable/my_tab_background"
-                android:gravity="center"
-                android:paddingBottom="11dp"
-                android:paddingTop="11dp"
-                android:singleLine="true"
-                android:text="Pipo" />
+            <!--<TextView-->
+                <!--android:id="@+id/hot_text6"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginRight="0.2dp"-->
+                <!--android:layout_weight="1"-->
+                <!--android:background="@drawable/my_tab_background"-->
+                <!--android:gravity="center"-->
+                <!--android:paddingBottom="11dp"-->
+                <!--android:paddingTop="11dp"-->
+                <!--android:singleLine="true"-->
+                <!--android:text="Pipo" />-->
 
-            <TextView
-                android:id="@+id/hot_text7"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="0.2dp"
-                android:layout_weight="1"
-                android:background="@drawable/my_tab_background"
-                android:gravity="center"
-                android:paddingBottom="11dp"
-                android:paddingTop="11dp"
-                android:singleLine="true"
-                android:text="Sony" />
+            <!--<TextView-->
+                <!--android:id="@+id/hot_text7"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginRight="0.2dp"-->
+                <!--android:layout_weight="1"-->
+                <!--android:background="@drawable/my_tab_background"-->
+                <!--android:gravity="center"-->
+                <!--android:paddingBottom="11dp"-->
+                <!--android:paddingTop="11dp"-->
+                <!--android:singleLine="true"-->
+                <!--android:text="Sony" />-->
 
-            <TextView
-                android:id="@+id/hot_text8"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/my_tab_background"
-                android:gravity="center"
-                android:paddingBottom="11dp"
-                android:paddingTop="11dp"
-                android:singleLine="true"
-                android:text="NCE" />
-        </LinearLayout>
+            <!--<TextView-->
+                <!--android:id="@+id/hot_text8"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:background="@drawable/my_tab_background"-->
+                <!--android:gravity="center"-->
+                <!--android:paddingBottom="11dp"-->
+                <!--android:paddingTop="11dp"-->
+                <!--android:singleLine="true"-->
+                <!--android:text="NCE" />-->
+        <!--</LinearLayout>-->
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#ADADAD"
-            android:orientation="horizontal"
-            android:paddingBottom="0.1dp" >
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="#ADADAD"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:paddingBottom="0.1dp" >-->
 
-            <TextView
-                android:id="@+id/hot_text9"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="0.2dp"
-                android:layout_weight="0.5"
-                android:background="@drawable/my_tab_background"
-                android:gravity="center"
-                android:paddingBottom="11dp"
-                android:paddingTop="11dp"
-                android:singleLine="true"
-                android:text="Yamaha" />
+            <!--<TextView-->
+                <!--android:id="@+id/hot_text9"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginRight="0.2dp"-->
+                <!--android:layout_weight="0.5"-->
+                <!--android:background="@drawable/my_tab_background"-->
+                <!--android:gravity="center"-->
+                <!--android:paddingBottom="11dp"-->
+                <!--android:paddingTop="11dp"-->
+                <!--android:singleLine="true"-->
+                <!--android:text="Yamaha" />-->
 
-            <TextView
-                android:id="@+id/hot_text10"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="0.2dp"
-                android:layout_weight="0.5"
-                android:background="@drawable/my_tab_background"
-                android:gravity="center"
-                android:paddingBottom="11dp"
-                android:paddingTop="11dp"
-                android:singleLine="true"
-                android:text="Ada" />
+            <!--<TextView-->
+                <!--android:id="@+id/hot_text10"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginRight="0.2dp"-->
+                <!--android:layout_weight="0.5"-->
+                <!--android:background="@drawable/my_tab_background"-->
+                <!--android:gravity="center"-->
+                <!--android:paddingBottom="11dp"-->
+                <!--android:paddingTop="11dp"-->
+                <!--android:singleLine="true"-->
+                <!--android:text="Ada" />-->
 
-            <TextView
-                android:id="@+id/hot_more"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="0.2dp"
-                android:layout_weight="0.333333"
-                android:background="@drawable/my_tab_background"
-                android:gravity="center"
-                android:paddingBottom="11dp"
-                android:paddingTop="11dp"
-                android:singleLine="true"
-                android:text="More..." />
-        </LinearLayout>
-    </LinearLayout>
+            <!--<TextView-->
+                <!--android:id="@+id/hot_more"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginRight="0.2dp"-->
+                <!--android:layout_weight="0.333333"-->
+                <!--android:background="@drawable/my_tab_background"-->
+                <!--android:gravity="center"-->
+                <!--android:paddingBottom="11dp"-->
+                <!--android:paddingTop="11dp"-->
+                <!--android:singleLine="true"-->
+                <!--android:text="More..." />-->
+        <!--</LinearLayout>-->
+    <!--</LinearLayout>-->
 
     <LinearLayout
         android:id="@+id/his_view"
