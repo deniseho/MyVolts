@@ -51,11 +51,12 @@
                 android:background="@null"
                 android:completionThreshold="1"
                 android:dropDownVerticalOffset="2dp"
-                android:hint="Product/Device/ASIN"
+                android:hint="Enter Brand"
                 android:inputType="textPersonName"
                 android:padding="8dp"
                 android:textSize="14sp"
                 android:singleLine="true"/>
+
 
             <LinearLayout
                 android:id="@+id/search_btn_layout"
