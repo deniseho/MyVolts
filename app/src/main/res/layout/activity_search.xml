@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@null"
-                android:completionThreshold="1"
+                android:completionThreshold="2"
                 android:dropDownVerticalOffset="2dp"
                 android:hint="Enter Brand"
                 android:inputType="textPersonName"
