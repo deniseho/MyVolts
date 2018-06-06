@@ -66,45 +66,45 @@
             android:padding="8dp" />
 
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:padding="6dp"
-            android:text="I have a device..."
-            android:textSize="14sp" />
+        <!--<TextView-->
+            <!--android:id="@+id/textView3"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="20dp"-->
+            <!--android:padding="6dp"-->
+            <!--android:text="I have a device..."-->
+            <!--android:textSize="14sp" />-->
 
-        <TextView
-            android:id="@+id/brand"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:background="@drawable/edittext_bg"
-            android:drawableRight="@drawable/right_icon"
-            android:hint="Manufacturer"
-            android:visibility="gone"
-            android:padding="8dp" />
+        <!--<TextView-->
+            <!--android:id="@+id/brand"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="4dp"-->
+            <!--android:background="@drawable/edittext_bg"-->
+            <!--android:drawableRight="@drawable/right_icon"-->
+            <!--android:hint="Manufacturer"-->
+            <!--android:visibility="gone"-->
+            <!--android:padding="8dp" />-->
 
-        <TextView
-            android:id="@+id/device"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/edittext_bg"
-            android:drawableRight="@drawable/right_icon"
-            android:hint="Device"
-            android:padding="8dp" />
+        <!--<TextView-->
+            <!--android:id="@+id/device"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="12dp"-->
+            <!--android:background="@drawable/edittext_bg"-->
+            <!--android:drawableRight="@drawable/right_icon"-->
+            <!--android:hint="Device"-->
+            <!--android:padding="8dp" />-->
 
-        <TextView
-            android:id="@+id/model"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/edittext_bg"
-            android:drawableRight="@drawable/right_icon"
-            android:hint="Model"
-            android:padding="8dp" />
+        <!--<TextView-->
+            <!--android:id="@+id/model"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="12dp"-->
+            <!--android:background="@drawable/edittext_bg"-->
+            <!--android:drawableRight="@drawable/right_icon"-->
+            <!--android:hint="Model"-->
+            <!--android:padding="8dp" />-->
 
         <Button
             android:id="@+id/sbut"
