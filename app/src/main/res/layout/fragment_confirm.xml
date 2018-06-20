@@ -1,0 +1,75 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/edit_name"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="20dp"
+    android:paddingBottom="20dp"
+    tools:context="com.example.cassie.myvolts.fragment.ConfirmFragment">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Brand"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/brand_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SONY"
+            android:textSize="30sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Device"
+            android:textSize="18sp"
+            android:layout_marginTop="30dp" />
+
+        <TextView
+            android:id="@+id/device_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Device Name"
+            android:textSize="30sp" />
+
+            <Button
+                android:id="@+id/search_cables"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="Search Cables"
+                android:background="@color/app_primary"
+                android:textColor="@color/white"/>
+
+            <Button
+                android:id="@+id/cancel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/grey"
+                android:text="Cancel"
+                android:layout_marginTop="6dp"/>
+
+</LinearLayout>
+
+
+    <!-- fragment_edit_name.xml -->
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:id="@+id/edit_name"-->
+    <!--android:layout_width="wrap_content" android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center" android:orientation="vertical"  >-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/lbl_your_name" android:text="Your name"-->
+        <!--android:layout_width="wrap_content" android:layout_height="wrap_content" />-->
+
+    <!--<EditText-->
+        <!--android:id="@+id/txt_your_name"-->
+        <!--android:layout_width="match_parent"  android:layout_height="wrap_content"-->
+        <!--android:inputType="text"-->
+        <!--android:imeOptions="actionDone" />-->
+<!--</LinearLayout>-->

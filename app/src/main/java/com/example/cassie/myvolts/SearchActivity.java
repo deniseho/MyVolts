@@ -8,6 +8,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -28,6 +29,7 @@ import com.example.cassie.myvolts.adapter.HistoryAdapter;
 import com.example.cassie.myvolts.adapter.ProductAdapter;
 import com.example.cassie.myvolts.db.DbHelp;
 import com.example.cassie.myvolts.dto.HistoryData;
+import com.example.cassie.myvolts.fragment.ConfirmFragment;
 import com.example.cassie.myvolts.util.DrawableUtil;
 import com.example.cassie.myvolts.util.TestUtil;
 
@@ -82,9 +84,13 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        String[] BRANDS = new String[] {
+                "Sony", "Samsung", "Phillips", "Mitsubishi", "Apple"
+        };
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
@@ -101,7 +107,10 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
         hisAdapter.setDatas(dbHelp.getHisData());
 
-        autoAdapter = new ArrayAdapter<>(this, R.layout.item_data, R.id.item_name,dbHelp.getAllProductName());
+        autoAdapter = new ArrayAdapter<>(this,
+//                R.layout.item_data, R.id.item_name,dbHelp.getAllProductName());
+                  R.layout.item_data, R.id.item_name,BRANDS);
+
         search.setAdapter(autoAdapter);
 
         search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -126,7 +135,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         if (!TextUtils.isEmpty(made) || !TextUtils.isEmpty(type) || !TextUtils.isEmpty(model)) {
             search(null);
         }
-
     }
 
     private void ForwardToSannerActivity(String pid) {
@@ -329,19 +337,25 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void searchByInput() {
-        String st = search.getText().toString();
-        if (!TextUtils.isEmpty(st.trim())) {
-            dbHelp.saveHis(search.getText().toString(), "0", "");
-            hisAdapter.addDatas(new HistoryData(search.getText().toString(), "0", ""));
-            hisAdapter.notifyDataSetChanged();
-            search(st);
-            search.clearFocus();
-
-        } else {
-            Toast.makeText(this, "please fill the search box...", Toast.LENGTH_SHORT).show();
-        }
+//        String st = search.getText().toString();
+//        if (!TextUtils.isEmpty(st.trim())) {
+//            dbHelp.saveHis(search.getText().toString(), "0", "");
+//            hisAdapter.addDatas(new HistoryData(search.getText().toString(), "0", ""));
+//            hisAdapter.notifyDataSetChanged();
+//            //search(st);
+//            search.clearFocus();
+//
+//        } else {
+//            Toast.makeText(this, "please fill the search box...", Toast.LENGTH_SHORT).show();
+//        }
+        showAlertDialog();
     }
 
 
+    private void showAlertDialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        ConfirmFragment alertDialog = ConfirmFragment.newInstance("Some title");
+        alertDialog.show(fm, "fragment_alert");
+    }
 }
 
