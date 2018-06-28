@@ -38,7 +38,7 @@
             android:textSize="30sp" />
 
             <Button
-                android:id="@+id/search_cables"
+                android:id="@+id/confirm_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
@@ -47,7 +47,7 @@
                 android:textColor="@color/white"/>
 
             <Button
-                android:id="@+id/cancel"
+                android:id="@+id/confirm_cancel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/grey"
