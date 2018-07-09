@@ -135,6 +135,13 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         if (!TextUtils.isEmpty(made) || !TextUtils.isEmpty(type) || !TextUtils.isEmpty(model)) {
             search(null);
         }
+
+        search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick (AdapterView<?> parent, View view, int position, long id) {
+                showAlertDialog(search.getText().toString());
+            }
+        });
     }
 
     private void ForwardToSannerActivity(String pid) {
