@@ -83,7 +83,6 @@
             android:background="@drawable/edittext_bg"
             android:drawableRight="@drawable/right_icon"
             android:hint="Manufacturer"
-            android:visibility="gone"
             android:padding="8dp" />
 
         <TextView

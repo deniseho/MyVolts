@@ -337,25 +337,27 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void searchByInput() {
-//        String st = search.getText().toString();
-//        if (!TextUtils.isEmpty(st.trim())) {
-//            dbHelp.saveHis(search.getText().toString(), "0", "");
-//            hisAdapter.addDatas(new HistoryData(search.getText().toString(), "0", ""));
-//            hisAdapter.notifyDataSetChanged();
-//            //search(st);
-//            search.clearFocus();
-//
-//        } else {
-//            Toast.makeText(this, "please fill the search box...", Toast.LENGTH_SHORT).show();
-//        }
-        showAlertDialog();
+        String brand = search.getText().toString();
+        if (!TextUtils.isEmpty(brand.trim())) {
+            dbHelp.saveHis(search.getText().toString(), "0", "");
+            hisAdapter.addDatas(new HistoryData(search.getText().toString(), "0", ""));
+            hisAdapter.notifyDataSetChanged();
+            //search(st);
+            search.clearFocus();
+
+        } else {
+            Toast.makeText(this, "please fill the search box...", Toast.LENGTH_SHORT).show();
+        }
+
+        showAlertDialog(brand);
     }
 
 
-    private void showAlertDialog() {
+    private void showAlertDialog(String brand) {
         FragmentManager fm = getSupportFragmentManager();
-        ConfirmFragment alertDialog = ConfirmFragment.newInstance("Some title");
-        alertDialog.show(fm, "fragment_alert");
+        ConfirmFragment alertDialog = ConfirmFragment.newInstance(brand);
+        alertDialog.show(fm, "fragment_confirm");
+
     }
 }
 

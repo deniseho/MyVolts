@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.cassie.myvolts.R;
 
@@ -20,18 +21,31 @@ public class ConfirmFragment extends DialogFragment {
         // Use `newInstance` instead as shown below
     }
 
-    public static ConfirmFragment newInstance(String title) {
+    public static ConfirmFragment newInstance(String brand) {
         ConfirmFragment frag = new ConfirmFragment();
         Bundle args = new Bundle();
-        args.putString("title", title);
+        args.putString("brand", brand);
+//        args.putString("device", "machine");
         frag.setArguments(args);
         return frag;
+    }
+
+    String mBrand, mDevice;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mBrand = getArguments().getString("brand");
+//        mDevice = getArguments().getString("device");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_confirm, container, false);
+
+        View brandName = rootView.findViewById(R.id.brand_name);
+        ((TextView)brandName).setText(mBrand);
+
         Button btn = (Button)rootView.findViewById(R.id.confirm_cancel);
         btn.setOnClickListener(new View.OnClickListener() {
 

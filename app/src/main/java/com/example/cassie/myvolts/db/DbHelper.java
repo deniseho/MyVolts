@@ -1,12 +1,10 @@
 package com.example.cassie.myvolts.db;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
 
-import com.example.cassie.myvolts.MainActivity;
 import com.example.cassie.myvolts.dto.DeviceData;
 import com.example.cassie.myvolts.dto.ManufactorData;
 import com.example.cassie.myvolts.dto.ProductData;
@@ -98,7 +96,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         this.db = db;
         if(db != null && db.isOpen()) {
-            //initProduct(db);
+//            initProduct(db);
             //initMade(db);
             CacheManu cacheManu = new CacheManu();
             cacheManu.execute();
@@ -107,30 +105,30 @@ public class DbHelper extends SQLiteOpenHelper {
         }
     }
 
-    /*public void initProduct(SQLiteDatabase db){
-        ArrayList<ProductData> products = new ArrayList<ProductData>();
-        products.add(new ProductData("Aguilar Effects pedal Tonehammer Compatible USB", "Aguilar", ""));
-        products.add(new ProductData("Ada Amp modeller GCS-2 Compatible USB", "Ada", ""));
-        products.add(new ProductData("Akai Keyboard Advance 49 Compatible USB", "Akai", ""));
-        products.add(new ProductData("Akai Wind synth EWI4000S Compatible", "Akai", ""));
-        products.add(new ProductData("Alesis Compressor 3630 Compatible", "Alesis", ""));
-        products.add(new ProductData("AC Ryan Media player ACR-PV73100 Compatible", "AC Ryan", ""));
-        products.add(new ProductData("Acer Laptop 104378 Compatible", "Acer", ""));
-        products.add(new ProductData("AAcmePoint Monitor VT988 Compatible", "AAcmePoint", ""));
-        products.add(new ProductData("AG Neovo Monitor E-17DA Compatiblee", "AG Neovo", ""));
-        products.add(new ProductData("AG Neovo Monitor E-560 Compatible", "AG Neovo", ""));
-        products.add(new ProductData("Buffalo External hard drive DriveStation Velocity Compatible", "Buffalo", ""));
-        products.add(new ProductData("ClickFree External hard drive HD1035 Co", "ClickFree", ""));
-        products.add(new ProductData("ClickFree External hard drive HD1036 Compatible", "ClickFree", ""));
-        products.add(new ProductData("ClickFree External hard drive HD2087 Compatible", "ClickFree ", ""));
-        products.add(new ProductData("Sony DVD player DVP-FX720 Compatib", "Sony", ""));
-        products.add(new ProductData("ATMT External hard drive HD 350U-P Compatible", "ATMT", ""));
+    public void initProduct(SQLiteDatabase db){
+//        ArrayList<ProductData> products = new ArrayList<ProductData>();
+//        products.add(new ProductData("Aguilar Effects pedal Tonehammer Compatible USB", "Aguilar", new ArrayList<TechSpec>()));
+//        products.add(new ProductData("Ada Amp modeller GCS-2 Compatible USB", "Ada", new ArrayList<TechSpec>()));
+//        products.add(new ProductData("Akai Keyboard Advance 49 Compatible USB", "Akai", new ArrayList<TechSpec>()));
+//        products.add(new ProductData("Akai Wind synth EWI4000S Compatible", "Akai", new ArrayList<TechSpec>()));
+//        products.add(new ProductData("Alesis Compressor 3630 Compatible", "Alesis", ""));
+//        products.add(new ProductData("AC Ryan Media player ACR-PV73100 Compatible", "AC Ryan", ""));
+//        products.add(new ProductData("Acer Laptop 104378 Compatible", "Acer", ""));
+//        products.add(new ProductData("AAcmePoint Monitor VT988 Compatible", "AAcmePoint", ""));
+//        products.add(new ProductData("AG Neovo Monitor E-17DA Compatiblee", "AG Neovo", ""));
+//        products.add(new ProductData("AG Neovo Monitor E-560 Compatible", "AG Neovo", ""));
+//        products.add(new ProductData("Buffalo External hard drive DriveStation Velocity Compatible", "Buffalo", ""));
+//        products.add(new ProductData("ClickFree External hard drive HD1035 Co", "ClickFree", ""));
+//        products.add(new ProductData("ClickFree External hard drive HD1036 Compatible", "ClickFree", ""));
+//        products.add(new ProductData("ClickFree External hard drive HD2087 Compatible", "ClickFree ", ""));
+//        products.add(new ProductData("Sony DVD player DVP-FX720 Compatib", "Sony", ""));
+//        products.add(new ProductData("ATMT External hard drive HD 350U-P Compatible", "ATMT", ""));
+//
+//        for(ProductData productData: products) {
+//           long insert = db.insert(FeedReaderContract.FeedEntry.PRODUCT_TABLE_NAME, null, manager.generateProductValues(productData));
+//        }
 
-        for(ProductData productData: products) {
-           long insert = db.insert(FeedReaderContract.FeedEntry.PRODUCT_TABLE_NAME, null, manager.generateProductValues(productData));
-        }
-
-    }*/
+    }
 
     public void initMade(SQLiteDatabase db){
         ArrayList<DeviceData> devices = new ArrayList<DeviceData>();
@@ -147,7 +145,6 @@ public class DbHelper extends SQLiteOpenHelper {
         for(DeviceData device: devices) {
             long insert = db.insert(FeedReaderContract.FeedEntry.TABLE_NAME_MADE, null, manager.generateDeviceValues(device));
         }
-
     }
 
     private static final String SQL_DELETE_PRODUCT_ENTRIES =

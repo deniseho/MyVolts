@@ -1,5 +1,6 @@
 package com.example.cassie.myvolts.db;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -53,15 +54,47 @@ public class DbHelp{
     public void saveHis(String name, String iswhole, String productid){
         if(mwcdb!=null){
             mwcdb.execSQL("delete from his where name=?",new String[]{name});
-            mwcdb.execSQL("insert into his(name, isWhole, productid) values(?,?,?)",new String[]{name,iswhole, productid});
+//            mwcdb.execSQL("insert into his(name, isWhole, productid) " +
+//                               "values(?,?,?)",
+//                                new String[]{name,iswhole, productid});
+
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("name", name);
+            contentValues.put("isWhole", iswhole);
+            contentValues.put("productid", productid);
+            mwcdb.insert("his", null, contentValues);
         }
     }
 
     public void saveTestData(int taskId, int deviceClick, int brandClick, int modelClick,int searchBoxClick,int searchBtnClick,int historyClck, int resultListClick, int searchAcivtityListClick,double worktime, int scanButtonClick){
         if(mwcdb!=null){
-            mwcdb.execSQL("insert into test(taskId, deviceClick, brandClick, modelClick, searchBoxClick, searchBtnClick, " +
-                    "historyClck, resultListClick, searchAcivtityListClick, worktime, scanButtonClick) values(?,?,?,?,?,?,?,?,?,?,?)",new String[]{String.valueOf(taskId),String.valueOf(deviceClick), String.valueOf(brandClick),String.valueOf(modelClick),String.valueOf(searchBoxClick),
-                    String.valueOf(searchBtnClick),String.valueOf(historyClck),String.valueOf(resultListClick),String.valueOf(searchAcivtityListClick),String.valueOf(worktime),String.valueOf(scanButtonClick)});
+//            mwcdb.execSQL("insert into test(taskId, deviceClick, brandClick, modelClick, searchBoxClick, searchBtnClick, " +
+//                    "historyClck, resultListClick, searchAcivtityListClick, worktime, scanButtonClick) " +
+//                    "values(?,?,?,?,?,?,?,?,?,?,?)",
+//                    new String[]{String.valueOf(taskId),
+//                            String.valueOf(deviceClick),
+//                            String.valueOf(brandClick),
+//                            String.valueOf(modelClick),
+//                            String.valueOf(searchBoxClick),
+//                            String.valueOf(searchBtnClick),
+//                            String.valueOf(historyClck),
+//                            String.valueOf(resultListClick),
+//                            String.valueOf(searchAcivtityListClick),
+//                            String.valueOf(worktime),
+//                            String.valueOf(scanButtonClick)});
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("taskId",String.valueOf(taskId));
+            contentValues.put("deviceClick",String.valueOf(deviceClick));
+            contentValues.put("brandClick",String.valueOf(brandClick));
+            contentValues.put("modelClick",String.valueOf(modelClick));
+            contentValues.put("searchBoxClick",String.valueOf(searchBoxClick));
+            contentValues.put("searchBtnClick",String.valueOf(searchBtnClick));
+            contentValues.put("historyClck",String.valueOf(historyClck));
+            contentValues.put("resultListClick",String.valueOf(resultListClick));
+            contentValues.put("searchAcivtityListClick",String.valueOf(searchAcivtityListClick));
+            contentValues.put("worktime",String.valueOf(worktime));
+            contentValues.put("scanButtonClick",String.valueOf(scanButtonClick));
+            mwcdb.insert("test", null, contentValues);
         }
     }
 
@@ -93,12 +126,12 @@ public class DbHelp{
 
     public String getProductIdByName(String name){
         String id = "";
-        if(mwcdb!=null){
-            Cursor cursor= mwcdb.rawQuery("select pid from product where name=?",new String[]{name});
-            while(cursor.moveToNext()){
-                id = cursor.getString(0);
-            }
-        }
+//        if(mwcdb!=null){
+//            Cursor cursor= mwcdb.rawQuery("select pid from product where name=?",new String[]{name});
+//            while(cursor.moveToNext()){
+//                id = cursor.getString(0);
+//            }
+//        }
         return id;
     }
 
