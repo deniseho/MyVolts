@@ -88,7 +88,11 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
 
         String[] BRANDS = new String[] {
-                "Sony", "Samsung", "Phillips", "Mitsubishi", "Apple"
+                "Sony customerDevice01, CableDevice01",
+                "Samsung customerDevice02, CableDevice02",
+                "Phillips customerDevice03, CableDevice03",
+                "Mitsubishi customerDevice04, CableDevice04",
+                "Apple customerDevice05, CableDevice05"
         };
 
         super.onCreate(savedInstanceState);
@@ -139,7 +143,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick (AdapterView<?> parent, View view, int position, long id) {
-                showAlertDialog(search.getText().toString());
+                searchByInput();
+//                showAlertDialog(search.getText().toString());
             }
         });
     }
@@ -344,8 +349,11 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void searchByInput() {
-        String brand = search.getText().toString();
-        if (!TextUtils.isEmpty(brand.trim())) {
+        String searchInput = search.getText().toString();
+//        String output = "";
+//        dbHelp.searchCable(searchInput);
+
+        if (!TextUtils.isEmpty(searchInput.trim())) {
             dbHelp.saveHis(search.getText().toString(), "0", "");
             hisAdapter.addDatas(new HistoryData(search.getText().toString(), "0", ""));
             hisAdapter.notifyDataSetChanged();
@@ -356,7 +364,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             Toast.makeText(this, "please fill the search box...", Toast.LENGTH_SHORT).show();
         }
 
-        showAlertDialog(brand);
+        showAlertDialog(searchInput);
     }
 
 

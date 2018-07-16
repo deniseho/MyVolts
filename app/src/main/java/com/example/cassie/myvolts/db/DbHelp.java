@@ -212,5 +212,12 @@ public class DbHelp{
     }
 */
 
+//    public String searchCable(String searchInput){
+//        if(mwcdb!=null){
+//            mwcdb.execSQL(("select * from "));
+//        }
+//
+//        return "";
+//    }
 
 }
