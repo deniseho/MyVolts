@@ -86,15 +86,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        String[] BRANDS = new String[] {
-                "Sony customerDevice01, CableDevice01",
-                "Samsung customerDevice02, CableDevice02",
-                "Phillips customerDevice03, CableDevice03",
-                "Mitsubishi customerDevice04, CableDevice04",
-                "Apple customerDevice05, CableDevice05"
-        };
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
@@ -105,6 +96,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         editor = sharedPreferences.edit();
 
         dbHelp = new DbHelp(this);
+        dbHelp.initTestData();
 
         hisAdapter = new HistoryAdapter(this);
         hislist.setAdapter(hisAdapter);
@@ -113,7 +105,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
         autoAdapter = new ArrayAdapter<>(this,
 //                R.layout.item_data, R.id.item_name,dbHelp.getAllProductName());
-                  R.layout.item_data, R.id.item_name,BRANDS);
+//                R.layout.item_data, R.id.item_name,BRANDS);
+                  R.layout.item_data, R.id.item_name, dbHelp.getInitTestData());
 
         search.setAdapter(autoAdapter);
 

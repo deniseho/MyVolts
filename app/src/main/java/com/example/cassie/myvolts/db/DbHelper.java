@@ -33,6 +33,9 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public SQLiteDatabase db;
 
+    private static final String SQL_CREATE_INIT_TEST_DATA=
+            "CREATE TABLE 'initTestData' ( 'id' INTEGER PRIMARY KEY, 'testData' TEXT)";
+
     private static final String SQL_CREATE_PRODUCT_ENTRIES =
             "CREATE TABLE " + FeedReaderContract.FeedEntry.PRODUCT_TABLE_NAME + " (" +
                     FeedReaderContract.FeedEntry._ID + " INTEGER PRIMARY KEY," +

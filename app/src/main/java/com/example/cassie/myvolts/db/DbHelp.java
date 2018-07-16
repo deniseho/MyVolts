@@ -29,6 +29,41 @@ public class DbHelp{
         mwcdb = dbHelper.getWritableDatabase();
     }
 
+    //----- initTestData by Denise ---------
+    public void initTestData(){
+        if(mwcdb!=null){
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("testData", "Sony customerDevice01, CableDevice01");
+            contentValues.put("testData", "Samsung customerDevice02, CableDevice02");
+            contentValues.put("testData", "Phillips customerDevice03, CableDevice03");
+            contentValues.put("testData", "Mitsubishi customerDevice04, CableDevice04");
+            contentValues.put("testData", "Apple customerDevice05, CableDevice05");
+
+            mwcdb.insert("initTestData", null, contentValues);
+        }
+    }
+
+    public List<String> getInitTestData(){
+        List<String> datas = new ArrayList<>();
+//        if(mwcdb!=null){
+//            Cursor cursor= mwcdb.rawQuery("select testData from initTestData order by id desc limit 20",new String[]{});
+//            while(cursor.moveToNext()){
+//                datas.add(cursor.getString(1));
+//            }
+//        }
+
+        datas.add("Sony customerDevice01, CableDevice01");
+        datas.add("Samsung customerDevice02, CableDevice02");
+        datas.add("Phillips customerDevice03, CableDevice03");
+        datas.add("Mitsubishi customerDevice04, CableDevice04");
+        datas.add("Apple customerDevice05, CableDevice05");
+
+        return datas;
+    }
+
+
+    //--------------------------------------
+
     public List<HistoryData> getHisData(){
         List<HistoryData> datas=new ArrayList<>();
         if(mwcdb!=null){
