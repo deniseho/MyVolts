@@ -41,7 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
-                android:text="Search Cables"
+                android:text="Search for Cable"
                 android:background="@color/app_primary"
                 android:textColor="@color/white"/>
 

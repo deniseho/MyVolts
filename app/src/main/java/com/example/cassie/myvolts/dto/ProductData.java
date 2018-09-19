@@ -86,7 +86,7 @@ public class ProductData extends DataBase implements Serializable, Comparable<Pr
     }
 
     public void setSimilarity(float similarity) {
-        this.similarity = similarity;
+        this .similarity = similarity;
     }
 
     public String getType_id() {

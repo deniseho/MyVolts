@@ -33,30 +33,32 @@ public class DbHelp{
     public void initTestData(){
         if(mwcdb!=null){
             ContentValues contentValues = new ContentValues();
-            contentValues.put("testData", "Sony customerDevice01, CableDevice01");
-            contentValues.put("testData", "Samsung customerDevice02, CableDevice02");
-            contentValues.put("testData", "Phillips customerDevice03, CableDevice03");
-            contentValues.put("testData", "Mitsubishi customerDevice04, CableDevice04");
-            contentValues.put("testData", "Apple customerDevice05, CableDevice05");
+            contentValues.put("testData", "Sony DVD player DVP-FX720 Compatible Power Supply Cable & in Car Charger");
+            contentValues.put("testData", "Korg Tuner Pitchblack Compatible Power Supply Cable & in Car Charger");
+            contentValues.put("testData", "Korg PSU part KA-183 Compatible Power Supply Cable & in Car Charger");
+            contentValues.put("testData", "Dymo Label printer LT-100H Compatible Power Supply Plug Charger");
+            contentValues.put("testData", "Seagate PSU part FreeAgent 9NK2AE-500 Compatible Power Supply Plug Charger");
 
             mwcdb.insert("initTestData", null, contentValues);
         }
     }
 
-    public List<String> getInitTestData(){
+    public List<String> getInitTestData(String searchText){
         List<String> datas = new ArrayList<>();
+
+        //todo: select from database
+        datas.add("Sony DVD player DVP-FX720 Compatible Power Supply Cable & in Car Charger");
+        datas.add("Korg Tuner Pitchblack Compatible Power Supply Cable & in Car Charger");
+        datas.add("Korg PSU part KA-183 Compatible Power Supply Cable & in Car Charger");
+        datas.add("Dymo Label printer LT-100H Compatible Power Supply Plug Charger");
+        datas.add("Seagate PSU part FreeAgent 9NK2AE-500 Compatible Power Supply Plug Charger");
+
 //        if(mwcdb!=null){
-//            Cursor cursor= mwcdb.rawQuery("select testData from initTestData order by id desc limit 20",new String[]{});
+//            Cursor cursor= mwcdb.rawQuery("select testData from initTestData",new String[]{});
 //            while(cursor.moveToNext()){
 //                datas.add(cursor.getString(1));
 //            }
 //        }
-
-        datas.add("Sony customerDevice01, CableDevice01");
-        datas.add("Samsung customerDevice02, CableDevice02");
-        datas.add("Phillips customerDevice03, CableDevice03");
-        datas.add("Mitsubishi customerDevice04, CableDevice04");
-        datas.add("Apple customerDevice05, CableDevice05");
 
         return datas;
     }

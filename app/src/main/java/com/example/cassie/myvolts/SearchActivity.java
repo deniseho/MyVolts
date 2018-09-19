@@ -96,17 +96,17 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         editor = sharedPreferences.edit();
 
         dbHelp = new DbHelp(this);
-        dbHelp.initTestData();
 
         hisAdapter = new HistoryAdapter(this);
         hislist.setAdapter(hisAdapter);
 
         hisAdapter.setDatas(dbHelp.getHisData());
 
+        //todo: add custom filter
         autoAdapter = new ArrayAdapter<>(this,
 //                R.layout.item_data, R.id.item_name,dbHelp.getAllProductName());
 //                R.layout.item_data, R.id.item_name,BRANDS);
-                  R.layout.item_data, R.id.item_name, dbHelp.getInitTestData());
+                  R.layout.item_data, R.id.item_name, dbHelp.getInitTestData(search.getText().toString()));
 
         search.setAdapter(autoAdapter);
 
@@ -141,6 +141,45 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
     }
+
+    // ---------------- Adapter filter by Denise ----------------
+
+//    private Filter countryFilter = new Filter() {
+//        @Override
+//        protected FilterResults performFiltering(CharSequence constraint) {
+//            FilterResults results = new FilterResults();
+//            List<CountryItem> suggestions = new ArrayList<>();
+//
+//            if (constraint == null || constraint.length() == 0) {
+//                suggestions.addAll(countryListFull);
+//            } else {
+//                String filterPattern = constraint.toString().toLowerCase().trim();
+//
+//                for (CountryItem item : countryListFull) {
+//                    if (item.getCountryName().toLowerCase().contains(filterPattern)) {
+//                        suggestions.add(item);
+//                    }
+//                }
+//            }
+//
+//            results.values = suggestions;
+//            results.count = suggestions.size();
+//
+//            return results;
+//        }
+//
+//        @Override
+//        protected void publishResults(CharSequence constraint, FilterResults results) {
+//            clear();
+//            addAll((List) results.values);
+//            notifyDataSetChanged();
+//        }
+//
+//        @Override
+//        public CharSequence convertResultToString(Object resultValue) {
+//            return ((CountryItem) resultValue).getCountryName();
+//        }
+//    };
 
     private void ForwardToSannerActivity(String pid) {
         Intent intent = new Intent(SearchActivity.this,ScannerActivity.class);
