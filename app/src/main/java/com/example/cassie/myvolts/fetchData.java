@@ -20,8 +20,9 @@ public class fetchData extends AsyncTask<Void,Void,Void> {
     @Override
     protected Void doInBackground(Void... voids) {
         try {
-//            URL url = new URL("http://vma53.scss.tcd.ie/result.php?mode=0&limit=2");
+//            URL url = new URL("https://api.myjson.com/bins/j5f6b");
             URL url = new URL("https://api.myjson.com/bins/1hcph0");
+//            URL url = new URL("https://api.myjson.com/bins/hz4pg");
 
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             InputStream inputStream = httpURLConnection.getInputStream();
@@ -31,11 +32,13 @@ public class fetchData extends AsyncTask<Void,Void,Void> {
                 line = bufferedReader.readLine();
                 data = data + line;
             }
-
-//            JSONArray JA = new JSONArray(data);
+//
+//    JSONObject JO1 = new JSONObject(data);
+//
+//            JSONArray JA = new JSONArray(JO1.get("mv_db"));
 //            for(int i =0 ;i <JA.length(); i++){
 //                JSONObject JO = (JSONObject) JA.get(i);
-//                singleParsed =  "Name:" + JO.get("name") + "\n"+
+//                singleParsed =  "Name:" + JO.get("device") + "\n"+
 //                        "Password:" + JO.get("password") + "\n"+
 //                        "Contact:" + JO.get("contact") + "\n"+
 //                        "Country:" + JO.get("country") + "\n";
@@ -48,9 +51,6 @@ public class fetchData extends AsyncTask<Void,Void,Void> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
 
         return null;
     }
@@ -60,7 +60,6 @@ public class fetchData extends AsyncTask<Void,Void,Void> {
         super.onPostExecute(aVoid);
 
 //        MainActivity.data.setText(this.dataParsed);
-        MainActivity.data.setText(this.data);
-
+//        MainActivity.data.setText(this.data);
     }
 }

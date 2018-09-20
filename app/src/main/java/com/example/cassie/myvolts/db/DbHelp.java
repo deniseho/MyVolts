@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import com.example.cassie.myvolts.dto.HistoryData;
 import com.example.cassie.myvolts.dto.HotData;
 import com.example.cassie.myvolts.dto.ProductData;
+import com.example.cassie.myvolts.fetchData;
 import com.example.cassie.myvolts.testing.TestingBean;
 
 import java.io.File;
@@ -27,10 +28,14 @@ public class DbHelp{
     public DbHelp(Context context){
         dbHelper = new DbHelper(context);
         mwcdb = dbHelper.getWritableDatabase();
+
     }
 
-    //----- initTestData by Denise ---------
+    //----- initTestData  ---------
     public void initTestData(){
+        fetchData process = new fetchData();
+        process.execute();
+        
         if(mwcdb!=null){
             ContentValues contentValues = new ContentValues();
             contentValues.put("testData", "Sony DVD player DVP-FX720 Compatible Power Supply Cable & in Car Charger");

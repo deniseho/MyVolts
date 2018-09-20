@@ -7,29 +7,6 @@
     android:orientation="vertical"
     tools:context="com.example.cassie.myvolts.MainActivity"
     android:background="@color/colorPrimaryDark">
-
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Click Me!"
-        android:layout_marginBottom="10dp"
-        android:id="@+id/button"/>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/button">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="5dp"
-            android:textSize="24sp"
-            android:id="@+id/fetcheddata"
-            android:hint="Fetched Text Here!!!"/>
-    </ScrollView>
-
-
     <FrameLayout
         android:id="@+id/content"
         android:layout_width="match_parent"
@@ -40,7 +17,36 @@
             class="com.example.cassie.myvolts.fragment.SearchFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
     </FrameLayout>
+    <!--<FrameLayout-->
+        <!--android:id="@+id/content2"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_weight="1">-->
+
+
+        <!--<Button-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Click Me!"-->
+            <!--android:layout_marginBottom="10dp"-->
+            <!--android:id="@+id/button"/>-->
+
+        <!--<ScrollView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@id/button">-->
+            <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:padding="5dp"-->
+                <!--android:textSize="24sp"-->
+                <!--android:id="@+id/fetcheddata"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:hint="Fetched Text Here!!!"/>-->
+        <!--</ScrollView>-->
+    <!--</FrameLayout>-->
 
     <RadioGroup
         android:layout_width="match_parent"

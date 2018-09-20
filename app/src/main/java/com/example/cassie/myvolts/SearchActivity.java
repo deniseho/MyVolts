@@ -8,10 +8,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -29,7 +31,6 @@ import com.example.cassie.myvolts.adapter.HistoryAdapter;
 import com.example.cassie.myvolts.adapter.ProductAdapter;
 import com.example.cassie.myvolts.db.DbHelp;
 import com.example.cassie.myvolts.dto.HistoryData;
-import com.example.cassie.myvolts.fragment.ConfirmFragment;
 import com.example.cassie.myvolts.util.DrawableUtil;
 import com.example.cassie.myvolts.util.TestUtil;
 
@@ -350,7 +351,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
                 clearHistory();
                 break;
-
         }
 
     }
@@ -369,7 +369,10 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             dbHelp.clearHis();
             hisAdapter.setDatas(dbHelp.getHisData());
             hisAdapter.notifyDataSetChanged();
-           }
+                Toast.makeText(SearchActivity.this, "All history record has been cleared!", Toast.LENGTH_SHORT)
+                        .show();
+
+            }
           });
           builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
            @Override
@@ -399,11 +402,54 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         showAlertDialog(searchInput);
     }
 
+    Button searchClick;
 
-    private void showAlertDialog(String brand) {
-        FragmentManager fm = getSupportFragmentManager();
-        ConfirmFragment alertDialog = ConfirmFragment.newInstance(brand);
-        alertDialog.show(fm, "fragment_confirm");
+    private void showAlertDialog(final String brand) {
+//        FragmentManager fm = getSupportFragmentManager();
+//        ConfirmFragment alertDialog = ConfirmFragment.newInstance(brand);
+//        alertDialog.show(fm, "fragment_confirm");
+//
+//        searchClick = (Button) findViewById(R.id.confirm_search);
+//        searchClick.setOnClickListener(new View.OnClickListener() {
+//                public void onClick(View view) {
+//                    Intent dialIntent =  new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + "111"));
+//                    startActivity(dialIntent);
+//                }
+//            });
+
+
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(SearchActivity.this);
+//        builder.setMessage(brand);
+//        builder.setTitle("Confirm");
+//        builder.setIcon(android.R.drawable.ic_dialog_info);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.fragment_confirm, null);
+        builder.setView(dialogView);
+        TextView brandTextView = (TextView)dialogView.findViewById(R.id.brand_name);
+        brandTextView.setText(brand);
+
+
+
+        Button confirmSearch = (Button) dialogView.findViewById(R.id.confirm_search);
+        Button confirmCancel = (Button) dialogView.findViewById(R.id.confirm_cancel);
+
+        final AlertDialog dialog = builder.create();
+
+        confirmSearch.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                dialog.dismiss();
+                search(brand);
+            }
+        });
+
+        confirmCancel.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+
+        builder.create().show();
 
     }
 }
