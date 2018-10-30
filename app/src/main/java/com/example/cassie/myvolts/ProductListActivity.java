@@ -10,12 +10,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -157,7 +155,7 @@ public class ProductListActivity extends ActionBarActivity implements AbsListVie
 
         dbHelp = new DbHelp(this);
 
-       // search = (SearchBox) findViewById(R.id.searchbox);
+        // search = (SearchBox) findViewById(R.id.searchbox);
         search.enableVoiceRecognition(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         this.setSupportActionBar(toolbar);
@@ -314,8 +312,10 @@ public class ProductListActivity extends ActionBarActivity implements AbsListVie
         }
     }
 
+
     private void doNoInternet() {
         final View listview = findViewById(R.id.productlist);
+
         if (null != listview) {
 
             no_internet = getLayoutInflater().inflate(R.layout.no_internet,layout,false);
@@ -329,6 +329,7 @@ public class ProductListActivity extends ActionBarActivity implements AbsListVie
                 public void onClick(View v) {
                     listview.setVisibility(View.VISIBLE);
                     initInternetStatusPage(searchStr);
+
                 }
             });
         }

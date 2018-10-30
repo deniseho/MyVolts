@@ -7,21 +7,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.RadioButton;
 
 import com.example.cassie.myvolts.db.DbHelp;
 import com.example.cassie.myvolts.fragment.SearchFragment;
 import com.example.cassie.myvolts.util.DensityUtil;
-import com.example.cassie.myvolts.util.TestUtil;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-import zxing.activity.CaptureActivity;
 
 /**
  * Created by cassie on 23/05/2017.
@@ -52,19 +46,18 @@ public class MainActivity extends AppCompatActivity {
 
 
     DbHelp dbHelp;
-//    Button click;
-//    public static TextView data;
 
-    @BindView(R.id.main)
-    RadioButton main;
-    @BindView(R.id.hot)
-    RadioButton scanner;
-    @BindView(R.id.set)
-    RadioButton contact;
+//    @BindView(R.id.main)
+//    RadioButton main;
+//    @BindView(R.id.hot)
+//    RadioButton scanner;
+//    @BindView(R.id.set)
+//    RadioButton contact;
 
     String made, type, model;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,15 +65,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        initDrawable(main);
-        initDrawable(scanner);
-        initDrawable(contact);
+//        initDrawable(main);
+//        initDrawable(scanner);
+//        initDrawable(contact);
 
         dbHelp = new DbHelp(this);
         dbHelp.initTestData();
-
-//        click = (Button) findViewById(R.id.button);
-//        data = (TextView) findViewById(R.id.fetcheddata);
 
         sharedPreferences = getSharedPreferences("base64", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
@@ -98,8 +88,7 @@ public class MainActivity extends AppCompatActivity {
             searchFragment.setArguments(bundle);
 
             changeFragment(searchFragment);
-        }
-
+          }
 
     }
 
@@ -111,30 +100,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @OnClick({R.id.main, R.id.hot, R.id.set})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.main:
-                SearchFragment searchFragment = new SearchFragment();
-                changeFragment(searchFragment);
-                break;
-            case R.id.hot:
-                //changeFragment(new HotFragment());
-                TestUtil.storeSearchClicks(sharedPreferences, editor, "scanBtnClick");
-                Intent intent = new Intent(MainActivity.this,
-                        CaptureActivity.class);
-                startActivityForResult(intent, 0);
-                break;
-            case R.id.set:
-                //changeFragment(new SetFragment());
-                String phone = "014407407";
-
-                Intent dialIntent =  new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
-                startActivity(dialIntent);
-
-                break;
-        }
-    }
+//    @OnClick({R.id.main, R.id.hot, R.id.set})
+//    public void onViewClicked(View view) {
+//        switch (view.getId()) {
+//            case R.id.main:
+//                SearchFragment searchFragment = new SearchFragment();
+//                changeFragment(searchFragment);
+//                break;
+//            case R.id.hot:
+//                //changeFragment(new HotFragment());
+//                TestUtil.storeSearchClicks(sharedPreferences, editor, "scanBtnClick");
+//                Intent intent = new Intent(MainActivity.this,
+//                        CaptureActivity.class);
+//                startActivityForResult(intent, 0);
+//                break;
+//            case R.id.set:
+//                //changeFragment(new SetFragment());
+//                String phone = "014407407";
+//
+//                Intent dialIntent =  new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
+//                startActivity(dialIntent);
+//
+//                break;
+//        }
+//    }
 
     private void changeFragment(Fragment fragment){
         FragmentTransaction ft=getFragmentManager().beginTransaction();

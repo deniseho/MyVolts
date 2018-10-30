@@ -19,11 +19,11 @@
             android:layout_height="match_parent" />
 
     </FrameLayout>
-    <!--<FrameLayout-->
-        <!--android:id="@+id/content2"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0dp"-->
-        <!--android:layout_weight="1">-->
+    <FrameLayout
+        android:id="@+id/content2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
 
         <!--<Button-->
@@ -33,65 +33,65 @@
             <!--android:layout_marginBottom="10dp"-->
             <!--android:id="@+id/button"/>-->
 
-        <!--<ScrollView-->
-            <!--android:layout_width="match_parent"-->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/button">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="5dp"
+                android:textSize="24sp"
+                android:id="@+id/fetcheddata"
+                android:textColor="@color/white"
+                android:hint="Fetched Text Here!!!"/>
+        </ScrollView>
+    </FrameLayout>
+
+    <!--<RadioGroup-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="?android:attr/colorForeground"-->
+        <!--android:orientation="horizontal">-->
+
+        <!--<RadioButton-->
+            <!--android:id="@+id/main"-->
+            <!--android:layout_width="0dp"-->
             <!--android:layout_height="wrap_content"-->
-            <!--android:layout_below="@id/button">-->
-            <!--<TextView-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:padding="5dp"-->
-                <!--android:textSize="24sp"-->
-                <!--android:id="@+id/fetcheddata"-->
-                <!--android:textColor="@color/white"-->
-                <!--android:hint="Fetched Text Here!!!"/>-->
-        <!--</ScrollView>-->
-    <!--</FrameLayout>-->
+            <!--android:layout_weight="1"-->
+            <!--android:button="@null"-->
+            <!--android:checked="true"-->
+            <!--android:drawableTop="@drawable/main_index_search_normal"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingBottom="10dp"-->
+            <!--android:paddingTop="10dp"-->
+            <!--android:text="Home"-->
+            <!--android:textColor="@color/tab_color" />-->
 
-    <RadioGroup
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?android:attr/colorForeground"
-        android:orientation="horizontal">
+        <!--<RadioButton-->
+            <!--android:id="@+id/hot"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:button="@null"-->
+            <!--android:drawableTop="@drawable/scanner"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingBottom="10dp"-->
+            <!--android:paddingTop="10dp"-->
+            <!--android:text="Scan"-->
+            <!--android:textColor="@color/tab_color" />-->
 
-        <RadioButton
-            android:id="@+id/main"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:button="@null"
-            android:checked="true"
-            android:drawableTop="@drawable/main_index_search_normal"
-            android:gravity="center"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:text="Home"
-            android:textColor="@color/tab_color" />
-
-        <RadioButton
-            android:id="@+id/hot"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:button="@null"
-            android:drawableTop="@drawable/scanner"
-            android:gravity="center"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:text="Scan"
-            android:textColor="@color/tab_color" />
-
-        <RadioButton
-            android:id="@+id/set"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:button="@null"
-            android:drawableTop="@drawable/ic_phone_big"
-            android:gravity="center"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:text="Contact"
-            android:textColor="@color/tab_color" />
-    </RadioGroup>
+        <!--<RadioButton-->
+            <!--android:id="@+id/set"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:button="@null"-->
+            <!--android:drawableTop="@drawable/ic_phone_big"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingBottom="10dp"-->
+            <!--android:paddingTop="10dp"-->
+            <!--android:text="Contact"-->
+            <!--android:textColor="@color/tab_color" />-->
+    <!--</RadioGroup>-->
 </LinearLayout>

@@ -41,8 +41,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import butterknife.OnClick;
-import butterknife.OnItemClick;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.JaroWinkler;
 
 
@@ -266,6 +264,8 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnScroll
 
         @Override
         protected String doInBackground(String... arg0) {
+            System.out.println("===============device bg arg0: " + arg0);
+
             // TODO Auto-generated method stub
             String offset = "";
             if(curPage > 0) {
@@ -291,6 +291,8 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnScroll
 
         @Override
         protected void onPostExecute(String result) {
+            System.out.println("===============device onPostExecute result: " + result);
+
             // TODO Auto-generated method stub
             super.onPostExecute(result);
            // p.dismiss();

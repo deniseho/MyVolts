@@ -33,9 +33,6 @@ public class DbHelp{
 
     //----- initTestData  ---------
     public void initTestData(){
-        fetchData process = new fetchData();
-        process.execute();
-        
         if(mwcdb!=null){
             ContentValues contentValues = new ContentValues();
             contentValues.put("testData", "Sony DVD player DVP-FX720 Compatible Power Supply Cable & in Car Charger");
@@ -46,6 +43,9 @@ public class DbHelp{
 
             mwcdb.insert("initTestData", null, contentValues);
         }
+
+//        new fetchData().execute();
+
     }
 
     public List<String> getInitTestData(String searchText){

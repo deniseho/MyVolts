@@ -2,8 +2,6 @@ package com.example.cassie.myvolts;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -14,11 +12,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.cassie.myvolts.db.DbHelp;
 import com.example.cassie.myvolts.dto.TechSpec;
-import com.example.cassie.myvolts.testing.TaskResultActivity;
 import com.example.cassie.myvolts.testing.TestingBean;
 import com.example.cassie.myvolts.util.DigitUtil;
 import com.example.cassie.myvolts.util.HttpUtils;
@@ -68,6 +64,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
     private ArrayList<DialogMenuItem> mMenuItems = new ArrayList<>();
     private DbHelp dbHelp;
+//    Button click;
+//    public static String data;
 
 
     @Override
@@ -79,6 +77,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("base64", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
         dbHelp = new DbHelp(this);
+
 
         //testTask();
 
@@ -125,6 +124,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
         builder.create().show();
     }
 */
+
+
     private void NormalListDialogNoTitle() {
         for(TechSpec tech: techspecs){
             mMenuItems.add(new DialogMenuItem("Vol: " + tech.getVol() + " " + "Amp: "

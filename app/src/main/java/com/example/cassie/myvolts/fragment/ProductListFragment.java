@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.example.cassie.myvolts.R;
 import com.example.cassie.myvolts.ScannerActivity;
 import com.example.cassie.myvolts.adapter.ProductListAdapter;
+import com.example.cassie.myvolts.db.DbHelp;
 import com.example.cassie.myvolts.dto.ProductData;
 import com.example.cassie.myvolts.util.DigitUtil;
 import com.example.cassie.myvolts.util.HttpUtils;
@@ -35,6 +36,9 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -42,7 +46,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import butterknife.OnItemClick;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.JaroWinkler;
 
 public class ProductListFragment extends Fragment implements AbsListView.OnScrollListener{
@@ -77,6 +80,8 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
 
     GetProducts db;
 
+    DbHelp dbHelp;
+
     public ProductListFragment() {
         // Required empty public constructor
     }
@@ -84,6 +89,9 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Context context = getActivity();
+        dbHelp = new DbHelp(context);
 
         sharedPreferences = getActivity().getSharedPreferences("base64", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
@@ -282,6 +290,8 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
         protected String doInBackground(String... arg0) {
             // TODO Auto-generated method stub
             String offset = "";
+            JSONArray output_arr = new JSONArray();
+
             if(curPage > 0) {
                 offset = "%0AOFFSET%20" + curPage * 10;
             }
@@ -294,27 +304,78 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
                 for(int i = 1; i < arg0.length; i++){
                     args = args + "%20%7C%7C%20%20regex(%3Fpname%2C%20%22" + arg0[i] + "%22%2C%20%22i%22)";
                 }
-                String url = "http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/mv2.54/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0ASELECT%20%20distinct%20%3Fprod_id%20%20%3Fpname%20%3Ftype%20%0AWHERE%20%0A%7B%20%0A%20%3Fprod_id%20%3Aproduct_name%20%3Fpname%20.%0A%20%3Fprod_id%20%3AisOfTypeCategory%20%3Ftype%20.%0A%0A%20filter%20(regex(%3Fpname%2C%20%22" + arg0[0] + "%22%2C%20%22i%22)" + args + ")%20.%0A%7D%0Aorder%20by%20%3Fpname%0ALIMIT%2010"+ offset +"&limit=100&infer=true&";
-                System.out.println(url);
+                String url = "http://api.myjson.com/bins/1hcph0"; //"http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/mv2.54/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0ASELECT%20%20distinct%20%3Fprod_id%20%20%3Fpname%20%3Ftype%20%0AWHERE%20%0A%7B%20%0A%20%3Fprod_id%20%3Aproduct_name%20%3Fpname%20.%0A%20%3Fprod_id%20%3AisOfTypeCategory%20%3Ftype%20.%0A%0A%20filter%20(regex(%3Fpname%2C%20%22" + arg0[0] + "%22%2C%20%22i%22)" + args + ")%20.%0A%7D%0Aorder%20by%20%3Fpname%0ALIMIT%2010"+ offset +"&limit=100&infer=true&";
 
                 result = HttpUtils.doGet(url);
+                System.out.println("productfragment result: " + result);
+
+                JSONObject obj = null;
+                try {
+                    obj = new JSONObject(result);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                JSONArray mv_db_arr = null;
+                try {
+                    mv_db_arr = obj.getJSONArray("mv_db");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                JSONArray mv_db_arr2 = null;
+                try {
+                    mv_db_arr2 = mv_db_arr.getJSONArray(0);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                for(int i=0; i<mv_db_arr2.length(); i++) {
+
+                    JSONObject item = null;
+                    try {
+                        item = (JSONObject) mv_db_arr2.get(i);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Iterator<String> keys = item.keys();
+
+                    String category = keys.next();
+                    if(category.equals("product")){
+
+                        String category_val = item.optString(category);
+
+                        System.out.println("---------category");
+                        System.out.println(category);
+                        System.out.println("---------category_val");
+                        System.out.println(category_val);
+
+                        output_arr.put(category);
+                    }
+
+
+                }
+
+                System.out.println("=============== output_arr ===============");
+                System.out.println(output_arr);
+
 
             }else{
-                String url1 = "http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/mv2.53/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0A%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0A%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0A%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0A%0ASELECT%20distinct%20%3Fprod_id%20%3Fpname%20%20WHERE%20%7B%0A%0A%3Fpi_id%20%3AhasTechSpec%20%3Fts_id%20.%0A%0A%3Fprod_id%20%3Asupports%20%3Fts_id%20.%0A%0A%3Fts_id%20%3Avoltage%20%3Fx%20.%0A%0A%3Fts_id%20%3Aamperage%20%3Fy%20.%0A%0A%3Fts_id%20%3Atip_length%20%3Fz%20.%0A%0A%3Fpi_id%20%3AisManufacturedBy%20%3Fman%20.%0A%0A%3Fman%20%3Amanufacturer_name%20%22" + arg0[0] + "%22%20.%0A%0A%3Fpi_id%20%3AisOfDeviceCategory%20%3Fdevice%20.%0A%0A%3Fdevice%20%3ApiDevice_name%20%22" + arg0[1] + "%22%20.%0A%0A%3Fpi_id%20%3ApiModel_name%20%22" + arg0[2] + "%22%20.%0A%0A%3Fprod_id%20%3Aproduct_name%20%20%3Fpname%20.%0A%0A%3Fpi_id%20%3Api_asin%20%3Fasin%20.%0A%0AFilter(%3Fasin%20!%3D%20%22%22)%7D%0ALIMIT%2010"+ offset +"&limit=100&infer=true&";
-
-                result = HttpUtils.doGet(url1);
+//                String url1 = "http://api.myjson.com/bins/1hcph0"; //"http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/mv2.53/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0A%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0A%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0A%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0A%0ASELECT%20distinct%20%3Fprod_id%20%3Fpname%20%20WHERE%20%7B%0A%0A%3Fpi_id%20%3AhasTechSpec%20%3Fts_id%20.%0A%0A%3Fprod_id%20%3Asupports%20%3Fts_id%20.%0A%0A%3Fts_id%20%3Avoltage%20%3Fx%20.%0A%0A%3Fts_id%20%3Aamperage%20%3Fy%20.%0A%0A%3Fts_id%20%3Atip_length%20%3Fz%20.%0A%0A%3Fpi_id%20%3AisManufacturedBy%20%3Fman%20.%0A%0A%3Fman%20%3Amanufacturer_name%20%22" + arg0[0] + "%22%20.%0A%0A%3Fpi_id%20%3AisOfDeviceCategory%20%3Fdevice%20.%0A%0A%3Fdevice%20%3ApiDevice_name%20%22" + arg0[1] + "%22%20.%0A%0A%3Fpi_id%20%3ApiModel_name%20%22" + arg0[2] + "%22%20.%0A%0A%3Fprod_id%20%3Aproduct_name%20%20%3Fpname%20.%0A%0A%3Fpi_id%20%3Api_asin%20%3Fasin%20.%0A%0AFilter(%3Fasin%20!%3D%20%22%22)%7D%0ALIMIT%2010"+ offset +"&limit=100&infer=true&";
+//                result = HttpUtils.doGet(url1);
 
             }
-            return result;
+
+            return output_arr.toString();
         }
 
         @Override
         protected void onPostExecute(String result) {
+            System.out.println("===============product onPostExecute result: " + result);
+
+
+
             // TODO Auto-generated method stub
             super.onPostExecute(result);
             p.dismiss();
-
-            //System.out.println(result);
 
             List<ProductData> newData = new ArrayList<>();
 
