@@ -424,13 +424,16 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
 
             try {
                 System.out.println("===============product onPostExecute result.getJSONObject(0): ");
-                JSONObject jsonObject = new JSONObject(result.getString(0));
-                System.out.println(jsonObject);
 
-                String name = jsonObject.getString("name");
-                System.out.print("Name: " + name);
+                for(int i=0; i<result.length(); i++){
+                    JSONObject jsonObject = new JSONObject(result.getString(i));
+                    System.out.println(jsonObject);
 
-                newData.add(new ProductData("4",name, null));
+                    String name = jsonObject.getString("name");
+                    System.out.print("Name: " + name);
+
+                    newData.add(new ProductData("id"+i ,name, null));
+                }
 
             } catch (JSONException e) {
                 e.printStackTrace();
