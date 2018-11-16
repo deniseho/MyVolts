@@ -25,17 +25,12 @@ import com.example.cassie.myvolts.ScannerActivity;
 import com.example.cassie.myvolts.adapter.ProductListAdapter;
 import com.example.cassie.myvolts.db.DbHelp;
 import com.example.cassie.myvolts.dto.ProductData;
-import com.example.cassie.myvolts.util.DigitUtil;
 import com.example.cassie.myvolts.util.HttpUtils;
 import com.example.cassie.myvolts.util.NetworkUtil;
 import com.example.cassie.myvolts.util.RegexUtil;
 import com.example.cassie.myvolts.util.TestUtil;
 import com.github.clans.fab.FloatingActionButton;
 
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -273,10 +268,11 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
 
 
 
-    public class GetProducts extends AsyncTask<String, Void, String> {
+    public class GetProducts extends AsyncTask<Object, Integer, JSONArray> {
 
         ProgressDialog p = new ProgressDialog(getActivity(),
                 ProgressDialog.STYLE_SPINNER);
+
 
         @Override
         protected void onPreExecute() {
@@ -286,8 +282,9 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
             p.show();
         }
 
+
         @Override
-        protected String doInBackground(String... arg0) {
+        protected JSONArray doInBackground(Object... arg0) {
             // TODO Auto-generated method stub
             String offset = "";
             JSONArray output_arr = new JSONArray();
@@ -309,68 +306,47 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
                 result = HttpUtils.doGet(url);
                 System.out.println("productfragment result: " + result);
 
-                JSONObject obj = null;
-                try {
-                    obj = new JSONObject(result);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                JSONArray mv_db_arr = null;
-                try {
-                    mv_db_arr = obj.getJSONArray("mv_db");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                JSONArray mv_db_arr2 = null;
-                try {
-                    mv_db_arr2 = mv_db_arr.getJSONArray(0);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
 
-                for(int i=0; i<mv_db_arr2.length(); i++) {
+                try {
+                    JSONObject obj = new JSONObject(result);
+                    JSONArray mv_db_arr = obj.getJSONArray("mv_db");
+                    JSONArray mv_db_arr2 = mv_db_arr.getJSONArray(0);
 
-                    JSONObject item = null;
-                    try {
-                        item = (JSONObject) mv_db_arr2.get(i);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+
+                    for(int i=0; i<mv_db_arr2.length(); i++) {
+
+                        JSONObject item = (JSONObject) mv_db_arr2.get(i);
+                        Iterator<String> keys = item.keys();
+
+                        String category = keys.next();
+                        if(category.equals("product")){
+
+                            String category_val = item.optString(category);
+
+                            System.out.println("---------category");
+                            System.out.println(category);
+                            System.out.println("---------category_val");
+                            System.out.println(category_val);
+
+                            output_arr.put(category_val);
+                        }
                     }
-                    Iterator<String> keys = item.keys();
-
-                    String category = keys.next();
-                    if(category.equals("product")){
-
-                        String category_val = item.optString(category);
-
-                        System.out.println("---------category");
-                        System.out.println(category);
-                        System.out.println("---------category_val");
-                        System.out.println(category_val);
-
-                        output_arr.put(category);
-                    }
-
-
-                }
-
-                System.out.println("=============== output_arr ===============");
-                System.out.println(output_arr);
-
-
-            }else{
-//                String url1 = "http://api.myjson.com/bins/1hcph0"; //"http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/mv2.53/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0A%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0A%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0A%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0A%0ASELECT%20distinct%20%3Fprod_id%20%3Fpname%20%20WHERE%20%7B%0A%0A%3Fpi_id%20%3AhasTechSpec%20%3Fts_id%20.%0A%0A%3Fprod_id%20%3Asupports%20%3Fts_id%20.%0A%0A%3Fts_id%20%3Avoltage%20%3Fx%20.%0A%0A%3Fts_id%20%3Aamperage%20%3Fy%20.%0A%0A%3Fts_id%20%3Atip_length%20%3Fz%20.%0A%0A%3Fpi_id%20%3AisManufacturedBy%20%3Fman%20.%0A%0A%3Fman%20%3Amanufacturer_name%20%22" + arg0[0] + "%22%20.%0A%0A%3Fpi_id%20%3AisOfDeviceCategory%20%3Fdevice%20.%0A%0A%3Fdevice%20%3ApiDevice_name%20%22" + arg0[1] + "%22%20.%0A%0A%3Fpi_id%20%3ApiModel_name%20%22" + arg0[2] + "%22%20.%0A%0A%3Fprod_id%20%3Aproduct_name%20%20%3Fpname%20.%0A%0A%3Fpi_id%20%3Api_asin%20%3Fasin%20.%0A%0AFilter(%3Fasin%20!%3D%20%22%22)%7D%0ALIMIT%2010"+ offset +"&limit=100&infer=true&";
-//                result = HttpUtils.doGet(url1);
+                } catch (JSONException e) {
+                    e.printStackTrace();
 
             }
 
-            return output_arr.toString();
+                System.out.println("=============== output_arr ===============");
+                System.out.println(output_arr);
+            }
+
+            return output_arr;
         }
 
         @Override
-        protected void onPostExecute(String result) {
-            System.out.println("===============product onPostExecute result: " + result);
-
+        protected void onPostExecute(JSONArray result) {
+            System.out.println("===============product onPostExecute result: ");
+            System.out.println(result);
 
 
             // TODO Auto-generated method stub
@@ -379,71 +355,91 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
 
             List<ProductData> newData = new ArrayList<>();
 
-            String product_id = "";
-            String dname = "";
-            String x= "";
-            String y = "";
-            String z = "";
-            Document doc = null;
-            String type = "";
-            String images = "";
+//            String product_id = "";
+//            String dname = "";
+//            String x= "";
+//            String y = "";
+//            String z = "";
+//            Document doc = null;
+//            String type = "";
+//            String images = "";
 
-            newData.add(new ProductData("3", "Dymo Label printer LT-100H Compatible Power Supply Plug Charger",null));
-            newData.add(new ProductData("1", "Korg Tuner Pitchblack Compatible Power Supply Cable & in Car Charger",null));
-            newData.add(new ProductData("2", "Korg PSU part KA-183 Compatible Power Supply Cable & in Car Charger",null));
+//            newData.add(new ProductData("3", "Dymo Label printer LT-100H Compatible Power Supply Plug Charger",null));
+//            newData.add(new ProductData("1", "Korg Tuner Pitchblack Compatible Power Supply Cable & in Car Charger",null));
+//            newData.add(new ProductData("2", "Korg PSU part KA-183 Compatible Power Supply Cable & in Car Charger",null));
 
-            if(result != null && !result.equals("")) {
 
-                try {
-                    doc = DocumentHelper.parseText(result);
-                    Element rootElt = doc.getRootElement();
-                    Iterator iter = rootElt.elementIterator("results");
-                    while (iter.hasNext()) {
 
-                        Element resultRecord = (Element) iter.next();
-                        Iterator itersElIterator = resultRecord.elementIterator("result");
-                        if (!itersElIterator.hasNext() && count == 0) {
-                            removeListViewToNoResults();
-                            break;
-                        }else if (!itersElIterator.hasNext()) {
-                            //Toast.makeText(getContext(), "No more results...", Toast.LENGTH_SHORT).show();
-                        }
-                        count++;
-                        while (itersElIterator.hasNext()) {
-                            Element itemEle = (Element) itersElIterator.next();
-                            Iterator literLIterator = itemEle.elementIterator("binding");
-                            while (literLIterator.hasNext()) {
-                                Element ele = (Element) literLIterator.next();
-                                if ("prod_id".equals(ele.attributeValue("name"))) {
-                                    product_id = ele.elementTextTrim("uri");
-                                } else if ("x".equals(ele.attributeValue("name"))) {
-                                    x = ele.elementTextTrim("literal");
-                                } else if ("y".equals(ele.attributeValue("name"))) {
-                                    y = ele.elementTextTrim("literal");
-                                } else if ("z".equals(ele.attributeValue("name"))) {
-                                    z = ele.elementTextTrim("literal");
-                                } else if ("pname".equals(ele.attributeValue("name"))) {
-                                    dname = ele.elementTextTrim("literal");
-                                }else if ("type".equals(ele.attributeValue("name"))) {
-                                    type = ele.elementTextTrim("uri");
-                                }
-                            }
-                            ProductData p = new ProductData(product_id, dname, null);
+//            if(result != null && !result.equals("")) {
 
-                            if(!"".equals(type) && !"".equals(images)){
-                                String tid = DigitUtil.getNumericTid(type);
-                                p.setType(tid);
-                            }
-                            if(searchStr != null) {
-                                p.setSimilarity(algorithm.getSimilarity(searchStr, dname));
-                            }
-                            newData.add(p);
-                        }
-                    }
+//                try {
+//                    doc = DocumentHelper.parseText(result);
+//                    Element rootElt = doc.getRootElement();
+//                    Iterator iter = rootElt.elementIterator("results");
+//                    while (iter.hasNext()) {
+//
+//                        Element resultRecord = (Element) iter.next();
+//                        Iterator itersElIterator = resultRecord.elementIterator("result");
+//                        if (!itersElIterator.hasNext() && count == 0) {
+//                            removeListViewToNoResults();
+//                            break;
+//                        }else if (!itersElIterator.hasNext()) {
+//                            //Toast.makeText(getContext(), "No more results...", Toast.LENGTH_SHORT).show();
+//                        }
+//                        count++;
+//                        while (itersElIterator.hasNext()) {
+//                            Element itemEle = (Element) itersElIterator.next();
+//                            Iterator literLIterator = itemEle.elementIterator("binding");
+//                            while (literLIterator.hasNext()) {
+//                                Element ele = (Element) literLIterator.next();
+//                                if ("prod_id".equals(ele.attributeValue("name"))) {
+//                                    product_id = ele.elementTextTrim("uri");
+//                                } else if ("x".equals(ele.attributeValue("name"))) {
+//                                    x = ele.elementTextTrim("literal");
+//                                } else if ("y".equals(ele.attributeValue("name"))) {
+//                                    y = ele.elementTextTrim("literal");
+//                                } else if ("z".equals(ele.attributeValue("name"))) {
+//                                    z = ele.elementTextTrim("literal");
+//                                } else if ("pname".equals(ele.attributeValue("name"))) {
+//                                    dname = ele.elementTextTrim("literal");
+//                                }else if ("type".equals(ele.attributeValue("name"))) {
+//                                    type = ele.elementTextTrim("uri");
+//                                }
+//                            }
+//                            ProductData p = new ProductData(product_id, dname, null);
+//
+//                            if(!"".equals(type) && !"".equals(images)){
+//                                String tid = DigitUtil.getNumericTid(type);
+//                                p.setType(tid);
+//                            }
+//                            if(searchStr != null) {
+//                                p.setSimilarity(algorithm.getSimilarity(searchStr, dname));
+//                            }
+//                            newData.add(p);
+//                        }
+//                    }
 
-                    newData.add(new ProductData("4","Seagate PSU part FreeAgent 9NK2AE-500 Compatible Power Supply Plug Charger",null));
+//                    newData.add(new ProductData("4","Seagate PSU part FreeAgent 9NK2AE-500 Compatible Power Supply Plug Charger",null));
 
-                    if(searchStr != null)
+
+            try {
+                System.out.println("===============product onPostExecute result.getJSONObject(0): ");
+                JSONObject jsonObject = new JSONObject(result.getString(0));
+                System.out.println(jsonObject);
+
+                String name = jsonObject.getString("name");
+                System.out.print("Name: " + name);
+
+                newData.add(new ProductData("4",name, null));
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+
+
+            if(searchStr != null)
                         Collections.sort(newData);
 
                     if (adapter == null) {
@@ -458,12 +454,12 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
                     products.addAll(newData);
                     adapter.setDatas(products);
 
-                } catch (DocumentException e) {
-                    e.printStackTrace();
-                }
-            }else{
-                doNoInternet();
-            }
+//                } catch (DocumentException e) {
+//                    e.printStackTrace();
+//                }
+//            }else{
+//                doNoInternet();
+//            }
         }
     }
 

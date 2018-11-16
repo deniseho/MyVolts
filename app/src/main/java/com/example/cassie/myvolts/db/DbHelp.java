@@ -33,16 +33,16 @@ public class DbHelp{
 
     //----- initTestData  ---------
     public void initTestData(){
-        if(mwcdb!=null){
-            ContentValues contentValues = new ContentValues();
-            contentValues.put("testData", "Sony DVD player DVP-FX720 Compatible Power Supply Cable & in Car Charger");
-            contentValues.put("testData", "Korg Tuner Pitchblack Compatible Power Supply Cable & in Car Charger");
-            contentValues.put("testData", "Korg PSU part KA-183 Compatible Power Supply Cable & in Car Charger");
-            contentValues.put("testData", "Dymo Label printer LT-100H Compatible Power Supply Plug Charger");
-            contentValues.put("testData", "Seagate PSU part FreeAgent 9NK2AE-500 Compatible Power Supply Plug Charger");
-
-            mwcdb.insert("initTestData", null, contentValues);
-        }
+//        if(mwcdb!=null){
+//            ContentValues contentValues = new ContentValues();
+//            contentValues.put("testData", "Sony DVD player DVP-FX720 Compatible Power Supply Cable & in Car Charger");
+//            contentValues.put("testData", "Korg Tuner Pitchblack Compatible Power Supply Cable & in Car Charger");
+//            contentValues.put("testData", "Korg PSU part KA-183 Compatible Power Supply Cable & in Car Charger");
+//            contentValues.put("testData", "Dymo Label printer LT-100H Compatible Power Supply Plug Charger");
+//            contentValues.put("testData", "Seagate PSU part FreeAgent 9NK2AE-500 Compatible Power Supply Plug Charger");
+//
+///            mwcdb.insert("initTestData", null, contentValues);
+//        }
 
 //        new fetchData().execute();
 
