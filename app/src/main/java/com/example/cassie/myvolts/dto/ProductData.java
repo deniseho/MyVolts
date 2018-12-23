@@ -23,12 +23,19 @@ public class ProductData extends DataBase implements Serializable, Comparable<Pr
         this.tech = tech;
     }
 
+//    public ProductData(String productId, String name, String tech) {
+//        this.productId = productId;
+//        this.name = name;
+//        this.tech = tech;
+//    }
+
     private String name;
     private String des;
     private String made;
     private String type;
     private String productId;
     private List<TechSpec> tech;
+//    private String tech;
     private float similarity;
     private String type_id;
     private String images_id;
@@ -80,6 +87,15 @@ public class ProductData extends DataBase implements Serializable, Comparable<Pr
     public void setTech(List<TechSpec> tech) {
         this.tech = tech;
     }
+
+//    public String getTech() {
+//        return tech;
+//    }
+//
+//    public void setTech(String tech) {
+//        this.tech = tech;
+//    }
+
 
     public float getSimilarity() {
         return similarity;

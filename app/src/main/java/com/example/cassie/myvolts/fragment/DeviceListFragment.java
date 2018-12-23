@@ -264,8 +264,6 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnScroll
 
         @Override
         protected String doInBackground(String... arg0) {
-            System.out.println("===============device bg arg0: " + arg0);
-
             // TODO Auto-generated method stub
             String offset = "";
             if(curPage > 0) {
@@ -291,13 +289,9 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnScroll
 
         @Override
         protected void onPostExecute(String result) {
-            System.out.println("===============device onPostExecute result: " + result);
-
             // TODO Auto-generated method stub
             super.onPostExecute(result);
            // p.dismiss();
-
-            //System.out.println(result);
 
             List<DeviceData> newData = new ArrayList<>();
 

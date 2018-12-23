@@ -1,11 +1,11 @@
 package com.example.cassie.myvolts.db;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
 
-import com.example.cassie.myvolts.dto.DeviceData;
 import com.example.cassie.myvolts.dto.ManufactorData;
 import com.example.cassie.myvolts.dto.ProductData;
 import com.example.cassie.myvolts.util.HttpUtils;
@@ -15,9 +15,13 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by cassie on 23/05/2017.
@@ -99,8 +103,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
         this.db = db;
         if(db != null && db.isOpen()) {
-//            initProduct(db);
-            //initMade(db);
             CacheManu cacheManu = new CacheManu();
             cacheManu.execute();
             CacheProductName cacheProductName = new CacheProductName();
@@ -108,47 +110,6 @@ public class DbHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void initProduct(SQLiteDatabase db){
-//        ArrayList<ProductData> products = new ArrayList<ProductData>();
-//        products.add(new ProductData("Aguilar Effects pedal Tonehammer Compatible USB", "Aguilar", new ArrayList<TechSpec>()));
-//        products.add(new ProductData("Ada Amp modeller GCS-2 Compatible USB", "Ada", new ArrayList<TechSpec>()));
-//        products.add(new ProductData("Akai Keyboard Advance 49 Compatible USB", "Akai", new ArrayList<TechSpec>()));
-//        products.add(new ProductData("Akai Wind synth EWI4000S Compatible", "Akai", new ArrayList<TechSpec>()));
-//        products.add(new ProductData("Alesis Compressor 3630 Compatible", "Alesis", ""));
-//        products.add(new ProductData("AC Ryan Media player ACR-PV73100 Compatible", "AC Ryan", ""));
-//        products.add(new ProductData("Acer Laptop 104378 Compatible", "Acer", ""));
-//        products.add(new ProductData("AAcmePoint Monitor VT988 Compatible", "AAcmePoint", ""));
-//        products.add(new ProductData("AG Neovo Monitor E-17DA Compatiblee", "AG Neovo", ""));
-//        products.add(new ProductData("AG Neovo Monitor E-560 Compatible", "AG Neovo", ""));
-//        products.add(new ProductData("Buffalo External hard drive DriveStation Velocity Compatible", "Buffalo", ""));
-//        products.add(new ProductData("ClickFree External hard drive HD1035 Co", "ClickFree", ""));
-//        products.add(new ProductData("ClickFree External hard drive HD1036 Compatible", "ClickFree", ""));
-//        products.add(new ProductData("ClickFree External hard drive HD2087 Compatible", "ClickFree ", ""));
-//        products.add(new ProductData("Sony DVD player DVP-FX720 Compatib", "Sony", ""));
-//        products.add(new ProductData("ATMT External hard drive HD 350U-P Compatible", "ATMT", ""));
-//
-//        for(ProductData productData: products) {
-//           long insert = db.insert(FeedReaderContract.FeedEntry.PRODUCT_TABLE_NAME, null, manager.generateProductValues(productData));
-//        }
-
-    }
-
-    public void initMade(SQLiteDatabase db){
-        ArrayList<DeviceData> devices = new ArrayList<DeviceData>();
-
-        devices.add(new DeviceData("Access", "Synth"));
-        devices.add(new DeviceData("NEC", "Laptop"));
-        devices.add(new DeviceData("ATMT", "External hard drive"));
-        devices.add(new DeviceData("ATMT", "Media hard drive"));
-        devices.add(new DeviceData("Acer", "Laptop"));
-        devices.add(new DeviceData("Acer", "Monitor"));
-        devices.add(new DeviceData("Acer", "Projector"));
-        devices.add(new DeviceData("Acer", "PSU part"));
-
-        for(DeviceData device: devices) {
-            long insert = db.insert(FeedReaderContract.FeedEntry.TABLE_NAME_MADE, null, manager.generateDeviceValues(device));
-        }
-    }
 
     private static final String SQL_DELETE_PRODUCT_ENTRIES =
             "DROP TABLE IF EXISTS " + FeedReaderContract.FeedEntry.PRODUCT_TABLE_NAME;
@@ -166,6 +127,9 @@ public class DbHelper extends SQLiteOpenHelper {
             "DROP TABLE IF EXISTS " + FeedReaderContract.FeedEntry.TABLE_NAME_TESTING;
 
     // private static final String SQL_INSERT_P1="INSERT INTO product VALUES (?,?,?)";
+
+    private static final String SQL_SELECT_PRODUCT =
+            "SELECT * FROM PRODUCT";
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -234,73 +198,159 @@ public class DbHelper extends SQLiteOpenHelper {
         }
     }
 
-    public class CacheProductName extends AsyncTask<String, Void, String> {
+    public class CacheProductName extends AsyncTask<Object, Void, JSONArray> {
+
         @Override
         protected void onPreExecute() {
             // TODO Auto-generated method stub
             super.onPreExecute();
-
         }
 
-        @Override
-        protected String doInBackground(String... arg0) {
-            // TODO Auto-generated method stub
-
-            String result = HttpUtils.doGet(Url.pname_url());
-            return result;
-        }
 
         @Override
-        protected void onPostExecute(String result) {
+        protected JSONArray doInBackground(Object... arg0) {
             // TODO Auto-generated method stub
-            super.onPostExecute(result);
+            JSONArray output_arr = new JSONArray();
 
-            System.out.println(result);
+            String result = "";
 
-            Document doc = null;
-            String product_id = "";
+            String url = "http://api.myjson.com/bins/1hcph0"; //"http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/mv2.54/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0ASELECT%20%20distinct%20%3Fprod_id%20%20%3Fpname%20%3Ftype%20%0AWHERE%20%0A%7B%20%0A%20%3Fprod_id%20%3Aproduct_name%20%3Fpname%20.%0A%20%3Fprod_id%20%3AisOfTypeCategory%20%3Ftype%20.%0A%0A%20filter%20(regex(%3Fpname%2C%20%22" + arg0[0] + "%22%2C%20%22i%22)" + args + ")%20.%0A%7D%0Aorder%20by%20%3Fpname%0ALIMIT%2010"+ offset +"&limit=100&infer=true&";
+
+            result = HttpUtils.doGet(url);
+            System.out.println("=======dbhelper result: ======" + result);
+
 
             try {
-                doc = DocumentHelper.parseText(result);
-                Element rootElt = doc.getRootElement();
-                Iterator iter = rootElt.elementIterator("results");
+                JSONObject obj = new JSONObject(result);
+                JSONArray mv_db_arr = obj.getJSONArray("mv_db");
+                JSONArray mv_db_arr2 = mv_db_arr.getJSONArray(0);
 
-                while (iter.hasNext()) {
-                    Element resultRecord = (Element) iter.next();
-                    Iterator itersElIterator = resultRecord.elementIterator("result");
-                    while (itersElIterator.hasNext()) {
-                        Element itemEle = (Element) itersElIterator.next();
-                        Iterator literLIterator = itemEle.elementIterator("binding");
-                        while(literLIterator.hasNext()){
-                            Element ele = (Element) literLIterator.next();
-                            if ("product".equals(ele.attributeValue("name"))) {
-                                product_id = ele.elementTextTrim("uri");
-                            }else if ("pname".equals(ele.attributeValue("name"))){
-                                String pname = ele.elementTextTrim("literal");
-                                if(!pname.equals(""))
-                                    db.insert(FeedReaderContract.FeedEntry.PRODUCT_TABLE_NAME, null, manager.generateProductValues(new ProductData(pname, product_id)));
 
-                            }
+                for(int i=0; i<mv_db_arr2.length(); i++) {
 
-                        }
+                    JSONObject item = (JSONObject) mv_db_arr2.get(i);
+                    Iterator<String> keys = item.keys();
 
+                    String category = keys.next();
+                    if(category.equals("product")){
+                        String category_val = item.optString(category);
+                        output_arr.put(category_val);
                     }
-
                 }
-
-            } catch (DocumentException e) {
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-            db.insert(FeedReaderContract.FeedEntry.PRODUCT_TABLE_NAME, null, manager.generateProductValues(new ProductData("Korg Tuner Pitchblack Compatible Power Supply Cable & in Car Charger", "1")));
+            return output_arr;
+        }
 
-            db.insert(FeedReaderContract.FeedEntry.PRODUCT_TABLE_NAME, null, manager.generateProductValues(new ProductData("Korg PSU part KA-183 Compatible Power Supply Cable & in Car Charger", "2")));
+        @Override
+        protected void onPostExecute(JSONArray result) {
+            // TODO Auto-generated method stub
+            super.onPostExecute(result);
 
-            db.insert(FeedReaderContract.FeedEntry.PRODUCT_TABLE_NAME, null, manager.generateProductValues(new ProductData("Dymo Label printer LT-100H Compatible Power Supply Plug Charger", "3")));
+            List<ProductData> newData = new ArrayList<>();
 
-            db.insert(FeedReaderContract.FeedEntry.PRODUCT_TABLE_NAME, null, manager.generateProductValues(new ProductData("Seagate PSU part FreeAgent 9NK2AE-500 Compatible Power Supply Plug Charger", "4")));
+            try {
+                for(int i=0; i<result.length(); i++){
+                    JSONObject jsonObject = new JSONObject(result.getString(i));
+                    System.out.println("json object");
+                    System.out.println(jsonObject);
 
+                    String name = jsonObject.getString("name");
+                    String productId = jsonObject.getString("productId");
+//if(jsonObject.toString().contains(searchStr))
+                    newData.add(new ProductData(productId, name, null));
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            saveToDB(newData);
         }
     }
+
+    private void saveToDB(List<ProductData> products) {
+        ContentValues values = new ContentValues();
+
+        for(int i=0; i<products.size(); i++) {
+            ProductData product = products.get(i);
+            values.put(FeedReaderContract.FeedEntry.PRODUCT_COLUMN_ID, product.getProductId());
+            values.put(FeedReaderContract.FeedEntry.PRODUCT_COLUMN_NAME, product.getName());
+            db.insert(FeedReaderContract.FeedEntry.PRODUCT_TABLE_NAME, null, values);
+        }
+    }
+
+
+//    public class CacheProductName extends AsyncTask<String, Void, String> {
+//        @Override
+//        protected void onPreExecute() {
+//            // TODO Auto-generated method stub
+//            super.onPreExecute();
+//
+//        }
+//
+//        @Override
+//        protected String doInBackground(String... arg0) {
+//            // TODO Auto-generated method stub
+//
+//            String result = HttpUtils.doGet(Url.pname_url());
+//            return result;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            // TODO Auto-generated method stub
+//            super.onPostExecute(result);
+//
+//            System.out.println("db helper cacheproduct");
+//            System.out.println(result);
+//
+//            Document doc = null;
+//            String product_id = "";
+//
+//            try {
+//                doc = DocumentHelper.parseText(result);
+//                Element rootElt = doc.getRootElement();
+//                Iterator iter = rootElt.elementIterator("results");
+//
+//                while (iter.hasNext()) {
+//                    Element resultRecord = (Element) iter.next();
+//                    Iterator itersElIterator = resultRecord.elementIterator("result");
+//                    while (itersElIterator.hasNext()) {
+//                        Element itemEle = (Element) itersElIterator.next();
+//                        Iterator literLIterator = itemEle.elementIterator("binding");
+//                        while(literLIterator.hasNext()){
+//                            Element ele = (Element) literLIterator.next();
+//                            if ("product".equals(ele.attributeValue("name"))) {
+//                                product_id = ele.elementTextTrim("uri");
+//                            }else if ("pname".equals(ele.attributeValue("name"))){
+//                                String pname = ele.elementTextTrim("literal");
+//                                if(!pname.equals(""))
+//                                    db.insert(FeedReaderContract.FeedEntry.PRODUCT_TABLE_NAME, null, manager.generateProductValues(new ProductData(pname, product_id)));
+//
+//                            }
+//
+//                        }
+//
+//                    }
+//
+//                }
+//
+//            } catch (DocumentException e) {
+//                e.printStackTrace();
+//            }
+//
+//            db.insert(FeedReaderContract.FeedEntry.PRODUCT_TABLE_NAME, null, manager.generateProductValues(new ProductData("Korg Tuner Pitchblack Compatible Power Supply Cable & in Car Charger", "1")));
+//
+//            db.insert(FeedReaderContract.FeedEntry.PRODUCT_TABLE_NAME, null, manager.generateProductValues(new ProductData("Korg PSU part KA-183 Compatible Power Supply Cable & in Car Charger", "2")));
+//
+//            db.insert(FeedReaderContract.FeedEntry.PRODUCT_TABLE_NAME, null, manager.generateProductValues(new ProductData("Dymo Label printer LT-100H Compatible Power Supply Plug Charger", "3")));
+//
+//            db.insert(FeedReaderContract.FeedEntry.PRODUCT_TABLE_NAME, null, manager.generateProductValues(new ProductData("Seagate PSU part FreeAgent 9NK2AE-500 Compatible Power Supply Plug Charger", "4")));
+//
+//        }
+//    }
 
 }

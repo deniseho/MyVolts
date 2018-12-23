@@ -1,9 +1,12 @@
 package com.example.cassie.myvolts.fragment;
 
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,6 +27,9 @@ import com.example.cassie.myvolts.R;
 import com.example.cassie.myvolts.ScannerActivity;
 import com.example.cassie.myvolts.adapter.ProductListAdapter;
 import com.example.cassie.myvolts.db.DbHelp;
+import com.example.cassie.myvolts.db.DbHelper;
+import com.example.cassie.myvolts.db.DbManager;
+import com.example.cassie.myvolts.db.FeedReaderContract;
 import com.example.cassie.myvolts.dto.ProductData;
 import com.example.cassie.myvolts.util.HttpUtils;
 import com.example.cassie.myvolts.util.NetworkUtil;
@@ -76,6 +82,7 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
     GetProducts db;
 
     DbHelp dbHelp;
+    DbManager manager;
 
     public ProductListFragment() {
         // Required empty public constructor
@@ -268,7 +275,7 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
 
 
 
-    public class GetProducts extends AsyncTask<Object, Integer, JSONArray> {
+    public class GetProducts extends AsyncTask<Object, Void, JSONArray> {
 
         ProgressDialog p = new ProgressDialog(getActivity(),
                 ProgressDialog.STYLE_SPINNER);
@@ -286,25 +293,25 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
         @Override
         protected JSONArray doInBackground(Object... arg0) {
             // TODO Auto-generated method stub
-            String offset = "";
+//            String offset = "";
             JSONArray output_arr = new JSONArray();
-
-            if(curPage > 0) {
-                offset = "%0AOFFSET%20" + curPage * 10;
-            }
-            curPage++;
-
+//
+//            if(curPage > 0) {
+//                offset = "%0AOFFSET%20" + curPage * 10;
+//            }
+//            curPage++;
+//
             String result = "";
 
             if(searchStr != null && !searchStr.equals("")) {
-                String args = "";
-                for(int i = 1; i < arg0.length; i++){
-                    args = args + "%20%7C%7C%20%20regex(%3Fpname%2C%20%22" + arg0[i] + "%22%2C%20%22i%22)";
-                }
+//                String args = "";
+//                for(int i = 1; i < arg0.length; i++){
+//                    args = args + "%20%7C%7C%20%20regex(%3Fpname%2C%20%22" + arg0[i] + "%22%2C%20%22i%22)";
+//                }
                 String url = "http://api.myjson.com/bins/1hcph0"; //"http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/mv2.54/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0ASELECT%20%20distinct%20%3Fprod_id%20%20%3Fpname%20%3Ftype%20%0AWHERE%20%0A%7B%20%0A%20%3Fprod_id%20%3Aproduct_name%20%3Fpname%20.%0A%20%3Fprod_id%20%3AisOfTypeCategory%20%3Ftype%20.%0A%0A%20filter%20(regex(%3Fpname%2C%20%22" + arg0[0] + "%22%2C%20%22i%22)" + args + ")%20.%0A%7D%0Aorder%20by%20%3Fpname%0ALIMIT%2010"+ offset +"&limit=100&infer=true&";
 
                 result = HttpUtils.doGet(url);
-                System.out.println("productfragment result: " + result);
+                System.out.println("=======productfragment result: ======" + result);
 
 
                 try {
@@ -320,24 +327,13 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
 
                         String category = keys.next();
                         if(category.equals("product")){
-
                             String category_val = item.optString(category);
-
-                            System.out.println("---------category");
-                            System.out.println(category);
-                            System.out.println("---------category_val");
-                            System.out.println(category_val);
-
                             output_arr.put(category_val);
                         }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-
-            }
-
-                System.out.println("=============== output_arr ===============");
-                System.out.println(output_arr);
+                }
             }
 
             return output_arr;
@@ -345,15 +341,47 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
 
         @Override
         protected void onPostExecute(JSONArray result) {
-            System.out.println("===============product onPostExecute result: ");
-            System.out.println(result);
-
-
             // TODO Auto-generated method stub
-            super.onPostExecute(result);
-            p.dismiss();
+//            super.onPostExecute(result);
+//            p.dismiss();
+//
+//            List<ProductData> newData = new ArrayList<>();
+//
+//            try {
+//                for(int i=0; i<result.length(); i++){
+//                    JSONObject jsonObject = new JSONObject(result.getString(i));
+//                    System.out.println("json object");
+//                    System.out.println(jsonObject);
+//
+//                    String name = jsonObject.getString("name");
+//                    String productId = jsonObject.getString("productId");
+////if(jsonObject.toString().contains(searchStr))
+//                    newData.add(new ProductData(productId, name, null));
+//                }
+//
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//
+//
+//            if(searchStr != null)
+//                Collections.sort(newData);
+//
+//            if (adapter == null) {
+//                adapter = new ProductListAdapter(products, getContext(), searchStr);
+//                listView.setAdapter(adapter);
+//                if(loadMoreView == null) {
+//                    loadMoreView = getActivity().getLayoutInflater().inflate(R.layout.load_more, null);
+//                    loadmorebutton = (TextView) loadMoreView.findViewById(R.id.loadMoreButton);
+//                    listView.addFooterView(loadmorebutton);
+//                }
+//            }
 
-            List<ProductData> newData = new ArrayList<>();
+
+//            products.addAll(newData);
+//            saveToDB(newData);
+            selectProducts(searchStr);
+//            adapter.setDatas(products);
 
 //            String product_id = "";
 //            String dname = "";
@@ -421,42 +449,6 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
 
 //                    newData.add(new ProductData("4","Seagate PSU part FreeAgent 9NK2AE-500 Compatible Power Supply Plug Charger",null));
 
-
-            try {
-                System.out.println("===============product onPostExecute result.getJSONObject(0): ");
-
-                for(int i=0; i<result.length(); i++){
-                    JSONObject jsonObject = new JSONObject(result.getString(i));
-                    System.out.println(jsonObject);
-
-                    String name = jsonObject.getString("name");
-                    System.out.print("Name: " + name);
-
-                    newData.add(new ProductData("id"+i ,name, null));
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-
-
-
-            if(searchStr != null)
-                        Collections.sort(newData);
-
-                    if (adapter == null) {
-                        adapter = new ProductListAdapter(products, getContext(), searchStr);
-                        listView.setAdapter(adapter);
-                        if(loadMoreView == null) {
-                            loadMoreView = getActivity().getLayoutInflater().inflate(R.layout.load_more, null);
-                            loadmorebutton = (TextView) loadMoreView.findViewById(R.id.loadMoreButton);
-                            listView.addFooterView(loadmorebutton);
-                        }
-                    }
-                    products.addAll(newData);
-                    adapter.setDatas(products);
-
 //                } catch (DocumentException e) {
 //                    e.printStackTrace();
 //                }
@@ -472,6 +464,59 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
             listView.setVisibility(View.GONE);
             product.addView(no_result);
         }
+    }
+
+    private void saveToDB(List<ProductData> products) {
+        SQLiteDatabase db = new DbHelper(this.getContext()).getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        for(int i=0; i<products.size(); i++) {
+            ProductData product = products.get(i);
+            values.put(FeedReaderContract.FeedEntry.PRODUCT_COLUMN_ID, product.getProductId());
+            values.put(FeedReaderContract.FeedEntry.PRODUCT_COLUMN_NAME, product.getName());
+            db.insert(FeedReaderContract.FeedEntry.PRODUCT_TABLE_NAME, null, values);
+        }
+    }
+
+    private void selectProducts(String searchStr) {
+
+        List<ProductData> productData = new ArrayList<ProductData>();
+
+        SQLiteDatabase db = new DbHelper(this.getContext()).getReadableDatabase();
+        String param = "%" + searchStr + "%";
+        Cursor cursor= db.rawQuery("SELECT * FROM product WHERE name LIKE '" + param + "'", null);
+        System.out.println("************selectproducts************" + searchStr);
+
+        if(cursor.moveToFirst()) {
+            do {
+//                String id = cursor.getString(0);
+                String pid = cursor.getString(1);
+                String name = cursor.getString(2);
+
+                productData.add(new ProductData(pid, name, null));
+
+            } while (cursor.moveToNext());
+
+            cursor.close();
+            db.close();
+        }
+
+
+        if(searchStr != null)
+            Collections.sort(productData);
+
+        if (adapter == null) {
+            adapter = new ProductListAdapter(products, getContext(), searchStr);
+            listView.setAdapter(adapter);
+            if(loadMoreView == null) {
+                loadMoreView = getActivity().getLayoutInflater().inflate(R.layout.load_more, null);
+                loadmorebutton = (TextView) loadMoreView.findViewById(R.id.loadMoreButton);
+                listView.addFooterView(loadmorebutton);
+            }
+        }
+
+        products.addAll(productData);
+        adapter.setDatas(products);
     }
 
 }
