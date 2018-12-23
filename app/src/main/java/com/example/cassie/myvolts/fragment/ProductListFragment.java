@@ -342,8 +342,8 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
         @Override
         protected void onPostExecute(JSONArray result) {
             // TODO Auto-generated method stub
-//            super.onPostExecute(result);
-//            p.dismiss();
+            super.onPostExecute(result);
+            p.dismiss();
 //
 //            List<ProductData> newData = new ArrayList<>();
 //
