@@ -19,7 +19,7 @@ import java.util.Iterator;
  */
 public class fetchData extends AsyncTask<Void,Void,JSONArray> {
     String data ="";
-    
+
     @Override
     protected JSONArray doInBackground(Void... params) {
         JSONArray output_arr = new JSONArray();

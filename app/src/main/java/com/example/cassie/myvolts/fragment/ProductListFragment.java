@@ -380,7 +380,7 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
 
 //            products.addAll(newData);
 //            saveToDB(newData);
-            selectProducts(searchStr);
+            getProductsFromDB(searchStr);
 //            adapter.setDatas(products);
 
 //            String product_id = "";
@@ -478,7 +478,7 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
         }
     }
 
-    private void selectProducts(String searchStr) {
+    private void getProductsFromDB(String searchStr) {
 
         List<ProductData> productData = new ArrayList<ProductData>();
 

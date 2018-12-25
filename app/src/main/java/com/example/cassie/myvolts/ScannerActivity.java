@@ -2,8 +2,6 @@ package com.example.cassie.myvolts;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -14,15 +12,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.cassie.myvolts.db.DbHelp;
 import com.example.cassie.myvolts.dto.ProductData;
 import com.example.cassie.myvolts.dto.TechSpec;
-import com.example.cassie.myvolts.testing.TaskResultActivity;
 import com.example.cassie.myvolts.testing.TestingBean;
 import com.example.cassie.myvolts.util.DigitUtil;
-import com.example.cassie.myvolts.util.HttpUtils;
 import com.example.cassie.myvolts.util.TestUtil;
 import com.flyco.dialog.entity.DialogMenuItem;
 import com.flyco.dialog.widget.NormalListDialog;
@@ -217,11 +212,11 @@ public class ScannerActivity extends AppCompatActivity {
             System.out.println(url);
             String result = "";
 
-            try {
-                result = HttpUtils.doGet(url);
-            }catch (RuntimeException re){
-
-            }
+//            try {
+//                result = HttpUtils.doGet(url);
+//            }catch (RuntimeException re){
+//
+//            }
 
             return result;
         }
@@ -289,7 +284,7 @@ public class ScannerActivity extends AppCompatActivity {
                 }
 
             }else{
-                shownorecord();
+//                shownorecord();
             }
         }
     }

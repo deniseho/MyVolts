@@ -1,42 +1,34 @@
 package com.example.cassie.myvolts.adapter;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
-
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.cassie.myvolts.ProductListActivity;
 import com.example.cassie.myvolts.R;
 import com.example.cassie.myvolts.dto.ProductData;
 import com.example.cassie.myvolts.util.DigitUtil;
 import com.example.cassie.myvolts.util.HttpUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -190,9 +182,9 @@ public class ProductListAdapter extends BaseAdapter{
         @Override
         protected String doInBackground(String... arg0) {
             // TODO Auto-generated method stub
-            String url = "http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/mv2.55/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0ASELECT%20%20%3Fimages%0AWHERE%20%0A%7B%20%0A%0A%20%3C" + arg0[0] + "%3E%20%3AhasImageFile%20%3Fimages%20.%0A%0A%7D%0A&limit=100&infer=true&";
+            String url = "http://api.myjson.com/bins/1hcph0";//"http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/mv2.55/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0ASELECT%20%20%3Fimages%0AWHERE%20%0A%7B%20%0A%0A%20%3C" + arg0[0] + "%3E%20%3AhasImageFile%20%3Fimages%20.%0A%0A%7D%0A&limit=100&infer=true&";
 
-            //System.out.println(url);
+            System.out.println(url);
             String result = "";
             try {
                 result = HttpUtils.doGet(url);
@@ -207,7 +199,7 @@ public class ProductListAdapter extends BaseAdapter{
             // TODO Auto-generated method stub
             super.onPostExecute(result);
 
-           // System.out.println(result);
+            System.out.println(result);
 
             Document doc = null;
 
