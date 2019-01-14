@@ -1,12 +1,9 @@
 package com.example.cassie.myvolts.fragment;
 
 import android.app.ProgressDialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,24 +24,18 @@ import com.example.cassie.myvolts.R;
 import com.example.cassie.myvolts.ScannerActivity;
 import com.example.cassie.myvolts.adapter.ProductListAdapter;
 import com.example.cassie.myvolts.db.DbHelp;
-import com.example.cassie.myvolts.db.DbHelper;
 import com.example.cassie.myvolts.db.DbManager;
-import com.example.cassie.myvolts.db.FeedReaderContract;
 import com.example.cassie.myvolts.dto.ProductData;
-import com.example.cassie.myvolts.util.HttpUtils;
 import com.example.cassie.myvolts.util.NetworkUtil;
 import com.example.cassie.myvolts.util.RegexUtil;
 import com.example.cassie.myvolts.util.TestUtil;
 import com.github.clans.fab.FloatingActionButton;
 
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import uk.ac.shef.wit.simmetrics.similaritymetrics.JaroWinkler;
@@ -293,50 +284,53 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
         @Override
         protected JSONArray doInBackground(Object... arg0) {
             // TODO Auto-generated method stub
-//            String offset = "";
-            JSONArray output_arr = new JSONArray();
-//
-//            if(curPage > 0) {
-//                offset = "%0AOFFSET%20" + curPage * 10;
-//            }
-//            curPage++;
-//
-            String result = "";
+            JSONArray arr = dbHelp.getProductsFromApi(searchStr);
+            return arr;
 
-            if(searchStr != null && !searchStr.equals("")) {
-//                String args = "";
-//                for(int i = 1; i < arg0.length; i++){
-//                    args = args + "%20%7C%7C%20%20regex(%3Fpname%2C%20%22" + arg0[i] + "%22%2C%20%22i%22)";
+////            String offset = "";
+//            JSONArray output_arr = new JSONArray();
+////
+////            if(curPage > 0) {
+////                offset = "%0AOFFSET%20" + curPage * 10;
+////            }
+////            curPage++;
+////
+//            String result = "";
+//
+//            if(searchStr != null && !searchStr.equals("")) {
+////                String args = "";
+////                for(int i = 1; i < arg0.length; i++){
+////                    args = args + "%20%7C%7C%20%20regex(%3Fpname%2C%20%22" + arg0[i] + "%22%2C%20%22i%22)";
+////                }
+//                String url = "http://api.myjson.com/bins/1hcph0"; //"http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/mv2.54/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0ASELECT%20%20distinct%20%3Fprod_id%20%20%3Fpname%20%3Ftype%20%0AWHERE%20%0A%7B%20%0A%20%3Fprod_id%20%3Aproduct_name%20%3Fpname%20.%0A%20%3Fprod_id%20%3AisOfTypeCategory%20%3Ftype%20.%0A%0A%20filter%20(regex(%3Fpname%2C%20%22" + arg0[0] + "%22%2C%20%22i%22)" + args + ")%20.%0A%7D%0Aorder%20by%20%3Fpname%0ALIMIT%2010"+ offset +"&limit=100&infer=true&";
+//
+//                result = HttpUtils.doGet(url);
+//                System.out.println("=======productfragment result: ======" + result);
+//
+//
+//                try {
+//                    JSONObject obj = new JSONObject(result);
+//                    JSONArray mv_db_arr = obj.getJSONArray("mv_db");
+//                    JSONArray mv_db_arr2 = mv_db_arr.getJSONArray(0);
+//
+//
+//                    for(int i=0; i<mv_db_arr2.length(); i++) {
+//
+//                        JSONObject item = (JSONObject) mv_db_arr2.get(i);
+//                        Iterator<String> keys = item.keys();
+//
+//                        String category = keys.next();
+//                        if(category.equals("product")){
+//                            String category_val = item.optString(category);
+//                            output_arr.put(category_val);
+//                        }
+//                    }
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
 //                }
-                String url = "http://api.myjson.com/bins/1hcph0"; //"http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/mv2.54/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0ASELECT%20%20distinct%20%3Fprod_id%20%20%3Fpname%20%3Ftype%20%0AWHERE%20%0A%7B%20%0A%20%3Fprod_id%20%3Aproduct_name%20%3Fpname%20.%0A%20%3Fprod_id%20%3AisOfTypeCategory%20%3Ftype%20.%0A%0A%20filter%20(regex(%3Fpname%2C%20%22" + arg0[0] + "%22%2C%20%22i%22)" + args + ")%20.%0A%7D%0Aorder%20by%20%3Fpname%0ALIMIT%2010"+ offset +"&limit=100&infer=true&";
-
-                result = HttpUtils.doGet(url);
-                System.out.println("=======productfragment result: ======" + result);
-
-
-                try {
-                    JSONObject obj = new JSONObject(result);
-                    JSONArray mv_db_arr = obj.getJSONArray("mv_db");
-                    JSONArray mv_db_arr2 = mv_db_arr.getJSONArray(0);
-
-
-                    for(int i=0; i<mv_db_arr2.length(); i++) {
-
-                        JSONObject item = (JSONObject) mv_db_arr2.get(i);
-                        Iterator<String> keys = item.keys();
-
-                        String category = keys.next();
-                        if(category.equals("product")){
-                            String category_val = item.optString(category);
-                            output_arr.put(category_val);
-                        }
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            return output_arr;
+//            }
+//
+//            return output_arr;
         }
 
         @Override
@@ -344,7 +338,8 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
             // TODO Auto-generated method stub
             super.onPostExecute(result);
             p.dismiss();
-//
+
+////move to dbhelper
 //            List<ProductData> newData = new ArrayList<>();
 //
 //            try {
@@ -380,7 +375,7 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
 
 //            products.addAll(newData);
 //            saveToDB(newData);
-            getProductsFromDB(searchStr);
+            getProducts(searchStr);
 //            adapter.setDatas(products);
 
 //            String product_id = "";
@@ -466,41 +461,24 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
         }
     }
 
-    private void saveToDB(List<ProductData> products) {
-        SQLiteDatabase db = new DbHelper(this.getContext()).getWritableDatabase();
-        ContentValues values = new ContentValues();
+//    private void saveToDB(List<ProductData> products) {
+//        SQLiteDatabase db = new DbHelper(this.getContext()).getWritableDatabase();
+//        ContentValues values = new ContentValues();
+//
+//        for(int i=0; i<products.size(); i++) {
+//            ProductData product = products.get(i);
+//            values.put(FeedReaderContract.FeedEntry.PRODUCT_COLUMN_ID, product.getProductId());
+//            values.put(FeedReaderContract.FeedEntry.PRODUCT_COLUMN_NAME, product.getName());
+//            db.insert(FeedReaderContract.FeedEntry.PRODUCT_TABLE_NAME, null, values);
+//        }
+//    }
 
-        for(int i=0; i<products.size(); i++) {
-            ProductData product = products.get(i);
-            values.put(FeedReaderContract.FeedEntry.PRODUCT_COLUMN_ID, product.getProductId());
-            values.put(FeedReaderContract.FeedEntry.PRODUCT_COLUMN_NAME, product.getName());
-            db.insert(FeedReaderContract.FeedEntry.PRODUCT_TABLE_NAME, null, values);
-        }
-    }
 
-    private void getProductsFromDB(String searchStr) {
 
+    private void getProducts(String searchStr) {
         List<ProductData> productData = new ArrayList<ProductData>();
 
-        SQLiteDatabase db = new DbHelper(this.getContext()).getReadableDatabase();
-        String param = "%" + searchStr + "%";
-        Cursor cursor= db.rawQuery("SELECT * FROM product WHERE name LIKE '" + param + "'", null);
-        System.out.println("************selectproducts************" + searchStr);
-
-        if(cursor.moveToFirst()) {
-            do {
-//                String id = cursor.getString(0);
-                String pid = cursor.getString(1);
-                String name = cursor.getString(2);
-
-                productData.add(new ProductData(pid, name, null));
-
-            } while (cursor.moveToNext());
-
-            cursor.close();
-            db.close();
-        }
-
+        productData = dbHelp.serachProducts(searchStr);
 
         if(searchStr != null)
             Collections.sort(productData);
@@ -519,4 +497,39 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
         adapter.setDatas(products);
     }
 
+//    private JSONArray getProductsFromApi(){
+//            JSONArray output_arr = new JSONArray();
+//            String result = "";
+//
+//            if(searchStr != null && !searchStr.equals("")) {
+//                String url = "http://api.myjson.com/bins/1hcph0"; //"http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/mv2.54/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0ASELECT%20%20distinct%20%3Fprod_id%20%20%3Fpname%20%3Ftype%20%0AWHERE%20%0A%7B%20%0A%20%3Fprod_id%20%3Aproduct_name%20%3Fpname%20.%0A%20%3Fprod_id%20%3AisOfTypeCategory%20%3Ftype%20.%0A%0A%20filter%20(regex(%3Fpname%2C%20%22" + arg0[0] + "%22%2C%20%22i%22)" + args + ")%20.%0A%7D%0Aorder%20by%20%3Fpname%0ALIMIT%2010"+ offset +"&limit=100&infer=true&";
+//
+//                result = HttpUtils.doGet(url);
+//                System.out.println("=======getProductsFromApi result: ======" + result);
+//
+//
+//                try {
+//                    JSONObject obj = new JSONObject(result);
+//                    JSONArray mv_db_arr = obj.getJSONArray("mv_db");
+//                    JSONArray mv_db_arr2 = mv_db_arr.getJSONArray(0);
+//
+//
+//                    for(int i=0; i<mv_db_arr2.length(); i++) {
+//
+//                        JSONObject item = (JSONObject) mv_db_arr2.get(i);
+//                        Iterator<String> keys = item.keys();
+//
+//                        String category = keys.next();
+//                        if(category.equals("product")){
+//                            String category_val = item.optString(category);
+//                            output_arr.put(category_val);
+//                        }
+//                    }
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            return output_arr;
+//        }
 }

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.example.cassie.myvolts.MainActivity"
-    android:background="@color/colorPrimaryDark">
+    android:background="@color/white">
     <FrameLayout
         android:id="@+id/content"
         android:layout_width="match_parent"
@@ -33,19 +33,19 @@
             <!--android:layout_marginBottom="10dp"-->
             <!--android:id="@+id/button"/>-->
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/button">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="5dp"
-                android:textSize="24sp"
-                android:id="@+id/fetcheddata"
-                android:textColor="@color/white"
-                android:hint="Fetched Text Here!!!"/>
-        </ScrollView>
+        <!--<ScrollView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@id/button">-->
+            <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:padding="5dp"-->
+                <!--android:textSize="24sp"-->
+                <!--android:id="@+id/fetcheddata"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:hint="Fetched Text Here!!!"/>-->
+        <!--</ScrollView>-->
     </FrameLayout>
 
     <!--<RadioGroup-->

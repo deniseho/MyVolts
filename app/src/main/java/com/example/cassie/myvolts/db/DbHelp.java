@@ -9,11 +9,16 @@ import android.text.TextUtils;
 import com.example.cassie.myvolts.dto.HistoryData;
 import com.example.cassie.myvolts.dto.HotData;
 import com.example.cassie.myvolts.dto.ProductData;
-import com.example.cassie.myvolts.fetchData;
 import com.example.cassie.myvolts.testing.TestingBean;
+import com.example.cassie.myvolts.util.HttpUtils;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class DbHelp{
@@ -28,7 +33,6 @@ public class DbHelp{
     public DbHelp(Context context){
         dbHelper = new DbHelper(context);
         mwcdb = dbHelper.getWritableDatabase();
-
     }
 
     //----- initTestData  ---------
@@ -234,6 +238,66 @@ public class DbHelp{
         return datas;
     }
 
+    public List<ProductData> serachProducts(String searchStr) {
+        List<ProductData> productData = new ArrayList<ProductData>();
+        String param = "%" + searchStr + "%";
+        Cursor cursor= mwcdb.rawQuery("SELECT * FROM product WHERE name LIKE '" + param + "'", null);
+
+        if(cursor.moveToFirst()) {
+            do {
+//                String id = cursor.getString(0);
+                String pid = cursor.getString(1);
+                String name = cursor.getString(2);
+
+                productData.add(new ProductData(pid, name, null));
+
+            } while (cursor.moveToNext());
+
+            cursor.close();
+            mwcdb.close();
+        }
+
+        return productData;
+    }
+
+    public JSONArray getProductsFromApi(String searchStr){
+        JSONArray output_arr = new JSONArray();
+        String result = "";
+
+        if(searchStr != null && !searchStr.equals("")) {
+            String url = "http://api.myjson.com/bins/1hcph0"; //"http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/mv2.54/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0ASELECT%20%20distinct%20%3Fprod_id%20%20%3Fpname%20%3Ftype%20%0AWHERE%20%0A%7B%20%0A%20%3Fprod_id%20%3Aproduct_name%20%3Fpname%20.%0A%20%3Fprod_id%20%3AisOfTypeCategory%20%3Ftype%20.%0A%0A%20filter%20(regex(%3Fpname%2C%20%22" + arg0[0] + "%22%2C%20%22i%22)" + args + ")%20.%0A%7D%0Aorder%20by%20%3Fpname%0ALIMIT%2010"+ offset +"&limit=100&infer=true&";
+
+            result = HttpUtils.doGet(url);
+            System.out.println("=======getProductsFromApi result: ======" + result);
+
+
+            try {
+                JSONObject obj = new JSONObject(result);
+                JSONArray mv_db_arr = obj.getJSONArray("mv_db");
+                JSONArray mv_db_arr2 = mv_db_arr.getJSONArray(0);
+
+
+                for(int i=0; i<mv_db_arr2.length(); i++) {
+
+                    JSONObject item = (JSONObject) mv_db_arr2.get(i);
+                    Iterator<String> keys = item.keys();
+
+                    String category = keys.next();
+                    if(category.equals("product")){
+                        String category_val = item.optString(category);
+                        output_arr.put(category_val);
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return output_arr;
+    }
+
+
+
     public void clearHis(){
         if(mwcdb!=null){
             mwcdb.execSQL("delete from his");
@@ -243,6 +307,12 @@ public class DbHelp{
     public void deleteHisByName(String name){
         if(mwcdb!=null){
             mwcdb.execSQL("delete from his where name=?", new String[]{name});
+        }
+    }
+
+    public void deleteProducts(){
+        if(mwcdb!=null){
+            mwcdb.execSQL("delete from products");
         }
     }
 /*
