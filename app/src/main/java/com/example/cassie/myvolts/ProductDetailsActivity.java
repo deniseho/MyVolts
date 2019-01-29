@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -64,9 +65,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
     private ArrayList<DialogMenuItem> mMenuItems = new ArrayList<>();
     private DbHelp dbHelp;
-//    Button click;
-//    public static String data;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -286,6 +284,15 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
             layout.addView(no_result);
 
+            Button updateDataButton = (Button)findViewById(R.id.updateDataButton);
+
+            updateDataButton.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    dbHelp.updateDataFromApi("");
+                }
+            });
         }
     }
 }

@@ -19,6 +19,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -79,6 +81,30 @@ public class DbHelper extends SQLiteOpenHelper {
                     FeedReaderContract.FeedEntry.TEST_COLUMN_NAME_WORKTIME + " TEXT," +
                     FeedReaderContract.FeedEntry.TEST_COLUMN_NAME_SCANBTNCLICK + " TEXT)";
 
+
+
+    private static final String SQL_DELETE_PRODUCT_ENTRIES =
+            "DROP TABLE IF EXISTS " + FeedReaderContract.FeedEntry.PRODUCT_TABLE_NAME;
+
+    private static final String SQL_DELETE_HIS_ENTRIES =
+            "DROP TABLE IF EXISTS " + FeedReaderContract.FeedEntry.TABLE_NAME_HISTORY;
+
+    private static final String SQL_DELETE_MADE_ENTRIES =
+            "DROP TABLE IF EXISTS " + FeedReaderContract.FeedEntry.TABLE_NAME_MADE;
+
+    private static final String SQL_DELETE_MANU_ENTRIES =
+            "DROP TABLE IF EXISTS " + FeedReaderContract.FeedEntry.TABLE_NAME_MANU;
+
+    private static final String SQL_DELETE_TEST_ENTRIES =
+            "DROP TABLE IF EXISTS " + FeedReaderContract.FeedEntry.TABLE_NAME_TESTING;
+
+    // private static final String SQL_INSERT_P1="INSERT INTO product VALUES (?,?,?)";
+
+    private static final String SQL_SELECT_PRODUCT =
+            "SELECT * FROM PRODUCT";
+
+
+
     public static DbHelper getDbHelp(Context context){
         if(dbHelp==null){
             dbHelp=new DbHelper(context);
@@ -102,6 +128,9 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
         this.db = db;
+
+//        boolean isUpdate = checkIfUpdateData();
+
         if(db != null && db.isOpen()) {
             CacheManu cacheManu = new CacheManu();
             cacheManu.execute();
@@ -110,26 +139,44 @@ public class DbHelper extends SQLiteOpenHelper {
         }
     }
 
+    public String checkIfUpdateData() {
+        // check if the app is going to update the data from API
+        System.out.println("------------checkIfUpdateData: ");
+        String result = "";
 
-    private static final String SQL_DELETE_PRODUCT_ENTRIES =
-            "DROP TABLE IF EXISTS " + FeedReaderContract.FeedEntry.PRODUCT_TABLE_NAME;
+        try {
+            //Dates to compare
+            String CurrentDate=  "09/24/2015";
+            String FinalDate=  "09/26/2015";
 
-    private static final String SQL_DELETE_HIS_ENTRIES =
-            "DROP TABLE IF EXISTS " + FeedReaderContract.FeedEntry.TABLE_NAME_HISTORY;
+            Date date1;
+            Date date2;
 
-    private static final String SQL_DELETE_MADE_ENTRIES =
-            "DROP TABLE IF EXISTS " + FeedReaderContract.FeedEntry.TABLE_NAME_MADE;
+            SimpleDateFormat dates = new SimpleDateFormat("MM/dd/yyyy");
 
-    private static final String SQL_DELETE_MANU_ENTRIES =
-            "DROP TABLE IF EXISTS " + FeedReaderContract.FeedEntry.TABLE_NAME_MANU;
+            //Setting dates
+            date1 = (Date) dates.parse(CurrentDate);
+            date2 = (Date) dates.parse(FinalDate);
 
-    private static final String SQL_DELETE_TEST_ENTRIES =
-            "DROP TABLE IF EXISTS " + FeedReaderContract.FeedEntry.TABLE_NAME_TESTING;
+            //Comparing dates
+            long difference = Math.abs(date1.getTime() - date2.getTime());
+            long differenceDates = difference / (24 * 60 * 60 * 1000);
 
-    // private static final String SQL_INSERT_P1="INSERT INTO product VALUES (?,?,?)";
+            //Convert long to String
+            String dayDifference = Long.toString(differenceDates);
 
-    private static final String SQL_SELECT_PRODUCT =
-            "SELECT * FROM PRODUCT";
+            System.out.println("dayDifference: ");
+            System.out.println(dayDifference);
+
+            result = dayDifference;
+
+        } catch (Exception exception) {
+            System.out.println("exception " + exception);
+        }
+
+        return result;
+    }
+
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -217,7 +264,6 @@ public class DbHelper extends SQLiteOpenHelper {
             String url = "http://api.myjson.com/bins/1hcph0"; //"http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/mv2.54/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0ASELECT%20%20distinct%20%3Fprod_id%20%20%3Fpname%20%3Ftype%20%0AWHERE%20%0A%7B%20%0A%20%3Fprod_id%20%3Aproduct_name%20%3Fpname%20.%0A%20%3Fprod_id%20%3AisOfTypeCategory%20%3Ftype%20.%0A%0A%20filter%20(regex(%3Fpname%2C%20%22" + arg0[0] + "%22%2C%20%22i%22)" + args + ")%20.%0A%7D%0Aorder%20by%20%3Fpname%0ALIMIT%2010"+ offset +"&limit=100&infer=true&";
 
             result = HttpUtils.doGet(url);
-            System.out.println("======= cachproduct: ======" + result);
 
 
             try {
@@ -259,7 +305,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
                     String name = jsonObject.getString("name");
                     String productId = jsonObject.getString("productId");
-//if(jsonObject.toString().contains(searchStr))
                     newData.add(new ProductData(productId, name, null));
                 }
 

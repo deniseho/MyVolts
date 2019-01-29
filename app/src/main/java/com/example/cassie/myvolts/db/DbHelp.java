@@ -50,6 +50,9 @@ public class DbHelp{
 
 //        new fetchData().execute();
 
+        dbHelper.checkIfUpdateData();
+
+
     }
 
     public List<String> getInitTestData(String searchText){
@@ -260,7 +263,7 @@ public class DbHelp{
         return productData;
     }
 
-    public JSONArray getProductsFromApi(String searchStr){
+    public JSONArray updateDataFromApi(String searchStr){
         JSONArray output_arr = new JSONArray();
         String result = "";
 

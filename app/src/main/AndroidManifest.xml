@@ -57,7 +57,11 @@
             android:theme="@style/AppTheme" />
         -->
         <activity android:name=".testing.TaskResultActivity" />
-        <activity android:name=".TabActivity"></activity>
+        <activity android:name=".TabActivity" />
+        <activity
+            android:name=".util.EmailActivity"
+            android:label="@string/title_activity_email"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

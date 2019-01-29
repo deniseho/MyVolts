@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         dbHelp = new DbHelp(this);
         dbHelp.initTestData();
 
+
         sharedPreferences = getSharedPreferences("base64", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
 

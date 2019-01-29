@@ -54,7 +54,6 @@ public class ConfirmFragment extends DialogFragment {
                 dismiss();
             }
         });
-
         return rootView;
     }
 

@@ -230,7 +230,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         if(hisitem.getIsWholeProduct().equals("0")) {
             search.setText(hisitem.name);
             search.dismissDropDown();
-            search(hisitem.name);
+            showAlertDialog(hisitem.name);
+//            search(hisitem.name);
         }else if(hisitem.getIsWholeProduct().equals("1")){
             ForwardToSannerActivity(hisitem.getProductId()
 
@@ -405,30 +406,13 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     Button searchClick;
 
     private void showAlertDialog(final String brand) {
-//        FragmentManager fm = getSupportFragmentManager();
-//        ConfirmFragment alertDialog = ConfirmFragment.newInstance(brand);
-//        alertDialog.show(fm, "fragment_confirm");
-//
-//        searchClick = (Button) findViewById(R.id.confirm_search);
-//        searchClick.setOnClickListener(new View.OnClickListener() {
-//                public void onClick(View view) {
-//                    Intent dialIntent =  new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + "111"));
-//                    startActivity(dialIntent);
-//                }
-//            });
-
-
         android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(SearchActivity.this);
-//        builder.setMessage(brand);
-//        builder.setTitle("Confirm");
-//        builder.setIcon(android.R.drawable.ic_dialog_info);
+
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.fragment_confirm, null);
         builder.setView(dialogView);
         TextView brandTextView = (TextView)dialogView.findViewById(R.id.brand_name);
         brandTextView.setText(brand);
-
-
 
         Button confirmSearch = (Button) dialogView.findViewById(R.id.confirm_search);
         Button confirmCancel = (Button) dialogView.findViewById(R.id.confirm_cancel);
