@@ -97,8 +97,6 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
             type = bundle.getString("device");
             model = bundle.getString("model");
         }
-
-
     }
 
     @Override

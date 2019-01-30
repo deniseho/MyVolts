@@ -144,6 +144,7 @@ public class ProductListActivity extends ActionBarActivity implements AbsListVie
     int count = 0;
     private int mPreviousVisibleItem;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -186,8 +187,6 @@ public class ProductListActivity extends ActionBarActivity implements AbsListVie
         //testTask2();
 
         sampleCustomView();
-
-
     }
 
 

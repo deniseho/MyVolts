@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -77,6 +79,11 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnScroll
 
     GetDeviceByName db;
 
+
+    private EditText mailTo;
+    private EditText mailSubject;
+    private EditText mailMessage;
+
     public DeviceListFragment() {
         // Required empty public constructor
         pis = new ArrayList<>();
@@ -98,7 +105,6 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnScroll
             type = bundle.getString("device");
             model = bundle.getString("model");
         }
-
     }
 
     @Override
@@ -121,6 +127,19 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnScroll
                 }
             });
             devicefrag = (FrameLayout) view.findViewById(R.id.device_fragment);
+
+
+            mailTo = (EditText) view.findViewById(R.id.edit_text_id);
+            mailSubject = (EditText) view.findViewById(R.id.edit_text_subject);
+            mailMessage = (EditText) view.findViewById(R.id.edit_text_message);
+
+            Button buttonSend = (Button) view.findViewById(R.id.email_send);
+            buttonSend.setOnClickListener(new View.OnClickListener(){
+                public void onClick(View v){
+                    sendMail();
+                    System.out.println("clicked send email");
+                }
+            });
         }
 
         initInternetStatusPage(searchStr);
@@ -128,6 +147,21 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnScroll
         return view;
     }
 
+    private void sendMail() {
+        String recipientList = mailTo.getText().toString();
+        String[] recipients = recipientList.split(",");
+
+        String subject = mailSubject.getText().toString();
+        String message = mailMessage.getText().toString();
+
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_EMAIL, recipients);
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        intent.putExtra(Intent.EXTRA_TEXT, message);
+
+        intent.setType("message/rcf822");
+        startActivity(Intent.createChooser(intent,"Choose an email client"));
+    }
 
     private void initInternetStatusPage(String searchStr) {
         boolean internetStatus = NetworkUtil.isNetworkAvailable(getActivity());
@@ -252,14 +286,14 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnScroll
 
     public class GetDeviceByName extends AsyncTask<String, Void, String> {
 
-        //ProgressDialog p = new ProgressDialog(getActivity());
+        ProgressDialog p = new ProgressDialog(getActivity());
 
         @Override
         protected void onPreExecute() {
             // TODO Auto-generated method stub
             super.onPreExecute();
-           // p.setMessage("Loading...");
-           // p.show();
+            p.setMessage("Loading...");
+            p.show();
         }
 
         @Override
@@ -445,7 +479,7 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnScroll
         if (null != listView) {
             no_result = getActivity().getLayoutInflater().inflate(R.layout.no_results, null);
             listView.setVisibility(View.GONE);
-            devicefrag.addView(no_result);
+//            devicefrag.addView(no_result);
         }
     }
 }

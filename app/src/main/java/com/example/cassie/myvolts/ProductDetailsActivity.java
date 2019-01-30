@@ -2,13 +2,13 @@ package com.example.cassie.myvolts;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -55,6 +55,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
     ScrollView scroll;
     @BindView(R.id.layout)
     RelativeLayout layout;
+    @BindView(R.id.email_layout)
+    RelativeLayout email_layout;
 
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -283,16 +285,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
             listview.setVisibility(View.GONE);
 
             layout.addView(no_result);
-
-            Button updateDataButton = (Button)findViewById(R.id.updateDataButton);
-
-            updateDataButton.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    dbHelp.updateDataFromApi("");
-                }
-            });
         }
     }
 }

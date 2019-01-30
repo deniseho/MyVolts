@@ -142,10 +142,10 @@
             android:id="@+id/productlist"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
             android:cacheColorHint="@color/transparent"
             android:headerDividersEnabled="false">
         </ListView>
-
     </RelativeLayout>
 
     <RelativeLayout

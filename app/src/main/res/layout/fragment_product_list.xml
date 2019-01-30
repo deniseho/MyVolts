@@ -5,6 +5,7 @@
     android:id="@+id/product_fragment"
     tools:context="com.example.cassie.myvolts.fragment.ProductListFragment">
 
+
     <ListView
         android:id="@+id/productlist"
         android:layout_width="fill_parent"
@@ -21,5 +22,4 @@
         android:layout_marginRight="8dp"
         android:src="@drawable/ic_back_to_top"
         android:layout_gravity="bottom|right"/>
-
 </FrameLayout>
