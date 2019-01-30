@@ -109,7 +109,7 @@ public class ScannerActivity extends AppCompatActivity {
                     + tech.getAmp() + " " + "Tip_Length: " + tech.getTip(), R.drawable.ic_tech));
         }
         final NormalListDialog dialog = new NormalListDialog(mContext, mMenuItems);
-        dialog.title("All Technique Specs")
+        dialog.title("All Technical Specs")
                 .isTitleShow(true)
                 .itemPressColor(Color.parseColor("#85D3EF"))
                 .itemTextColor(Color.parseColor("#303030"))
