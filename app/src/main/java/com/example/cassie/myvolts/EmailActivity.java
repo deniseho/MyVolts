@@ -31,11 +31,23 @@ public class EmailActivity extends AppCompatActivity {
         mailSubject = (EditText) findViewById(R.id.edit_text_subject);
         mailMessage = (EditText) findViewById(R.id.edit_text_message);
 
-        Button buttonSend = (Button) findViewById(R.id.email_send);
-        buttonSend.setOnClickListener(new View.OnClickListener(){
+        Button buttonEmailSend = (Button) findViewById(R.id.email_send);
+        Button buttonUpdateData = (Button) findViewById(R.id.update_data);
+
+        buttonEmailSend.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                sendMail();
+                try {
+                    sendMail();
+
+                }catch(Exception ex){
+                }
                 System.out.println("clicked send email");
+            }
+        });
+
+        buttonUpdateData.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                System.out.println("clicked buttonUpdateData");
             }
         });
     }

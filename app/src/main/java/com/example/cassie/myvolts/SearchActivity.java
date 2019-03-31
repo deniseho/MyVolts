@@ -1,5 +1,6 @@
 package com.example.cassie.myvolts;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,7 +9,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -20,7 +20,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -314,7 +314,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 TabActivity.class);
         intent.putExtra("search",st.trim());
         startActivity(intent);
-
     }
 
     @Override
@@ -403,38 +402,62 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         showAlertDialog(searchInput);
     }
 
-    Button searchClick;
-
+    private EditText editText;
     private void showAlertDialog(final String brand) {
-        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(SearchActivity.this);
+//        AlertDialog.Builder builder = new AlertDialog.Builder(SearchActivity.this);
+//
+//        LayoutInflater inflater = this.getLayoutInflater();
+//        View dialogView = inflater.inflate(R.layout.fragment_confirm, null);
+//        builder.setView(dialogView);
+//        TextView brandTextView = (TextView)dialogView.findViewById(R.id.brand_name);
+//        brandTextView.setText(brand);
+//
+//        Button confirmSearch = (Button) dialogView.findViewById(R.id.confirm_search);
+//        Button confirmCancel = (Button) dialogView.findViewById(R.id.confirm_cancel);
+//
+//        final AlertDialog dialog = builder.create();
+//
+//        confirmSearch.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                dialog.dismiss();
+//                search(brand);
+//            }
+//        });
+//
+//        confirmCancel.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                dialog.dismiss();
+//            }
+//        });
+//
+//
+//        builder.create().show();
+
+
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
 
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.fragment_confirm, null);
-        builder.setView(dialogView);
+        dialog.setView(dialogView);
         TextView brandTextView = (TextView)dialogView.findViewById(R.id.brand_name);
         brandTextView.setText(brand);
 
-        Button confirmSearch = (Button) dialogView.findViewById(R.id.confirm_search);
-        Button confirmCancel = (Button) dialogView.findViewById(R.id.confirm_cancel);
-
-        final AlertDialog dialog = builder.create();
-
-        confirmSearch.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                dialog.dismiss();
+        dialog.setPositiveButton("Search for cables", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
                 search(brand);
             }
-        });
-
-        confirmCancel.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                dialog.dismiss();
+        }) ;
+        dialog.setNegativeButton("cancel",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                editText = (EditText) findViewById(R.id.search);
+                editText.setSelection(editText.getText().length());
+                editText.requestFocus();
             }
         });
-
-
-        builder.create().show();
-
+        AlertDialog alertDialog=dialog.create();
+        alertDialog.show();
     }
+
 }
 

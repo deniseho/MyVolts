@@ -274,8 +274,8 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
         protected void onPreExecute() {
             // TODO Auto-generated method stub
             super.onPreExecute();
-            p.setMessage("Loading...");
-            p.show();
+//            p.setMessage("Loading...");
+//            p.show();
         }
 
 
@@ -386,7 +386,7 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
 //                            removeListViewToNoResults();
 //                            break;
 //                        }else if (!itersElIterator.hasNext()) {
-//                            //Toast.makeText(getContext(), "No more results...", Toast.LENGTH_SHORT).show();
+//                            //Toast.makeTcext(getContext(), "No more results...", Toast.LENGTH_SHORT).show();
 //                        }
 //                        count++;
 //                        while (itersElIterator.hasNext()) {

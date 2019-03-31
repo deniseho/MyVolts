@@ -227,8 +227,6 @@ public class ScannerActivity extends AppCompatActivity {
             super.onPostExecute(result);
             p.dismiss();
 
-            System.out.println(result);
-
             String pname = "";
             String x = "";
             String y = "";
@@ -284,7 +282,7 @@ public class ScannerActivity extends AppCompatActivity {
                 }
 
             }else{
-//                shownorecord();
+                shownorecord();
             }
         }
     }

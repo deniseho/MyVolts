@@ -25,27 +25,29 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <!--<activity-->
-            <!--android:name=".testing.TestingTasksSelection"-->
-            <!--android:windowSoftInputMode="adjustResize">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
+        <!-- <activity -->
+        <!-- android:name=".testing.TestingTasksSelection" -->
+        <!-- android:windowSoftInputMode="adjustResize"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
         <activity
-        android:name=".WelcomeActivity"
-        android:windowSoftInputMode="adjustResize">
-        <intent-filter>
-        <action android:name="android.intent.action.MAIN" />
+            android:name=".WelcomeActivity"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-        <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
-        <!--<activity-->
-            <!--android:name=".WelcomeActivity"-->
-            <!--android:screenOrientation="portrait" />-->
+        <!-- <activity -->
+        <!-- android:name=".WelcomeActivity" -->
+        <!-- android:screenOrientation="portrait" /> -->
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait" />
@@ -67,6 +69,10 @@
         -->
         <activity android:name=".testing.TaskResultActivity" />
         <activity android:name=".TabActivity" />
+        <activity
+            android:name=".NoResultsPageActivity"
+            android:label="@string/title_activity_no_results_page"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

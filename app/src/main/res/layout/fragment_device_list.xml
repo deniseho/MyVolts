@@ -1,111 +1,123 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/device_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/device_fragment"
     tools:context="com.example.cassie.myvolts.fragment.DeviceListFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <ListView
         android:id="@+id/devicelist"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-    </ListView>
+        android:layout_height="wrap_content"></ListView>
+
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:id="@+id/email_layout"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
-
-        <LinearLayout
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/email_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/white"
-            android:orientation="vertical"
-            android:padding="12dp">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="26dp"
-                android:gravity="center"
-                android:padding="30dp"
-                android:text="Sorry, no results." />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="16dp"
-                android:gravity="center"
-                android:paddingBottom="10dp"
-                android:text="If you need any service, please contact us:" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@android:color/white"
                 android:orientation="vertical"
-                android:padding="16dp"
-                android:background="#f1f1f1">
+                android:padding="12dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="To:" />
-
-                <EditText
-                    android:id="@+id/edit_text_id"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"
-                    android:text="hoc2@tcd.ie" />
+                    android:gravity="center"
+                    android:padding="30dp"
+                    android:text="Sorry, no results."
+                    android:textSize="26dp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Subject:" />
+                    android:gravity="center"
+                    android:paddingBottom="10dp"
+                    android:text="If you need any service, please contact us:"
+                    android:textSize="16dp" />
 
-                <EditText
-                    android:id="@+id/edit_text_subject"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textEmailSubject"
-                    android:text="MyVolts Product Enquiry" />
+                    android:background="#f1f1f1"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Message:" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="To:" />
 
-                <EditText
-                    android:id="@+id/edit_text_message"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="start|top"
-                    android:inputType="textMultiLine"
-                    android:lines="6" />
+                    <EditText
+                        android:id="@+id/edit_text_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
+                        android:text="hoc2@tcd.ie" />
 
-                <Button
-                    android:id="@+id/email_send"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:background="#0099FF"
-                    android:text="Send"
-                    android:textColor="#FFFFFF" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Subject:" />
+
+                    <EditText
+                        android:id="@+id/edit_text_subject"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailSubject"
+                        android:text="MyVolts Product Enquiry" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Message:" />
+
+                    <EditText
+                        android:id="@+id/edit_text_message"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="start|top"
+                        android:inputType="textMultiLine"
+                        android:lines="6" />
+
+                    <Button
+                        android:id="@+id/email_send"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:background="#0099FF"
+                        android:text="Send"
+                        android:textColor="#FFFFFF" />
+
+                    <Button
+                        android:id="@+id/update_data"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:background="#0099FF"
+                        android:text="Update Data"
+                        android:textColor="#FFFFFF" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
     </ScrollView>
+
     <com.github.clans.fab.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="24dp"
         android:layout_height="24dp"
+        android:layout_gravity="bottom|right"
         android:layout_marginBottom="8dp"
         android:layout_marginRight="8dp"
-        android:src="@drawable/ic_back_to_top"
-        android:layout_gravity="bottom|right"/>
+        android:src="@drawable/ic_back_to_top" />
 
 </FrameLayout>
