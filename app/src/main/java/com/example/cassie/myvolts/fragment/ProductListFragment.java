@@ -31,16 +31,10 @@ import com.example.cassie.myvolts.util.RegexUtil;
 import com.example.cassie.myvolts.util.TestUtil;
 import com.github.clans.fab.FloatingActionButton;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collections;
 import java.util.List;
-
-import uk.ac.shef.wit.simmetrics.similaritymetrics.JaroWinkler;
 
 public class ProductListFragment extends Fragment implements AbsListView.OnScrollListener{
 
@@ -56,10 +50,7 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
     private View loadMoreView;
     private TextView loadmorebutton;
 
-    JaroWinkler algorithm = new JaroWinkler();
-
     private List<ProductData> products = new ArrayList<>();;
-
 
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -287,43 +278,27 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            JSONArray output_arr = new JSONArray();
-
-            List<ProductData> newData = new ArrayList<>();
-
-            try {
-                JSONObject obj = new JSONObject(result);
-                JSONArray mv_db_arr = obj.getJSONArray("mv_db");
-                JSONArray mv_db_arr2 = mv_db_arr.getJSONArray(0);
-
-
-                for(int i=0; i<mv_db_arr2.length(); i++) {
-
-                    JSONObject item = (JSONObject) mv_db_arr2.get(i);
-                    Iterator<String> keys = item.keys();
-
-                    String category = keys.next();
-                    if(category.equals("product")){
-                        String category_val = item.optString(category);
-                        output_arr.put(category_val);
-                    }
-                }
-
-                for(int i=0; i<output_arr.length(); i++){
-                    JSONObject jsonObject = new JSONObject(output_arr.getString(i));
-
-                    String name = jsonObject.getString("name");
-                    String productId = jsonObject.getString("productId");
-                    newData.add(new ProductData(productId, name, null));
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            List<ProductData> allData = dbHelp.getALlProductData(result);
             dbHelp.deleteProducts();
-            dbHelp.saveProductList(newData);
+            dbHelp.saveProductList(allData);
 
-            dbHelp.getSearchedProducts(searchStr);
+            List<ProductData> productData = dbHelp.getSearchedProducts(searchStr);
+
+            if(searchStr != null)
+                Collections.sort(productData);
+
+            if (adapter == null) {
+                adapter = new ProductListAdapter(products, getContext(), searchStr);
+                listView.setAdapter(adapter);
+                if(loadMoreView == null) {
+                    loadMoreView = getActivity().getLayoutInflater().inflate(R.layout.load_more, null);
+                    loadmorebutton = (TextView) loadMoreView.findViewById(R.id.loadMoreButton);
+                    listView.addFooterView(loadmorebutton);
+                }
+            }
+
+            products.addAll(productData);
+            adapter.setDatas(products);
         }
     }
 

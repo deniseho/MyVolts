@@ -142,6 +142,44 @@ public class DbHelp{
         }
     }
 
+    public List<ProductData> getALlProductData(String result) {
+        JSONArray output_arr = new JSONArray();
+        List<ProductData> newData = new ArrayList<>();
+
+        try {
+            JSONObject obj = new JSONObject(result);
+            JSONArray mv_db_arr = obj.getJSONArray("mv_db");
+            JSONArray mv_db_arr2 = mv_db_arr.getJSONArray(0);
+
+
+            for(int i=0; i<mv_db_arr2.length(); i++) {
+
+                JSONObject item = (JSONObject) mv_db_arr2.get(i);
+                Iterator<String> keys = item.keys();
+
+                String category = keys.next();
+                if(category.equals("product")){
+                    String category_val = item.optString(category);
+                    output_arr.put(category_val);
+                }
+            }
+
+            for(int i=0; i<output_arr.length(); i++){
+                JSONObject jsonObject = new JSONObject(output_arr.getString(i));
+
+                String name = jsonObject.getString("name");
+                String productId = jsonObject.getString("productId");
+                newData.add(new ProductData(productId, name, null));
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return newData;
+    }
+
+
     public List<String> getAllProductName(){
         List<String> datas=new ArrayList<>();
         if(mwcdb!=null){
