@@ -83,7 +83,6 @@ public class ScannerActivity extends AppCompatActivity {
 
         getproductById getproductById = new getproductById();
         dbHelp = new DbHelp(this);
-
        if(null != pdata && "".equals(pdata.getProductId())){
             shownorecord();
         }else if(pid != null || pdata != null){
@@ -290,7 +289,7 @@ public class ScannerActivity extends AppCompatActivity {
         View listview = findViewById(R.id.scroll);
         if (null != listview) {
 
-            View no_result = getLayoutInflater().inflate(R.layout.no_results, layout, false);
+            View no_result = getLayoutInflater().inflate(R.layout.no_results_page, layout, false);
 
             listview.setVisibility(View.GONE);
 

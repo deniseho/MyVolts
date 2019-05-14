@@ -70,8 +70,6 @@ public class MainActivity extends AppCompatActivity {
 //        initDrawable(contact);
 
         dbHelp = new DbHelp(this);
-        dbHelp.initTestData();
-
 
         sharedPreferences = getSharedPreferences("base64", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
@@ -92,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
           }
 
     }
-
 
     public void initDrawable(RadioButton v){
         Drawable drawable = v.getCompoundDrawables()[1];

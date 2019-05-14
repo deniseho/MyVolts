@@ -20,6 +20,12 @@ public class DeviceData implements Comparable<DeviceData> {
         this.type = type;
     }
 
+    public DeviceData(String name, String manufacturer, String type){
+        this.name = name;
+        this.manufacturer =manufacturer;
+        this.type = type;
+    }
+
     public DeviceData(String name, String manufacturer, String asin, TechSpec tech) {
         this.name = name;
         this.manufacturer = manufacturer;

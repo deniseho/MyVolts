@@ -1,29 +1,8 @@
 package com.example.cassie.myvolts.db;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.AsyncTask;
-
-import com.example.cassie.myvolts.dto.ManufactorData;
-import com.example.cassie.myvolts.dto.ProductData;
-import com.example.cassie.myvolts.util.HttpUtils;
-import com.example.cassie.myvolts.util.Url;
-
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Created by cassie on 23/05/2017.
@@ -38,9 +17,6 @@ public class DbHelper extends SQLiteOpenHelper {
     private DbManager manager = new DbManager();
 
     public SQLiteDatabase db;
-
-    private static final String SQL_CREATE_INIT_TEST_DATA=
-            "CREATE TABLE 'initTestData' ( 'id' INTEGER PRIMARY KEY, 'testData' TEXT)";
 
     private static final String SQL_CREATE_PRODUCT_ENTRIES =
             "CREATE TABLE " + FeedReaderContract.FeedEntry.PRODUCT_TABLE_NAME + " (" +
@@ -114,9 +90,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public DbHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-
     }
-
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -126,57 +100,15 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_MANU_ENTRIES);
         db.execSQL(SQL_CREATE_TEST_ENTRIES);
 
-
-        this.db = db;
-
-//        boolean isUpdate = checkIfUpdateData();
-
-        if(db != null && db.isOpen()) {
-            CacheManu cacheManu = new CacheManu();
-            cacheManu.execute();
-            CacheProductName cacheProductName = new CacheProductName();
-            cacheProductName.execute();
-        }
+//        this.db = db;
+//
+//        if(db != null && db.isOpen()) {
+////            CacheManu cacheManu = new CacheManu();
+////            cacheManu.execute();
+//            CacheProductName cacheProductName = new CacheProductName();
+//            cacheProductName.execute();
+//        }
     }
-
-    public String checkIfUpdateData() {
-        // check if the app is going to update the data from API
-        System.out.println("------------checkIfUpdateData: ");
-        String result = "";
-
-        try {
-            //Dates to compare
-            String CurrentDate=  "09/24/2015";
-            String FinalDate=  "09/26/2015";
-
-            Date date1;
-            Date date2;
-
-            SimpleDateFormat dates = new SimpleDateFormat("MM/dd/yyyy");
-
-            //Setting dates
-            date1 = (Date) dates.parse(CurrentDate);
-            date2 = (Date) dates.parse(FinalDate);
-
-            //Comparing dates
-            long difference = Math.abs(date1.getTime() - date2.getTime());
-            long differenceDates = difference / (24 * 60 * 60 * 1000);
-
-            //Convert long to String
-            String dayDifference = Long.toString(differenceDates);
-
-            System.out.println("dayDifference: ");
-            System.out.println(dayDifference);
-
-            result = dayDifference;
-
-        } catch (Exception exception) {
-            System.out.println("exception " + exception);
-        }
-
-        return result;
-    }
-
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -189,143 +121,143 @@ public class DbHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public class CacheManu extends AsyncTask<String, Void, String> {
-        @Override
-        protected void onPreExecute() {
-            // TODO Auto-generated method stub
-            super.onPreExecute();
+//    public class CacheManu extends AsyncTask<String, Void, String> {
+//        @Override
+//        protected void onPreExecute() {
+//            // TODO Auto-generated method stub
+//            super.onPreExecute();
+//
+//        }
+//
+//        @Override
+//        protected String doInBackground(String... arg0) {
+//            // TODO Auto-generated method stub
+//
+//            String result = HttpUtils.doGet(Url.manu_url());
+//            return result;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            // TODO Auto-generated method stub
+//            super.onPostExecute(result);
+//
+//            Document doc = null;
+//
+//            try {
+//                doc = DocumentHelper.parseText(result);
+//                Element rootElt = doc.getRootElement();
+//                Iterator iter = rootElt.elementIterator("results");
+//
+//                while (iter.hasNext()) {
+//                    Element resultRecord = (Element) iter.next();
+//                    Iterator itersElIterator = resultRecord.elementIterator("result");
+//                    while (itersElIterator.hasNext()) {
+//                        Element itemEle = (Element) itersElIterator.next();
+//                        Iterator literLIterator = itemEle.elementIterator("binding");
+//                        while(literLIterator.hasNext()){
+//                            Element ele = (Element) literLIterator.next();
+//                            if ("mname".equals(ele.attributeValue("name"))){
+//                                String mname = ele.elementTextTrim("literal");
+//                                if(!mname.equals(""))
+//                                    db.insert(FeedReaderContract.FeedEntry.TABLE_NAME_MANU, null, manager.generateManuValues(new ManufactorData(mname)));
+//
+//                            }
+//
+//                        }
+//
+//                    }
+//
+//                }
+//
+//            } catch (DocumentException e) {
+//                e.printStackTrace();
+//            }
+//
+//        }
+//    }
 
-        }
-
-        @Override
-        protected String doInBackground(String... arg0) {
-            // TODO Auto-generated method stub
-
-            String result = HttpUtils.doGet(Url.manu_url());
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            // TODO Auto-generated method stub
-            super.onPostExecute(result);
-
-            Document doc = null;
-
-            try {
-                doc = DocumentHelper.parseText(result);
-                Element rootElt = doc.getRootElement();
-                Iterator iter = rootElt.elementIterator("results");
-
-                while (iter.hasNext()) {
-                    Element resultRecord = (Element) iter.next();
-                    Iterator itersElIterator = resultRecord.elementIterator("result");
-                    while (itersElIterator.hasNext()) {
-                        Element itemEle = (Element) itersElIterator.next();
-                        Iterator literLIterator = itemEle.elementIterator("binding");
-                        while(literLIterator.hasNext()){
-                            Element ele = (Element) literLIterator.next();
-                            if ("mname".equals(ele.attributeValue("name"))){
-                                String mname = ele.elementTextTrim("literal");
-                                if(!mname.equals(""))
-                                    db.insert(FeedReaderContract.FeedEntry.TABLE_NAME_MANU, null, manager.generateManuValues(new ManufactorData(mname)));
-
-                            }
-
-                        }
-
-                    }
-
-                }
-
-            } catch (DocumentException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
-
-    public class CacheProductName extends AsyncTask<Object, Void, JSONArray> {
-
-        @Override
-        protected void onPreExecute() {
-            // TODO Auto-generated method stub
-            super.onPreExecute();
-        }
-
-
-        @Override
-        protected JSONArray doInBackground(Object... arg0) {
-            // TODO Auto-generated method stub
-            JSONArray output_arr = new JSONArray();
-
-            String result = "";
-
-            String url = "http://api.myjson.com/bins/1hcph0"; //"http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/mv2.54/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0ASELECT%20%20distinct%20%3Fprod_id%20%20%3Fpname%20%3Ftype%20%0AWHERE%20%0A%7B%20%0A%20%3Fprod_id%20%3Aproduct_name%20%3Fpname%20.%0A%20%3Fprod_id%20%3AisOfTypeCategory%20%3Ftype%20.%0A%0A%20filter%20(regex(%3Fpname%2C%20%22" + arg0[0] + "%22%2C%20%22i%22)" + args + ")%20.%0A%7D%0Aorder%20by%20%3Fpname%0ALIMIT%2010"+ offset +"&limit=100&infer=true&";
-
-            result = HttpUtils.doGet(url);
-
-
-            try {
-                JSONObject obj = new JSONObject(result);
-                JSONArray mv_db_arr = obj.getJSONArray("mv_db");
-                JSONArray mv_db_arr2 = mv_db_arr.getJSONArray(0);
-
-
-                for(int i=0; i<mv_db_arr2.length(); i++) {
-
-                    JSONObject item = (JSONObject) mv_db_arr2.get(i);
-                    Iterator<String> keys = item.keys();
-
-                    String category = keys.next();
-                    if(category.equals("product")){
-                        String category_val = item.optString(category);
-                        output_arr.put(category_val);
-                    }
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            return output_arr;
-        }
-
-        @Override
-        protected void onPostExecute(JSONArray result) {
-            // TODO Auto-generated method stub
-            super.onPostExecute(result);
-
-            List<ProductData> newData = new ArrayList<>();
-
-            try {
-                for(int i=0; i<result.length(); i++){
-                    JSONObject jsonObject = new JSONObject(result.getString(i));
-                    System.out.println("json object");
-                    System.out.println(jsonObject);
-
-                    String name = jsonObject.getString("name");
-                    String productId = jsonObject.getString("productId");
-                    newData.add(new ProductData(productId, name, null));
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            saveToDB(newData);
-        }
-    }
-
-    private void saveToDB(List<ProductData> products) {
-        ContentValues values = new ContentValues();
-
-        for(int i=0; i<products.size(); i++) {
-            ProductData product = products.get(i);
-            values.put(FeedReaderContract.FeedEntry.PRODUCT_COLUMN_ID, product.getProductId());
-            values.put(FeedReaderContract.FeedEntry.PRODUCT_COLUMN_NAME, product.getName());
-            db.insert(FeedReaderContract.FeedEntry.PRODUCT_TABLE_NAME, null, values);
-        }
-    }
+//    public class CacheProductName extends AsyncTask<Object, Void, JSONArray> {
+//
+//        @Override
+//        protected void onPreExecute() {
+//            // TODO Auto-generated method stub
+//            super.onPreExecute();
+//        }
+//
+//
+//        @Override
+//        protected JSONArray doInBackground(Object... arg0) {
+//            // TODO Auto-generated method stub
+//            JSONArray output_arr = new JSONArray();
+//
+//            String result = "";
+//
+//            String url = "http://api.myjson.com/bins/1hcph0"; //"http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/mv2.54/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0ASELECT%20%20distinct%20%3Fprod_id%20%20%3Fpname%20%3Ftype%20%0AWHERE%20%0A%7B%20%0A%20%3Fprod_id%20%3Aproduct_name%20%3Fpname%20.%0A%20%3Fprod_id%20%3AisOfTypeCategory%20%3Ftype%20.%0A%0A%20filter%20(regex(%3Fpname%2C%20%22" + arg0[0] + "%22%2C%20%22i%22)" + args + ")%20.%0A%7D%0Aorder%20by%20%3Fpname%0ALIMIT%2010"+ offset +"&limit=100&infer=true&";
+//
+//            result = HttpUtils.doGet(url);
+//
+//
+//            try {
+//                JSONObject obj = new JSONObject(result);
+//                JSONArray mv_db_arr = obj.getJSONArray("mv_db");
+//                JSONArray mv_db_arr2 = mv_db_arr.getJSONArray(0);
+//
+//
+//                for(int i=0; i<mv_db_arr2.length(); i++) {
+//
+//                    JSONObject item = (JSONObject) mv_db_arr2.get(i);
+//                    Iterator<String> keys = item.keys();
+//
+//                    String category = keys.next();
+//                    if(category.equals("product")){
+//                        String category_val = item.optString(category);
+//                        output_arr.put(category_val);
+//                    }
+//                }
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//
+//            return output_arr;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(JSONArray result) {
+//            // TODO Auto-generated method stub
+//            super.onPostExecute(result);
+//
+//            List<ProductData> newData = new ArrayList<>();
+//
+//            try {
+//                for(int i=0; i<result.length(); i++){
+//                    JSONObject jsonObject = new JSONObject(result.getString(i));
+//                    System.out.println("----------------------------sjson object");
+//                    System.out.println(jsonObject);
+//
+//                    String name = jsonObject.getString("name");
+//                    String productId = jsonObject.getString("productId");
+//                    newData.add(new ProductData(productId, name, null));
+//                }
+//
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//
+//            saveToDB(newData);
+//        }
+//    }
+//
+//    public void saveToDB(List<ProductData> products) {
+//        ContentValues values = new ContentValues();
+//
+//        for(int i=0; i<products.size(); i++) {
+//            ProductData product = products.get(i);
+//            values.put(FeedReaderContract.FeedEntry.PRODUCT_COLUMN_ID, product.getProductId());
+//            values.put(FeedReaderContract.FeedEntry.PRODUCT_COLUMN_NAME, product.getName());
+//            db.insert(FeedReaderContract.FeedEntry.PRODUCT_TABLE_NAME, null, values);
+//        }
+//    }
 
 //    public class CacheProductName extends AsyncTask<String, Void, String> {
 //        @Override

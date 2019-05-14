@@ -140,12 +140,27 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnScroll
                     System.out.println("clicked send email");
                 }
             });
+
+            Button buttonUpdateData = (Button) view.findViewById(R.id.update_data);
+            buttonUpdateData.setOnClickListener(new View.OnClickListener(){
+                public void onClick(View v){
+                    updataData();
+                }
+            });
         }
 
         initInternetStatusPage(searchStr);
         setFab();
         return view;
     }
+
+
+    private void updataData(){
+        db = new GetDeviceByName();
+        db.execute(RegexUtil.spliteRegex(""));
+        Toast.makeText(getActivity(), "update data from productListFrag", Toast.LENGTH_SHORT).show();
+    }
+
 
     private void sendMail() {
         String recipientList = mailTo.getText().toString();
@@ -163,6 +178,9 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnScroll
         startActivity(Intent.createChooser(intent,"Choose an email client"));
     }
 
+
+
+
     private void initInternetStatusPage(String searchStr) {
         boolean internetStatus = NetworkUtil.isNetworkAvailable(getActivity());
 
@@ -171,6 +189,8 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnScroll
 
         }else {
             doWithInternet(searchStr);
+            Toast.makeText(getActivity(), searchStr, Toast.LENGTH_SHORT).show();
+
         }
     }
 
@@ -311,10 +331,12 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnScroll
                     args = args + "%20%7C%7C%20%20regex(%3Fdname%2C%20%22" + arg0[i] + "%22%2C%20%22i%22)";
                 }
 
-                String url = "http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/mv2.53/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0A%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0A%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0A%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0A%0ASELECT%20distinct%20%3Fpi_id%20%3Fmname%20%3Fdname%20%3Fmodel%20%3Fasin%20WHERE%20%7B%0A%0A%3Fpi_id%20%3AisManufacturedBy%20%3Fman%20.%0A%0A%3Fman%20%3Amanufacturer_name%20%3Fmname%20.%0A%0A%3Fpi_id%20%3Api_name%20%3Fdname%20.%0A%0A%3Fpi_id%20%3ApiModel_name%20%3Fmodel%20.%0A%0A%3Fpi_id%20%3Api_asin%20%3Fasin%20.%0A%0AFILTER%20(regex(%3Fdname%2C%20%22" + arg0[0] + "%22%2C%20%22i%22)" + args + ")%20.%0AFilter(%3Fasin%20!%3D%20%22%22)%0A%7D%0AOrder%20By%20%3Fdname%0ALIMIT%2010" + offset +"&limit=100&infer=true&";
-                System.out.println(url);
+                String url = "http://api.myjson.com/bins/1hcph0";//"http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/mv2.53/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0A%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0A%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0A%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0A%0ASELECT%20distinct%20%3Fpi_id%20%3Fmname%20%3Fdname%20%3Fmodel%20%3Fasin%20WHERE%20%7B%0A%0A%3Fpi_id%20%3AisManufacturedBy%20%3Fman%20.%0A%0A%3Fman%20%3Amanufacturer_name%20%3Fmname%20.%0A%0A%3Fpi_id%20%3Api_name%20%3Fdname%20.%0A%0A%3Fpi_id%20%3ApiModel_name%20%3Fmodel%20.%0A%0A%3Fpi_id%20%3Api_asin%20%3Fasin%20.%0A%0AFILTER%20(regex(%3Fdname%2C%20%22" + arg0[0] + "%22%2C%20%22i%22)" + args + ")%20.%0AFilter(%3Fasin%20!%3D%20%22%22)%0A%7D%0AOrder%20By%20%3Fdname%0ALIMIT%2010" + offset +"&limit=100&infer=true&";
 
                 result = HttpUtils.doGet(url);
+                System.out.println("================result");
+                System.out.println(result);
+
 
             }
 
@@ -325,7 +347,7 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnScroll
         protected void onPostExecute(String result) {
             // TODO Auto-generated method stub
             super.onPostExecute(result);
-           // p.dismiss();
+            p.dismiss();
 
             List<DeviceData> newData = new ArrayList<>();
 

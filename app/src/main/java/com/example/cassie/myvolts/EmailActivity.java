@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import butterknife.BindView;
 
@@ -47,7 +48,8 @@ public class EmailActivity extends AppCompatActivity {
 
         buttonUpdateData.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                System.out.println("clicked buttonUpdateData");
+                Toast.makeText(getApplicationContext(), "updatedata", Toast.LENGTH_LONG).show();
+
             }
         });
     }

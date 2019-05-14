@@ -15,7 +15,7 @@
 
 
     <Button
-        android:id="@+id/updateDataButton"
+        android:id="@+id/updateData"
         android:layout_width="match_parent"
         android:layout_height="65dp"
         android:layout_gravity="center"

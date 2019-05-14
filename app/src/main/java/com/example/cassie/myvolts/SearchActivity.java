@@ -138,49 +138,9 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onItemClick (AdapterView<?> parent, View view, int position, long id) {
                 searchByInput();
-//                showAlertDialog(search.getText().toString());
             }
         });
     }
-
-    // ---------------- Adapter filter by Denise ----------------
-
-//    private Filter countryFilter = new Filter() {
-//        @Override
-//        protected FilterResults performFiltering(CharSequence constraint) {
-//            FilterResults results = new FilterResults();
-//            List<CountryItem> suggestions = new ArrayList<>();
-//
-//            if (constraint == null || constraint.length() == 0) {
-//                suggestions.addAll(countryListFull);
-//            } else {
-//                String filterPattern = constraint.toString().toLowerCase().trim();
-//
-//                for (CountryItem item : countryListFull) {
-//                    if (item.getCountryName().toLowerCase().contains(filterPattern)) {
-//                        suggestions.add(item);
-//                    }
-//                }
-//            }
-//
-//            results.values = suggestions;
-//            results.count = suggestions.size();
-//
-//            return results;
-//        }
-//
-//        @Override
-//        protected void publishResults(CharSequence constraint, FilterResults results) {
-//            clear();
-//            addAll((List) results.values);
-//            notifyDataSetChanged();
-//        }
-//
-//        @Override
-//        public CharSequence convertResultToString(Object resultValue) {
-//            return ((CountryItem) resultValue).getCountryName();
-//        }
-//    };
 
     private void ForwardToSannerActivity(String pid) {
         Intent intent = new Intent(SearchActivity.this,ScannerActivity.class);
@@ -234,8 +194,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 //            search(hisitem.name);
         }else if(hisitem.getIsWholeProduct().equals("1")){
             ForwardToSannerActivity(hisitem.getProductId()
-
-
 
             );
         }
@@ -385,9 +343,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     private void searchByInput() {
         String searchInput = search.getText().toString();
-//        String output = "";
-//        dbHelp.searchCable(searchInput);
-
         if (!TextUtils.isEmpty(searchInput.trim())) {
             dbHelp.saveHis(search.getText().toString(), "0", "");
             hisAdapter.addDatas(new HistoryData(search.getText().toString(), "0", ""));
@@ -404,38 +359,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     private EditText editText;
     private void showAlertDialog(final String brand) {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(SearchActivity.this);
-//
-//        LayoutInflater inflater = this.getLayoutInflater();
-//        View dialogView = inflater.inflate(R.layout.fragment_confirm, null);
-//        builder.setView(dialogView);
-//        TextView brandTextView = (TextView)dialogView.findViewById(R.id.brand_name);
-//        brandTextView.setText(brand);
-//
-//        Button confirmSearch = (Button) dialogView.findViewById(R.id.confirm_search);
-//        Button confirmCancel = (Button) dialogView.findViewById(R.id.confirm_cancel);
-//
-//        final AlertDialog dialog = builder.create();
-//
-//        confirmSearch.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                dialog.dismiss();
-//                search(brand);
-//            }
-//        });
-//
-//        confirmCancel.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                dialog.dismiss();
-//            }
-//        });
-//
-//
-//        builder.create().show();
-
-
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.fragment_confirm, null);
         dialog.setView(dialogView);
@@ -445,6 +369,9 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         dialog.setPositiveButton("Search for cables", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 search(brand);
+                editText = (EditText) findViewById(R.id.search);
+                editText.setSelection(editText.getText().length());
+                editText.requestFocus();
             }
         }) ;
         dialog.setNegativeButton("cancel",new DialogInterface.OnClickListener() {
