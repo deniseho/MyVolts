@@ -16,13 +16,29 @@ public final class FeedReaderContract {
         public static final String PRODUCT_TABLE_NAME = "product";
         public static final String PRODUCT_COLUMN_NAME = "name";
         public static final String PRODUCT_COLUMN_ID = "pid";
-        //public static final String PRODUCT_COLUMN_NAME_TYPE = "type";
+
+//        private static final String SQL_CREATE_DEVICE_ENTRIES =
+//"CREATE TABLE " + FeedReaderContract.FeedEntry.DEVICE_TABLE_NAME + " (" +
+//        FeedReaderContract.FeedEntry._ID + " INTEGER PRIMARY KEY," +
+//        FeedReaderContract.FeedEntry.DEVICE_COLUMN_PID + " TEXT," +
+//        FeedReaderContract.FeedEntry.DEVICE_COLUMN_MANU + " TEXT," +
+//        FeedReaderContract.FeedEntry.DEVICE_COLUMN_NAME + " TEXT," +
+//        FeedReaderContract.FeedEntry.DEVICE_COLUMN_TYPE + " TEXT," +
+//        FeedReaderContract.FeedEntry.DEVICE_COLUMN_MODEL + " TEXT," +
+//        FeedReaderContract.FeedEntry.DEVICE_COLUMN_TECH + " TEXT)";
+//
+        public static final String DEVICE_TABLE_NAME = "device";
+        public static final String DEVICE_COLUMN_PID = "pid";
+        public static final String DEVICE_COLUMN_MANU = "manufacturer";
+        public static final String DEVICE_COLUMN_NAME = "name";
+        public static final String DEVICE_COLUMN_TYPE = "type";
+        public static final String DEVICE_COLUMN_MODEL = "model";
+        public static final String DEVICE_COLUMN_TECH = "tech";
 
         public static final String TABLE_NAME_HISTORY = "his";
         public static final String HISTORY_COLUMN_NAME_HISTORY_NAME = "name";
         public static final String HISTORY_COLUMN_NAME_HISTORY_ISWHOLE = "isWhole";
         public static final String HISTORY_COLUMN_NAME_HISTORY_PRODUCTID = "productid";
-
 
         public static final String TABLE_NAME_MADE = "made";
         public static final String MADE_COLUMN_NAME_NAME = "name";

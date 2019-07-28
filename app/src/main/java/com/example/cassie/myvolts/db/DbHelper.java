@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DbHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
     public static final String DATABASE_NAME = "mwc.db";
 
     private static DbHelper dbHelp=null;
@@ -23,6 +23,17 @@ public class DbHelper extends SQLiteOpenHelper {
                     FeedReaderContract.FeedEntry._ID + " INTEGER PRIMARY KEY," +
                     FeedReaderContract.FeedEntry.PRODUCT_COLUMN_ID + " TEXT," +
                     FeedReaderContract.FeedEntry.PRODUCT_COLUMN_NAME + " TEXT)";
+
+    private static final String SQL_CREATE_DEVICE_ENTRIES =
+            "CREATE TABLE " + FeedReaderContract.FeedEntry.DEVICE_TABLE_NAME + " (" +
+                    FeedReaderContract.FeedEntry._ID + " INTEGER PRIMARY KEY," +
+                    FeedReaderContract.FeedEntry.DEVICE_COLUMN_PID + " TEXT," +
+                    FeedReaderContract.FeedEntry.DEVICE_COLUMN_MANU + " TEXT," +
+                    FeedReaderContract.FeedEntry.DEVICE_COLUMN_NAME + " TEXT," +
+                    FeedReaderContract.FeedEntry.DEVICE_COLUMN_TYPE + " TEXT," +
+                    FeedReaderContract.FeedEntry.DEVICE_COLUMN_MODEL + " TEXT," +
+                    FeedReaderContract.FeedEntry.DEVICE_COLUMN_TECH + " TEXT)";
+
 
     private static final String SQL_CREATE_HIS_ENTRIES =
             "CREATE TABLE " + FeedReaderContract.FeedEntry.TABLE_NAME_HISTORY + " (" +
@@ -62,6 +73,9 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String SQL_DELETE_PRODUCT_ENTRIES =
             "DROP TABLE IF EXISTS " + FeedReaderContract.FeedEntry.PRODUCT_TABLE_NAME;
 
+    private static final String SQL_DELETE_DEVICE_ENTRIES =
+            "DROP TABLE IF EXISTS " + FeedReaderContract.FeedEntry.DEVICE_TABLE_NAME;
+
     private static final String SQL_DELETE_HIS_ENTRIES =
             "DROP TABLE IF EXISTS " + FeedReaderContract.FeedEntry.TABLE_NAME_HISTORY;
 
@@ -80,7 +94,6 @@ public class DbHelper extends SQLiteOpenHelper {
             "SELECT * FROM PRODUCT";
 
 
-
     public static DbHelper getDbHelp(Context context){
         if(dbHelp==null){
             dbHelp=new DbHelper(context);
@@ -95,6 +108,7 @@ public class DbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_PRODUCT_ENTRIES);
+        db.execSQL(SQL_CREATE_DEVICE_ENTRIES);
         db.execSQL(SQL_CREATE_HIS_ENTRIES);
         db.execSQL(SQL_CREATE_MADE_ENTRIES);
         db.execSQL(SQL_CREATE_MANU_ENTRIES);
@@ -113,6 +127,7 @@ public class DbHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(SQL_DELETE_PRODUCT_ENTRIES);
+        db.execSQL(SQL_DELETE_DEVICE_ENTRIES);
         db.execSQL(SQL_DELETE_HIS_ENTRIES);
         db.execSQL(SQL_DELETE_MADE_ENTRIES);
         db.execSQL(SQL_DELETE_MANU_ENTRIES);

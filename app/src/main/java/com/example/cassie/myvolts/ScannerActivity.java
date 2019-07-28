@@ -78,27 +78,20 @@ public class ScannerActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("base64", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
-        String pid = getIntent().getStringExtra("product_id");
+//        String pid = getIntent().getStringExtra("productId");
         ProductData pdata = (ProductData) getIntent().getExtras().getSerializable("product");
-
+        prod_id = pdata.getProductId();
         getproductById getproductById = new getproductById();
         dbHelp = new DbHelp(this);
-       if(null != pdata && "".equals(pdata.getProductId())){
-            shownorecord();
-        }else if(pid != null || pdata != null){
-            if(pid != null && !pid.equals("")){
-                prod_id = pid;
-                getproductById.execute(URLEncoder.encode(pid));
-            }else if(pdata != null){
-                pro_name.setText(pdata.getName());
-                prod_id = pdata.getProductId();
-                getproductById.execute(URLEncoder.encode(pdata.getProductId()));
-            }
-        }else{
+       if(pdata != null && prod_id != null && !prod_id.equals("")) {
+           pro_name.setText(pdata.getName());
+           prod_id = pdata.getProductId();
+           getproductById.execute(URLEncoder.encode(prod_id));
+       } else{
             shownorecord();
         }
 
-        testTask1();
+//        testTask1();
 
     }
 
@@ -281,7 +274,7 @@ public class ScannerActivity extends AppCompatActivity {
                 }
 
             }else{
-                shownorecord();
+//                shownorecord();
             }
         }
     }

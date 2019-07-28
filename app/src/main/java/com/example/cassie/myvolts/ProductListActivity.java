@@ -30,13 +30,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.cassie.myvolts.adapter.AsinListAdapter;
 import com.example.cassie.myvolts.adapter.DeviceListAdapter;
 import com.example.cassie.myvolts.adapter.ProductListAdapter;
 import com.example.cassie.myvolts.db.DbHelp;
 import com.example.cassie.myvolts.dto.DeviceData;
 import com.example.cassie.myvolts.dto.ProductData;
-import com.example.cassie.myvolts.dto.TechSpec;
 import com.example.cassie.myvolts.testing.TaskResultActivity;
 import com.example.cassie.myvolts.util.DensityUtils;
 import com.example.cassie.myvolts.util.DigitUtil;
@@ -55,7 +53,6 @@ import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,10 +65,12 @@ import butterknife.OnClick;
 import butterknife.OnItemClick;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.JaroWinkler;
 
+//import com.example.cassie.myvolts.adapter.AsinListAdapter;
+
 public class ProductListActivity extends ActionBarActivity implements AbsListView.OnScrollListener {
 
     ProductListAdapter adapter;
-    AsinListAdapter asinListAdapter;
+//    AsinListAdapter asinListAdapter;
     DeviceListAdapter deviceListAdapter;
     ProductData pdata = null;
     List<ProductData> products = new ArrayList<>();
@@ -95,8 +94,8 @@ public class ProductListActivity extends ActionBarActivity implements AbsListVie
     @BindView(R.id.layout)
     RelativeLayout layout;
 
-    @BindView(R.id.layout2)
-    RelativeLayout layout2;
+//    @BindView(R.id.layout2)
+//    RelativeLayout layout2;
 
     @BindView(R.id.layout3)
     RelativeLayout layout3;
@@ -104,8 +103,8 @@ public class ProductListActivity extends ActionBarActivity implements AbsListVie
     @BindView(R.id.productlist)
     ListView listview;
 
-    @BindView(R.id.asintlist)
-    ListView asinlist;
+//    @BindView(R.id.asintlist)
+//    ListView asinlist;
 
     @BindView(R.id.devicelist)
     ListView devicelist;
@@ -125,8 +124,8 @@ public class ProductListActivity extends ActionBarActivity implements AbsListVie
     RadioButton product;
     @BindView(R.id.device)
     RadioButton device;
-    @BindView(R.id.asin)
-    RadioButton asin;
+//    @BindView(R.id.asin)
+//    RadioButton asin;
 
     @BindView(R.id.fab)
     FloatingActionButton mFab;
@@ -208,8 +207,6 @@ public class ProductListActivity extends ActionBarActivity implements AbsListVie
                     listview.setSelection(0);
                 }else if(device.isChecked()){
                     devicelist.setSelection(0);
-                }else if(asin.isChecked()){
-                    asinlist.setSelection(0);
                 }
             }
         });
@@ -361,22 +358,23 @@ public class ProductListActivity extends ActionBarActivity implements AbsListVie
         }
     }
 
-    @OnClick({R.id.product, R.id.asin, R.id.device})
+//    @OnClick({R.id.product, R.id.asin, R.id.device})
+    @OnClick({R.id.product, R.id.device})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.product:
                 setTabSelected(product);
-                invisibleAsinlistDevieList();
+//                invisibleAsinlistDevieList();
                 searchByInput(searchStr);
                 break;
             case R.id.device:
                 setTabSelected(device);
                 searchByDevices();
                 break;
-            case R.id.asin:
-                setTabSelected(asin);
-                searchByAsin();
-                break;
+//            case R.id.asin:
+//                setTabSelected(asin);
+//                searchByAsin();
+//                break;
         }
     }
 
@@ -387,19 +385,19 @@ public class ProductListActivity extends ActionBarActivity implements AbsListVie
         super.onStart();
     }
 
-    private void searchByAsin() {
-        invisibleListviewDeviceList();
-        resetScrollVariables();
-        SearchByAsin searchByAsin = new SearchByAsin();
-        try {
-            searchByAsin.execute(URLEncoder.encode(searchStr, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-    }
+//    private void searchByAsin() {
+//        invisibleListviewDeviceList();
+//        resetScrollVariables();
+//        SearchByAsin searchByAsin = new SearchByAsin();
+//        try {
+//            searchByAsin.execute(URLEncoder.encode(searchStr, "UTF-8"));
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     private void searchByDevices(){
-        invisibleAsinProList();
+//        invisibleAsinProList();
         resetScrollVariables();
         getDeviceByName getDeviceByName = new getDeviceByName();
 
@@ -416,7 +414,7 @@ public class ProductListActivity extends ActionBarActivity implements AbsListVie
        // setTabSelected(product);
         radioSearch.setVisibility(View.GONE);
         layout.setVisibility(View.GONE);
-        layout2.setVisibility(View.GONE);
+//        layout2.setVisibility(View.GONE);
         layout3.setVisibility(View.GONE);
         search.revealFromMenuItem(R.id.search, this);
 
@@ -490,13 +488,14 @@ public class ProductListActivity extends ActionBarActivity implements AbsListVie
     public void onSearchBarFinished(){
         int id = getSelectedRadioId();
         if(id == product.getId()){
-            invisibleAsinlistDevieList();
+//            invisibleAsinlistDevieList();
             searchByInput(searchStr);
         }else if(id == device.getId()){
             searchByDevices();
-        }else if(id == asin.getId()){
-            searchByAsin();
         }
+//        else if(id == asin.getId()){
+//            searchByAsin();
+//        }
     }
 
     protected void closeSearch() {
@@ -504,7 +503,7 @@ public class ProductListActivity extends ActionBarActivity implements AbsListVie
         product.setChecked(true);
         search.hideCircularly(this);
         layout.setVisibility(View.VISIBLE);
-        layout2.setVisibility(View.GONE);
+//        layout2.setVisibility(View.GONE);
         layout3.setVisibility(View.GONE);
     }
 
@@ -524,7 +523,7 @@ public class ProductListActivity extends ActionBarActivity implements AbsListVie
         curPage = 0;
         adapter = null;
         deviceListAdapter = null;
-        asinListAdapter = null;
+//        asinListAdapter = null;
         products.clear();
         devices.clear();
         pis.clear();
@@ -541,13 +540,13 @@ public class ProductListActivity extends ActionBarActivity implements AbsListVie
                 no_result = null;
             }
         }
-        if(no_result2 != null){
-            if(((ViewGroup)no_result2.getParent()).getId() == layout2.getId()){
-                layout2.removeView(no_result2);
-                asinlist.setVisibility(View.VISIBLE);
-                no_result2 = null;
-            }
-        }
+//        if(no_result2 != null){
+//            if(((ViewGroup)no_result2.getParent()).getId() == layout2.getId()){
+//                layout2.removeView(no_result2);
+//                asinlist.setVisibility(View.VISIBLE);
+//                no_result2 = null;
+//            }
+//        }
 
         if(no_result3 != null){
             if(((ViewGroup)no_result3.getParent()).getId() == layout3.getId()){
@@ -566,13 +565,13 @@ public class ProductListActivity extends ActionBarActivity implements AbsListVie
                 no_result = null;
             }
         }
-        if(no_internet2 != null){
-            if(((ViewGroup)no_internet2.getParent()).getId() == layout2.getId()){
-                layout2.removeView(no_internet2);
-                asinlist.setVisibility(View.VISIBLE);
-                no_internet2 = null;
-            }
-        }
+//        if(no_internet2 != null){
+//            if(((ViewGroup)no_internet2.getParent()).getId() == layout2.getId()){
+//                layout2.removeView(no_internet2);
+//                asinlist.setVisibility(View.VISIBLE);
+//                no_internet2 = null;
+//            }
+//        }
 
         if(no_internet3 != null){
             if(((ViewGroup)no_internet3.getParent()).getId() == layout3.getId()){
@@ -617,33 +616,33 @@ public class ProductListActivity extends ActionBarActivity implements AbsListVie
         }
     }
 
-    @OnItemClick(R.id.asintlist)
-    public void onAsinListItemClick(int pos) {
-        TestUtil.storeSearchClicks(sharedPreferences, editor, "resultsListClick");
-        if(pis.size() > 0) {
-            DeviceData device = pis.get(pos);
-            GetProductByAsin getProductByAsin = new GetProductByAsin();
-            getProductByAsin.execute(device.getAsin());
-        }
-    }
+//    @OnItemClick(R.id.asintlist)
+//    public void onAsinListItemClick(int pos) {
+//        TestUtil.storeSearchClicks(sharedPreferences, editor, "resultsListClick");
+//        if(pis.size() > 0) {
+//            DeviceData device = pis.get(pos);
+//            GetProductByAsin getProductByAsin = new GetProductByAsin();
+//            getProductByAsin.execute(device.getAsin());
+//        }
+//    }
 
     @OnItemClick(R.id.devicelist)
     public void onDeviceListItemClick(int pos) {
         TestUtil.storeSearchClicks(sharedPreferences, editor, "resultsListClick");
         if(devices.size() > 0) {
             DeviceData device = devices.get(pos);
-            GetProductByAsin getProductByAsin = new GetProductByAsin();
-            getProductByAsin.execute(device.getAsin());
+//            GetProductByAsin getProductByAsin = new GetProductByAsin();
+//            getProductByAsin.execute(device.getAsin());
         }
     }
 
     public void invisibleListviewDeviceList(){
         layout.setVisibility(View.GONE);
         layout3.setVisibility(View.GONE);
-        layout2.setVisibility(View.VISIBLE);
-        if(asinlist.getVisibility() == View.GONE){
-            asinlist.setVisibility(View.VISIBLE);
-        }
+//        layout2.setVisibility(View.VISIBLE);
+//        if(asinlist.getVisibility() == View.GONE){
+//            asinlist.setVisibility(View.VISIBLE);
+//        }
         if(no_internet2 != null && no_internet2.getVisibility() == View.VISIBLE){
             no_internet2.setVisibility(View.GONE);
         }
@@ -652,46 +651,46 @@ public class ProductListActivity extends ActionBarActivity implements AbsListVie
             no_result2.setVisibility(View.GONE);
         }
 
-        clearOnScrollListnerOnAsinList();
-        asinlist.setOnScrollListener(this);
+//        clearOnScrollListnerOnAsinList();
+//        asinlist.setOnScrollListener(this);
     }
 
-    public void invisibleAsinlistDevieList(){
-        layout.setVisibility(View.VISIBLE);
-        layout2.setVisibility(View.GONE);
-        layout3.setVisibility(View.GONE);
-        if(listview.getVisibility() == View.GONE){
-            listview.setVisibility(View.VISIBLE);
-        }
+//    public void invisibleAsinlistDevieList(){
+//        layout.setVisibility(View.VISIBLE);
+//        layout2.setVisibility(View.GONE);
+//        layout3.setVisibility(View.GONE);
+//        if(listview.getVisibility() == View.GONE){
+//            listview.setVisibility(View.VISIBLE);
+//        }
+//
+//        if(no_internet != null && no_internet.getVisibility() == View.VISIBLE){
+//            no_internet.setVisibility(View.GONE);
+//        }
+//
+//        if(no_result != null && no_result.getVisibility() == View.VISIBLE){
+//            no_result.setVisibility(View.GONE);
+//        }
+//        clearOnScrollListnerOnProdList();
+//        listview.setOnScrollListener(this);
+//    }
 
-        if(no_internet != null && no_internet.getVisibility() == View.VISIBLE){
-            no_internet.setVisibility(View.GONE);
-        }
-
-        if(no_result != null && no_result.getVisibility() == View.VISIBLE){
-            no_result.setVisibility(View.GONE);
-        }
-        clearOnScrollListnerOnProdList();
-        listview.setOnScrollListener(this);
-    }
-
-    public void invisibleAsinProList(){
-        layout3.setVisibility(View.VISIBLE);
-        layout.setVisibility(View.GONE);
-        layout2.setVisibility(View.GONE);
-        if(devicelist.getVisibility() == View.GONE){
-            devicelist.setVisibility(View.VISIBLE);
-        }
-
-        if(no_internet3 != null && no_internet3.getVisibility() == View.VISIBLE){
-            no_internet3.setVisibility(View.GONE);
-        }
-        if(no_result3 != null && no_result3.getVisibility() == View.VISIBLE){
-            no_result3.setVisibility(View.GONE);
-        }
-        clearOnScrollListnerOnDeviceList();
-        devicelist.setOnScrollListener(this);
-    }
+//    public void invisibleAsinProList(){
+//        layout3.setVisibility(View.VISIBLE);
+//        layout.setVisibility(View.GONE);
+//        layout2.setVisibility(View.GONE);
+//        if(devicelist.getVisibility() == View.GONE){
+//            devicelist.setVisibility(View.VISIBLE);
+//        }
+//
+//        if(no_internet3 != null && no_internet3.getVisibility() == View.VISIBLE){
+//            no_internet3.setVisibility(View.GONE);
+//        }
+//        if(no_result3 != null && no_result3.getVisibility() == View.VISIBLE){
+//            no_result3.setVisibility(View.GONE);
+//        }
+//        clearOnScrollListnerOnDeviceList();
+//        devicelist.setOnScrollListener(this);
+//    }
 
 
 
@@ -705,38 +704,38 @@ public class ProductListActivity extends ActionBarActivity implements AbsListVie
 
     public void clearOnScrollListnerOnProdList(){
         adapter = null;
-        asinListAdapter = null;
+//        asinListAdapter = null;
         deviceListAdapter = null;
         devices.clear();
         pis.clear();
         products.clear();
         resetScrollVariables();
-        asinlist.setOnScrollListener(null);
+//        asinlist.setOnScrollListener(null);
         devicelist.setOnScrollListener(null);
     }
 
-    public void clearOnScrollListnerOnAsinList(){
-        adapter = null;
-        asinListAdapter = null;
-        deviceListAdapter = null;
-        products.clear();
-        devices.clear();
-        pis.clear();
-        resetScrollVariables();
-        listview.setOnScrollListener(null);
-        devicelist.setOnScrollListener(null);
-    }
+//    public void clearOnScrollListnerOnAsinList(){
+//        adapter = null;
+//        asinListAdapter = null;
+//        deviceListAdapter = null;
+//        products.clear();
+//        devices.clear();
+//        pis.clear();
+//        resetScrollVariables();
+//        listview.setOnScrollListener(null);
+//        devicelist.setOnScrollListener(null);
+//    }
 
     public void clearOnScrollListnerOnDeviceList(){
         adapter = null;
-        asinListAdapter = null;
+//        asinListAdapter = null;
         deviceListAdapter = null;
         products.clear();
         pis.clear();
         devices.clear();
         resetScrollVariables();
         listview.setOnScrollListener(null);
-        asinlist.setOnScrollListener(null);
+//        asinlist.setOnScrollListener(null);
     }
 
     private void resetScrollVariables() {
@@ -750,15 +749,16 @@ public class ProductListActivity extends ActionBarActivity implements AbsListVie
     public void onScrollStateChanged(AbsListView view, int scrollState) {
         Log.i("LOADMORE", "loading...");
 
-        if(asin.isChecked()){
-            if(asinListAdapter.getCount() % 10 == 0) {
-                int itemsLastIndex = asinListAdapter.getCount() - 1;
-                int lastIndex = itemsLastIndex + 1;
-                doOnScrollAsinList(scrollState, lastIndex);
-            }else{
-                Toast.makeText(ProductListActivity.this, "No more results", Toast.LENGTH_SHORT).show();
-            }
-        }else if(device.isChecked()){
+//        if(asin.isChecked()){
+//            if(asinListAdapter.getCount() % 10 == 0) {
+//                int itemsLastIndex = asinListAdapter.getCount() - 1;
+//                int lastIndex = itemsLastIndex + 1;
+//                doOnScrollAsinList(scrollState, lastIndex);
+//            }else{
+//                Toast.makeText(ProductListActivity.this, "No more results", Toast.LENGTH_SHORT).show();
+//            }
+//        }else
+        if(device.isChecked()){
             if(deviceListAdapter.getCount() % 10 == 0) {
                 int itemsLastIndex = deviceListAdapter.getCount() - 1;
                 int lastIndex = itemsLastIndex + 1;
@@ -777,15 +777,15 @@ public class ProductListActivity extends ActionBarActivity implements AbsListVie
         }
     }
 
-    private void doOnScrollAsinList(int scrollState, int lastIndex) {
-
-        if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && visibleLastIndex == lastIndex) {
-            SearchByAsin searchByAsin = new SearchByAsin();
-            searchByAsin.execute(searchStr);
-            asinListAdapter.notifyDataSetChanged();
-            asinlist.setSelection(visibleLastIndex - visibleItemCount + 1);
-        }
-    }
+//    private void doOnScrollAsinList(int scrollState, int lastIndex) {
+//
+//        if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && visibleLastIndex == lastIndex) {
+//            SearchByAsin searchByAsin = new SearchByAsin();
+//            searchByAsin.execute(searchStr);
+//            asinListAdapter.notifyDataSetChanged();
+//            asinlist.setSelection(visibleLastIndex - visibleItemCount + 1);
+//        }
+//    }
 
     private void doOnScrollDeviceList(int scrollState, int lastIndex) {
         if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && visibleLastIndex == lastIndex) {
@@ -1015,7 +1015,7 @@ public class ProductListActivity extends ActionBarActivity implements AbsListVie
 
             String pi_id = "";
             String dname = "";
-            String asin= "";
+//            String asin= "";
             String model = "";
             String mname = "";
             Document doc = null;
@@ -1046,8 +1046,8 @@ public class ProductListActivity extends ActionBarActivity implements AbsListVie
                                     pi_id = ele.elementTextTrim("uri");
                                 } else if ("model".equals(ele.attributeValue("name"))) {
                                     model = ele.elementTextTrim("literal");
-                                } else if ("asin".equals(ele.attributeValue("name"))) {
-                                    asin = ele.elementTextTrim("literal");
+//                                } else if ("asin".equals(ele.attributeValue("name"))) {
+//                                    asin = ele.elementTextTrim("literal");
                                 } else if ("mname".equals(ele.attributeValue("name"))) {
                                     mname = ele.elementTextTrim("literal");
                                 } else if ("dname".equals(ele.attributeValue("name"))) {
@@ -1055,7 +1055,7 @@ public class ProductListActivity extends ActionBarActivity implements AbsListVie
                                 }
                             }
 
-                            DeviceData data = new DeviceData(pi_id, dname, mname, asin, model);
+                            DeviceData data = new DeviceData(pi_id, dname, mname, null, model);
                             newData.add(data);
                         }
                     }
@@ -1085,199 +1085,199 @@ public class ProductListActivity extends ActionBarActivity implements AbsListVie
         }
     }
 
-    public class SearchByAsin extends AsyncTask<String, Void, String> {
-
-        ProgressDialog p = new ProgressDialog(ProductListActivity.this,
-                ProgressDialog.STYLE_SPINNER);
-
-        @Override
-        protected void onPreExecute() {
-            // TODO Auto-generated method stub
-            super.onPreExecute();
-            p.setMessage("Loading...");
-            p.show();
-        }
-
-        @Override
-        protected String doInBackground(String... arg0) {
-            // TODO Auto-generated method stub
-            String offset = "";
-            if(curPage > 0) {
-                offset = "%0AOFFSET%20" + curPage * 10;
-            }
-            curPage++;
-
-            String url = "http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/29.03mv2.4/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0A%0ASELECT%20%20Distinct%20%3Fpi_id%20%3Fpiname%20%3Fx%20%3Fy%20%3Fz%20%3Fbrand%20%3Fasin%20%0AWHERE%0A%7B%20%0A%20%3Fpi_id%20%3AHasTechSpec%20%3Fts_id%20.%0A%20%3Fprod_id%20%3ASupports%20%3Fts_id%20.%0A%20%3Fts_id%20%3AVoltage%20%3Fx%20.%0A%20%3Fts_id%20%3AAmperage%20%3Fy%20.%0A%20%3Fts_id%20%3ATip_length%20%3Fz%20.%0A%20%3Fpi_id%20%3APi_name%20%3Fpiname%20.%0A%20%3Fpi_id%20%3AIsManufacturedBy%20%3Fman%20.%0A%20%3Fman%20%3AManufacturer_name%20%3Fbrand%20.%0A%20%3Fpi_id%20%3APi_asin%20%3Fasin%20.%0A%0A%20%20FILTER%20regex(%3Fasin%2C%20%22" + arg0[0]+ "%22%2C%20%22i%22)%20.%0A%7D%0AORDER%20BY%20%3Fpiname%0ALIMIT%2010"+ offset +"&limit=100&infer=true&";
-            String result = HttpUtils.doGet(url);
-
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            // TODO Auto-generated method stub
-            super.onPostExecute(result);
-            p.dismiss();
-
-            System.out.println(result);
-
-            List<DeviceData> newData = new ArrayList<>();
-            String piname = "";
-            String asin = "";
-            String brand = "";
-            String x= "";
-            String y = "";
-            String z = "";
-            String id = "";
-            Document doc = null;
-
-            if(result != null && !result.equals("")) {
-
-                try {
-                    doc = DocumentHelper.parseText(result);
-                    Element rootElt = doc.getRootElement();
-                    Iterator iter = rootElt.elementIterator("results");
-                    while (iter.hasNext()) {
-
-                        Element resultRecord = (Element) iter.next();
-                        Iterator itersElIterator = resultRecord.elementIterator("result");
-
-                        if (!itersElIterator.hasNext() && count == 0) {
-                            removeAsinListViewToNoResults();
-                            break;
-                        }if (!itersElIterator.hasNext()) {
-                            Toast.makeText(getApplicationContext(), "No more results...", Toast.LENGTH_SHORT).show();
-                        }
-                        count++;
-
-                        while (itersElIterator.hasNext()) {
-                            Element itemEle = (Element) itersElIterator.next();
-                            Iterator literLIterator = itemEle.elementIterator("binding");
-                            while (literLIterator.hasNext()) {
-                                Element ele = (Element) literLIterator.next();
-                                if ("x".equals(ele.attributeValue("name"))) {
-                                    x = ele.elementTextTrim("literal");
-                                } else if ("y".equals(ele.attributeValue("name"))) {
-                                    y = ele.elementTextTrim("literal");
-                                } else if ("z".equals(ele.attributeValue("name"))) {
-                                    z = ele.elementTextTrim("literal");
-                                } else if ("asin".equals(ele.attributeValue("name"))) {
-                                    asin = ele.elementTextTrim("literal");
-                                } else if ("piname".equals(ele.attributeValue("name"))) {
-                                    piname = ele.elementTextTrim("literal");
-                                }else if ("brand".equals(ele.attributeValue("name"))) {
-                                    brand = ele.elementTextTrim("literal");
-                                }else if ("pi_id".equals(ele.attributeValue("name"))) {
-                                    id = ele.elementTextTrim("uri");
-                                }
-
-                            }
-                            TechSpec tech = new TechSpec(x, y, z);
-                            DeviceData device = new DeviceData(piname, brand, asin, tech);
-                            device.setPi_id(id);
-                            if (!pis.contains(device)) {
-                                newData.add(device);
-                            }
-                        }
-                    }
-
-                    if (asinListAdapter == null) {
-                        asinListAdapter = new AsinListAdapter(pis, ProductListActivity.this, searchStr);
-                        asinlist.setAdapter(asinListAdapter);
-                        if(loadMoreView2 == null) {
-                            loadMoreView2 = getLayoutInflater().inflate(R.layout.load_more, null);
-                            loadmorebutton = (TextView) loadMoreView2.findViewById(R.id.loadMoreButton);
-                            asinlist.addFooterView(loadmorebutton);
-                        }
-                    }
-
-                    pis.addAll(newData);
-                    asinListAdapter.setDatas(pis);
-
-                } catch (DocumentException e) {
-                    e.printStackTrace();
-                }
-            }else {
-                removeAsinListToNoInternet();
-            }
-        }
-    }
-
-    public class GetProductByAsin extends AsyncTask<String, Void, String> {
-
-        ProgressDialog p = new ProgressDialog(ProductListActivity.this,
-                ProgressDialog.STYLE_SPINNER);
-
-        @Override
-        protected void onPreExecute() {
-            // TODO Auto-generated method stub
-            super.onPreExecute();
-            p.setMessage("Loading...");
-            p.show();
-        }
-
-        @Override
-        protected String doInBackground(String... arg0) {
-            // TODO Auto-generated method stub
-            String url = "http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/29.03mv2.4/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0A%0ASELECT%20%20Distinct%20%3Fprod_id%20%3Fpname%20%3Fx%20%3Fy%20%3Fz%0AWHERE%0A%7B%20%0A%20%3Fpi_id%20%3AHasTechSpec%20%3Fts_id%20.%0A%20%3Fprod_id%20%3ASupports%20%3Fts_id%20.%0A%20%3Fts_id%20%3AVoltage%20%3Fx%20.%0A%20%3Fts_id%20%3AAmperage%20%3Fy%20.%0A%20%3Fts_id%20%3ATip_length%20%3Fz%20.%0A%20%3Fprod_id%20%3AProduct_name%20%3Fpname%20.%0A%20%3Fpi_id%20%3APi_asin%20%22" + arg0[0] + "%22%20.%0A%7D%0AORDER%20BY%20%3Fpname&limit=100&infer=true&";
-            System.out.println(url);
-            String result = "";
-            try {
-                result = HttpUtils.doGet(url);
-            }catch(RuntimeException rt){
-
-            }
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            // TODO Auto-generated method stub
-            super.onPostExecute(result);
-            p.dismiss();
-
-            System.out.println(result);
-
-
-            Document doc = null;
-            String product_id = "";
-
-            try {
-                doc = DocumentHelper.parseText(result);
-                Element rootElt = doc.getRootElement();
-                Iterator iter = rootElt.elementIterator("results");
-
-                while (iter.hasNext()) {
-                    Element resultRecord = (Element) iter.next();
-                    Iterator itersElIterator = resultRecord.elementIterator("result");
-                    if (!itersElIterator.hasNext() && count == 0) {
-
-                        removeListViewToNoResults();
-                        break;
-                    }else if (!itersElIterator.hasNext()) {
-                        Toast.makeText(getApplicationContext(), "No more results...", Toast.LENGTH_SHORT).show();
-                    }
-                    count++;
-                    while (itersElIterator.hasNext()) {
-                        Element itemEle = (Element) itersElIterator.next();
-                        Iterator literLIterator = itemEle.elementIterator("binding");
-                        while(literLIterator.hasNext()){
-                            Element ele = (Element) literLIterator.next();
-                            if ("prod_id".equals(ele.attributeValue("name"))){
-                                product_id = ele.elementTextTrim("uri");
-                            }
-                        }
-                    }
-                }
-                pdata = new ProductData();
-                pdata.setProductId(product_id);
-                ForwardPdataToScannerActivity(pdata);
-            } catch (DocumentException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
+//    public class SearchByAsin extends AsyncTask<String, Void, String> {
+//
+//        ProgressDialog p = new ProgressDialog(ProductListActivity.this,
+//                ProgressDialog.STYLE_SPINNER);
+//
+//        @Override
+//        protected void onPreExecute() {
+//            // TODO Auto-generated method stub
+//            super.onPreExecute();
+//            p.setMessage("Loading...");
+//            p.show();
+//        }
+//
+//        @Override
+//        protected String doInBackground(String... arg0) {
+//            // TODO Auto-generated method stub
+//            String offset = "";
+//            if(curPage > 0) {
+//                offset = "%0AOFFSET%20" + curPage * 10;
+//            }
+//            curPage++;
+//
+//            String url = "http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/29.03mv2.4/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0A%0ASELECT%20%20Distinct%20%3Fpi_id%20%3Fpiname%20%3Fx%20%3Fy%20%3Fz%20%3Fbrand%20%3Fasin%20%0AWHERE%0A%7B%20%0A%20%3Fpi_id%20%3AHasTechSpec%20%3Fts_id%20.%0A%20%3Fprod_id%20%3ASupports%20%3Fts_id%20.%0A%20%3Fts_id%20%3AVoltage%20%3Fx%20.%0A%20%3Fts_id%20%3AAmperage%20%3Fy%20.%0A%20%3Fts_id%20%3ATip_length%20%3Fz%20.%0A%20%3Fpi_id%20%3APi_name%20%3Fpiname%20.%0A%20%3Fpi_id%20%3AIsManufacturedBy%20%3Fman%20.%0A%20%3Fman%20%3AManufacturer_name%20%3Fbrand%20.%0A%20%3Fpi_id%20%3APi_asin%20%3Fasin%20.%0A%0A%20%20FILTER%20regex(%3Fasin%2C%20%22" + arg0[0]+ "%22%2C%20%22i%22)%20.%0A%7D%0AORDER%20BY%20%3Fpiname%0ALIMIT%2010"+ offset +"&limit=100&infer=true&";
+//            String result = HttpUtils.doGet(url);
+//
+//            return result;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            // TODO Auto-generated method stub
+//            super.onPostExecute(result);
+//            p.dismiss();
+//
+//            System.out.println(result);
+//
+//            List<DeviceData> newData = new ArrayList<>();
+//            String piname = "";
+//            String asin = "";
+//            String brand = "";
+//            String x= "";
+//            String y = "";
+//            String z = "";
+//            String id = "";
+//            Document doc = null;
+//
+//            if(result != null && !result.equals("")) {
+//
+//                try {
+//                    doc = DocumentHelper.parseText(result);
+//                    Element rootElt = doc.getRootElement();
+//                    Iterator iter = rootElt.elementIterator("results");
+//                    while (iter.hasNext()) {
+//
+//                        Element resultRecord = (Element) iter.next();
+//                        Iterator itersElIterator = resultRecord.elementIterator("result");
+//
+//                        if (!itersElIterator.hasNext() && count == 0) {
+//                            removeAsinListViewToNoResults();
+//                            break;
+//                        }if (!itersElIterator.hasNext()) {
+//                            Toast.makeText(getApplicationContext(), "No more results...", Toast.LENGTH_SHORT).show();
+//                        }
+//                        count++;
+//
+//                        while (itersElIterator.hasNext()) {
+//                            Element itemEle = (Element) itersElIterator.next();
+//                            Iterator literLIterator = itemEle.elementIterator("binding");
+//                            while (literLIterator.hasNext()) {
+//                                Element ele = (Element) literLIterator.next();
+//                                if ("x".equals(ele.attributeValue("name"))) {
+//                                    x = ele.elementTextTrim("literal");
+//                                } else if ("y".equals(ele.attributeValue("name"))) {
+//                                    y = ele.elementTextTrim("literal");
+//                                } else if ("z".equals(ele.attributeValue("name"))) {
+//                                    z = ele.elementTextTrim("literal");
+//                                } else if ("asin".equals(ele.attributeValue("name"))) {
+//                                    asin = ele.elementTextTrim("literal");
+//                                } else if ("piname".equals(ele.attributeValue("name"))) {
+//                                    piname = ele.elementTextTrim("literal");
+//                                }else if ("brand".equals(ele.attributeValue("name"))) {
+//                                    brand = ele.elementTextTrim("literal");
+//                                }else if ("pi_id".equals(ele.attributeValue("name"))) {
+//                                    id = ele.elementTextTrim("uri");
+//                                }
+//
+//                            }
+//                            TechSpec tech = new TechSpec(x, y, z);
+//                            DeviceData device = new DeviceData(piname, brand, asin, tech);
+//                            device.setPi_id(id);
+//                            if (!pis.contains(device)) {
+//                                newData.add(device);
+//                            }
+//                        }
+//                    }
+//
+//                    if (asinListAdapter == null) {
+//                        asinListAdapter = new AsinListAdapter(pis, ProductListActivity.this, searchStr);
+//                        asinlist.setAdapter(asinListAdapter);
+//                        if(loadMoreView2 == null) {
+//                            loadMoreView2 = getLayoutInflater().inflate(R.layout.load_more, null);
+//                            loadmorebutton = (TextView) loadMoreView2.findViewById(R.id.loadMoreButton);
+//                            asinlist.addFooterView(loadmorebutton);
+//                        }
+//                    }
+//
+//                    pis.addAll(newData);
+//                    asinListAdapter.setDatas(pis);
+//
+//                } catch (DocumentException e) {
+//                    e.printStackTrace();
+//                }
+//            }else {
+//                removeAsinListToNoInternet();
+//            }
+//        }
+//    }
+//
+//    public class GetProductByAsin extends AsyncTask<String, Void, String> {
+//
+//        ProgressDialog p = new ProgressDialog(ProductListActivity.this,
+//                ProgressDialog.STYLE_SPINNER);
+//
+//        @Override
+//        protected void onPreExecute() {
+//            // TODO Auto-generated method stub
+//            super.onPreExecute();
+//            p.setMessage("Loading...");
+//            p.show();
+//        }
+//
+//        @Override
+//        protected String doInBackground(String... arg0) {
+//            // TODO Auto-generated method stub
+//            String url = "http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/29.03mv2.4/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0A%0ASELECT%20%20Distinct%20%3Fprod_id%20%3Fpname%20%3Fx%20%3Fy%20%3Fz%0AWHERE%0A%7B%20%0A%20%3Fpi_id%20%3AHasTechSpec%20%3Fts_id%20.%0A%20%3Fprod_id%20%3ASupports%20%3Fts_id%20.%0A%20%3Fts_id%20%3AVoltage%20%3Fx%20.%0A%20%3Fts_id%20%3AAmperage%20%3Fy%20.%0A%20%3Fts_id%20%3ATip_length%20%3Fz%20.%0A%20%3Fprod_id%20%3AProduct_name%20%3Fpname%20.%0A%20%3Fpi_id%20%3APi_asin%20%22" + arg0[0] + "%22%20.%0A%7D%0AORDER%20BY%20%3Fpname&limit=100&infer=true&";
+//            System.out.println(url);
+//            String result = "";
+//            try {
+//                result = HttpUtils.doGet(url);
+//            }catch(RuntimeException rt){
+//
+//            }
+//            return result;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            // TODO Auto-generated method stub
+//            super.onPostExecute(result);
+//            p.dismiss();
+//
+//            System.out.println(result);
+//
+//
+//            Document doc = null;
+//            String product_id = "";
+//
+//            try {
+//                doc = DocumentHelper.parseText(result);
+//                Element rootElt = doc.getRootElement();
+//                Iterator iter = rootElt.elementIterator("results");
+//
+//                while (iter.hasNext()) {
+//                    Element resultRecord = (Element) iter.next();
+//                    Iterator itersElIterator = resultRecord.elementIterator("result");
+//                    if (!itersElIterator.hasNext() && count == 0) {
+//
+//                        removeListViewToNoResults();
+//                        break;
+//                    }else if (!itersElIterator.hasNext()) {
+//                        Toast.makeText(getApplicationContext(), "No more results...", Toast.LENGTH_SHORT).show();
+//                    }
+//                    count++;
+//                    while (itersElIterator.hasNext()) {
+//                        Element itemEle = (Element) itersElIterator.next();
+//                        Iterator literLIterator = itemEle.elementIterator("binding");
+//                        while(literLIterator.hasNext()){
+//                            Element ele = (Element) literLIterator.next();
+//                            if ("prod_id".equals(ele.attributeValue("name"))){
+//                                product_id = ele.elementTextTrim("uri");
+//                            }
+//                        }
+//                    }
+//                }
+//                pdata = new ProductData();
+//                pdata.setProductId(product_id);
+//                ForwardPdataToScannerActivity(pdata);
+//            } catch (DocumentException e) {
+//                e.printStackTrace();
+//            }
+//
+//        }
+//    }
 
     private void removeListViewToNoResults() {
         View listview = findViewById(R.id.productlist);
@@ -1291,17 +1291,17 @@ public class ProductListActivity extends ActionBarActivity implements AbsListVie
         }
     }
 
-    private void removeAsinListViewToNoResults() {
-        View listview = findViewById(R.id.asintlist);
-        if (null != listview) {
-
-            no_result2 = getLayoutInflater().inflate(R.layout.no_results,layout2,false);
-
-            listview.setVisibility(View.GONE);
-
-            layout2.addView(no_result2);
-        }
-    }
+//    private void removeAsinListViewToNoResults() {
+//        View listview = findViewById(R.id.asintlist);
+//        if (null != listview) {
+//
+//            no_result2 = getLayoutInflater().inflate(R.layout.no_results,layout2,false);
+//
+//            listview.setVisibility(View.GONE);
+//
+//            layout2.addView(no_result2);
+//        }
+//    }
 
     private void removDeviceListViewToNoResults() {
         View listview = findViewById(R.id.devicelist);
@@ -1338,32 +1338,32 @@ public class ProductListActivity extends ActionBarActivity implements AbsListVie
         }
     }
 
-    private void removeAsinListToNoInternet(){
-        View listview = findViewById(R.id.asintlist);
-        if (null != listview) {
-            if(null == no_internet2) {
-                no_internet2 = getLayoutInflater().inflate(R.layout.no_internet, layout2, false);
-                layout2.addView(no_internet2);
-            }
-            asinlist.setVisibility(View.GONE);
-            no_internet2.setVisibility(View.VISIBLE);
-
-            no_internet2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    no_internet2.setVisibility(View.GONE);
-
-                    if(no_internet != null)
-                        no_internet.setVisibility(View.GONE);
-                    if(no_internet3 != null)
-                        no_internet3.setVisibility(View.GONE);
-
-                    asinlist.setVisibility(View.VISIBLE);
-                    searchByAsin();
-                }
-            });
-        }
-    }
+//    private void removeAsinListToNoInternet(){
+//        View listview = findViewById(R.id.asintlist);
+//        if (null != listview) {
+//            if(null == no_internet2) {
+//                no_internet2 = getLayoutInflater().inflate(R.layout.no_internet, layout2, false);
+//                layout2.addView(no_internet2);
+//            }
+//            asinlist.setVisibility(View.GONE);
+//            no_internet2.setVisibility(View.VISIBLE);
+//
+//            no_internet2.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    no_internet2.setVisibility(View.GONE);
+//
+//                    if(no_internet != null)
+//                        no_internet.setVisibility(View.GONE);
+//                    if(no_internet3 != null)
+//                        no_internet3.setVisibility(View.GONE);
+//
+//                    asinlist.setVisibility(View.VISIBLE);
+//                    searchByAsin();
+//                }
+//            });
+//        }
+//    }
 
     private void removeDeviceListToNoInternet(){
         View listview = findViewById(R.id.devicelist);

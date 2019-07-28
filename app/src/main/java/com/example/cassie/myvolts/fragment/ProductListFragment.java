@@ -24,12 +24,15 @@ import com.example.cassie.myvolts.ScannerActivity;
 import com.example.cassie.myvolts.adapter.ProductListAdapter;
 import com.example.cassie.myvolts.db.DbHelp;
 import com.example.cassie.myvolts.db.DbManager;
+import com.example.cassie.myvolts.dto.DeviceData;
 import com.example.cassie.myvolts.dto.ProductData;
 import com.example.cassie.myvolts.util.HttpUtils;
 import com.example.cassie.myvolts.util.NetworkUtil;
 import com.example.cassie.myvolts.util.RegexUtil;
 import com.example.cassie.myvolts.util.TestUtil;
 import com.github.clans.fab.FloatingActionButton;
+
+import org.json.JSONArray;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -103,8 +106,6 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Toast.makeText(getActivity(), "item cilcked: " + position, Toast.LENGTH_LONG).show();
-
                     TestUtil.storeSearchClicks(sharedPreferences, editor, "resultsListClick");
                     if(products.size() > 0) {
                         ProductData productData = products.get(position);
@@ -166,8 +167,8 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
                             listView.setVisibility(View.VISIBLE);
                             FragmentTransaction ft = getFragmentManager().beginTransaction();
                             ft.detach(ProductListFragment.this).attach(ProductListFragment.this).commit();
-                            DeviceListFragment deviceListFragment = (DeviceListFragment)getFragmentManager().findFragmentByTag("android:switcher:"+R.id.viewpager+":1");
-                            deviceListFragment.updateView();
+//                            DeviceListFragment deviceListFragment = (DeviceListFragment)getFragmentManager().findFragmentByTag("android:switcher:"+R.id.viewpager+":1");
+//                            deviceListFragment.updateView();
                             //AsinListFragment asinListFragment = (AsinListFragment) getFragmentManager().findFragmentByTag("android:switcher:"+R.id.viewpager+":2");
                             //asinListFragment.updateView();
                         }
@@ -269,7 +270,7 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
         @Override
         protected String doInBackground(String... arg0) {
             String result = "";
-            String url = "http://api.myjson.com/bins/1hcph0"; //"http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/mv2.54/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0ASELECT%20%20distinct%20%3Fprod_id%20%20%3Fpname%20%3Ftype%20%0AWHERE%20%0A%7B%20%0A%20%3Fprod_id%20%3Aproduct_name%20%3Fpname%20.%0A%20%3Fprod_id%20%3AisOfTypeCategory%20%3Ftype%20.%0A%0A%20filter%20(regex(%3Fpname%2C%20%22" + arg0[0] + "%22%2C%20%22i%22)" + args + ")%20.%0A%7D%0Aorder%20by%20%3Fpname%0ALIMIT%2010"+ offset +"&limit=100&infer=true&";
+            String url = "https://api.myjson.com/bins/x6a9y"; //"http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/mv2.54/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0ASELECT%20%20distinct%20%3Fprod_id%20%20%3Fpname%20%3Ftype%20%0AWHERE%20%0A%7B%20%0A%20%3Fprod_id%20%3Aproduct_name%20%3Fpname%20.%0A%20%3Fprod_id%20%3AisOfTypeCategory%20%3Ftype%20.%0A%0A%20filter%20(regex(%3Fpname%2C%20%22" + arg0[0] + "%22%2C%20%22i%22)" + args + ")%20.%0A%7D%0Aorder%20by%20%3Fpname%0ALIMIT%2010"+ offset +"&limit=100&infer=true&";
             result = HttpUtils.doGet(url);
             return result;
 
@@ -278,11 +279,44 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            List<ProductData> allData = dbHelp.getALlProductData(result);
+            List<ProductData> allProductData = dbHelp.getALlProductData(result);
+            List<DeviceData> allDeviceData = dbHelp.getALlDeviceData(result);
+
             dbHelp.deleteProducts();
-            dbHelp.saveProductList(allData);
+            dbHelp.deleteDevices();
+            dbHelp.saveProductList(allProductData);
+            dbHelp.saveDeviceList(allDeviceData);
 
             List<ProductData> productData = dbHelp.getSearchedProducts(searchStr);
+            List<DeviceData> deviceData = new ArrayList<>();
+            JSONArray deviceDatajson = new JSONArray();
+
+            for(int i=0; i < productData.size(); i++) {
+                deviceData.addAll(dbHelp.getSearchedDevices(productData.get(i).getProductId()));
+            }
+
+//          for(int i=0; i < deviceData.size(); i++){
+//              deviceDatajson.put("pid", deviceData.get(i).getPi_id());
+//              deviceDatajson.put("manufacturer", deviceData.get(i).getManufacturer());
+//              deviceDatajson.put("name", deviceData.get(i).getName());
+//              deviceDatajson.put("type", deviceData.get(i).getType());
+//              deviceDatajson.put("model", deviceData.get(i).getModel());
+//              deviceDatajson.put("tech", deviceData.get(i).getsTech());
+//              editor.putString("deviceData", new GsonBuilder().create().toJson(deviceData.get(i)));
+//          }
+
+            for(int i=0; i < deviceData.size(); i++) {
+
+                editor.putString("pid", deviceData.get(i).getPi_id());
+                editor.putString("manufacturer", deviceData.get(i).getManufacturer());
+                editor.putString("name", deviceData.get(i).getName());
+                editor.putString("type", deviceData.get(i).getType());
+                editor.putString("model", deviceData.get(i).getModel());
+                editor.putString("tech", deviceData.get(i).getsTech());
+
+            }
+//            editor.putString("deviceData", deviceDatajson.toString());
+                editor.apply();
 
             if(searchStr != null)
                 Collections.sort(productData);

@@ -2,7 +2,6 @@ package com.example.cassie.myvolts.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -22,7 +21,6 @@ import com.example.cassie.myvolts.dto.TechSpec;
 import com.example.cassie.myvolts.util.DigitUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -112,7 +110,7 @@ public class DeviceListAdapter extends BaseAdapter {
                         redSpan = new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent));
                         builder.setSpan(redSpan, chageTextColor, chageTextColor
                                         + text[i].length(),
-                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }
                 }
                 holder.name.setText(builder);
@@ -159,7 +157,6 @@ public class DeviceListAdapter extends BaseAdapter {
             if (result != null) {
                 img.setImageBitmap(result);
             }
-
         }
     }
 

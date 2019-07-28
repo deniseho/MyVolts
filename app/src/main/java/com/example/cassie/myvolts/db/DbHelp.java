@@ -4,14 +4,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.text.TextUtils;
 
+import com.example.cassie.myvolts.dto.DeviceData;
 import com.example.cassie.myvolts.dto.HistoryData;
 import com.example.cassie.myvolts.dto.HotData;
 import com.example.cassie.myvolts.dto.ProductData;
 import com.example.cassie.myvolts.testing.TestingBean;
-import com.example.cassie.myvolts.util.HttpUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -91,7 +90,7 @@ public class DbHelp{
             contentValues.put("name",String.valueOf(name));
             contentValues.put("isWhole",String.valueOf(isWhole));
             contentValues.put("productid",String.valueOf(productid));
-            mwcdb.insert("test", null, contentValues);
+            mwcdb.insert("his", null, contentValues);
         }
     }
 
@@ -180,6 +179,49 @@ public class DbHelp{
     }
 
 
+    public List<DeviceData> getALlDeviceData(String result){
+        JSONArray output_arr = new JSONArray();
+        List<DeviceData> newData = new ArrayList<>();
+
+        try {
+            JSONObject obj = new JSONObject(result);
+            JSONArray mv_db_arr = obj.getJSONArray("mv_db");
+            JSONArray mv_db_arr2 = mv_db_arr.getJSONArray(0);
+
+
+            for(int i=0; i<mv_db_arr2.length(); i++) {
+
+                JSONObject item = (JSONObject) mv_db_arr2.get(i);
+                Iterator<String> keys = item.keys();
+
+                String category = keys.next();
+                if(category.equals("device")){
+                    String category_val = item.optString(category);
+                    output_arr.put(category_val);
+                }
+            }
+
+            for(int i=0; i<output_arr.length(); i++){
+                JSONObject jsonObject = new JSONObject(output_arr.getString(i));
+
+                String pi_id = jsonObject.getString("p_id");
+                String manufacturer = jsonObject.getString("manufacturer");
+                String type = jsonObject.getString("type");
+                String name = jsonObject.getString("name");
+                String model = jsonObject.getString("model");
+                String stech = jsonObject.getString("tech");
+
+                newData.add(new DeviceData(pi_id, manufacturer, type, name, model, stech));
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return newData;
+    }
+
+
     public List<String> getAllProductName(){
         List<String> datas=new ArrayList<>();
         if(mwcdb!=null){
@@ -203,6 +245,24 @@ public class DbHelp{
         return datas;
     }
 
+    public List<DeviceData> getSearchedDevices(String pid){
+        List<DeviceData> datas=new ArrayList<>();
+        if(mwcdb!=null){
+//            Cursor cursor= mwcdb.rawQuery("select * from product where name like '%" + searchStr + "%'",new String[]{});
+            Cursor cursor= mwcdb.rawQuery("select * from device where pid =" + pid ,new String[]{});
+            while(cursor.moveToNext()){
+                datas.add(new DeviceData(cursor.getString(cursor.getColumnIndex("pid")),
+                        cursor.getString(cursor.getColumnIndex("manufacturer")),
+                        cursor.getString(cursor.getColumnIndex("type")),
+                        cursor.getString(cursor.getColumnIndex("name")),
+                        cursor.getString(cursor.getColumnIndex("model")),
+                        cursor.getString(cursor.getColumnIndex("tech"))
+                ));
+            }
+        }
+        return datas;
+    }
+
     public void saveProductList(List<ProductData> products) {
         ContentValues values = new ContentValues();
 
@@ -214,6 +274,20 @@ public class DbHelp{
         }
     }
 
+    public void saveDeviceList(List<DeviceData> devices) {
+        ContentValues values = new ContentValues();
+
+        for(int i=0; i<devices.size(); i++) {
+            DeviceData device = devices.get(i);
+            values.put(FeedReaderContract.FeedEntry.DEVICE_COLUMN_PID, device.getPi_id());
+            values.put(FeedReaderContract.FeedEntry.DEVICE_COLUMN_MANU, device.getManufacturer());
+            values.put(FeedReaderContract.FeedEntry.DEVICE_COLUMN_NAME, device.getName());
+            values.put(FeedReaderContract.FeedEntry.DEVICE_COLUMN_TYPE, device.getType());
+            values.put(FeedReaderContract.FeedEntry.DEVICE_COLUMN_MODEL, device.getModel());
+            values.put(FeedReaderContract.FeedEntry.DEVICE_COLUMN_TECH, device.getsTech());
+            mwcdb.insert(FeedReaderContract.FeedEntry.DEVICE_TABLE_NAME, null, values);
+        }
+    }
 
 
     public String getProductIdByName(String name){
@@ -322,6 +396,13 @@ public class DbHelp{
     public void deleteProducts(){
         if(mwcdb!=null){
             mwcdb.execSQL("delete from product");
+        }
+    }
+
+
+    public void deleteDevices(){
+        if(mwcdb!=null){
+            mwcdb.execSQL("delete from device");
         }
     }
 /*

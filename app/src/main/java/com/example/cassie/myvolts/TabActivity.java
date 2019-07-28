@@ -1,10 +1,8 @@
 package com.example.cassie.myvolts;
 
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -18,11 +16,12 @@ import com.claudiodegio.msv.OnSearchViewListener;
 import com.claudiodegio.msv.SuggestionMaterialSearchView;
 import com.example.cassie.myvolts.adapter.ViewPagerAdapter;
 import com.example.cassie.myvolts.db.DbHelp;
-import com.example.cassie.myvolts.fragment.AsinListFragment;
 import com.example.cassie.myvolts.fragment.DeviceListFragment;
 import com.example.cassie.myvolts.fragment.ProductListFragment;
 
 import java.util.List;
+
+//import com.example.cassie.myvolts.fragment.AsinListFragment;
 
 public class TabActivity extends AppCompatActivity implements OnSearchViewListener{
 
@@ -72,12 +71,9 @@ public class TabActivity extends AppCompatActivity implements OnSearchViewListen
         String[] stockArr = new String[list.size()];
         stockArr = list.toArray(stockArr);
 
-
         SuggestionMaterialSearchView cast = (SuggestionMaterialSearchView)mSearchView;
         cast.setSuggestion(stockArr);
         mSearchView.setOnSearchViewListener(this);
-
-
     }
 
     private void initValue(){
@@ -109,7 +105,7 @@ public class TabActivity extends AppCompatActivity implements OnSearchViewListen
 
         adapter.addFragment(new ProductListFragment(), "Product");
         adapter.addFragment(new DeviceListFragment(), "Device");
-        adapter.addFragment(new AsinListFragment(), "ASIN");
+//        adapter.addFragment(new AsinListFragment(), "ASIN");
 
         viewPager.setAdapter(adapter);
     }
@@ -152,12 +148,12 @@ public class TabActivity extends AppCompatActivity implements OnSearchViewListen
 
     @Override
     public void onSearchViewShown() {
-        System.out.println("1");
+        System.out.println("=========onSearchViewShown");
     }
 
     @Override
     public void onSearchViewClosed() {
-        System.out.println("2");
+        System.out.println("=============onSearchViewClosed");
     }
 
     @Override
@@ -173,9 +169,9 @@ public class TabActivity extends AppCompatActivity implements OnSearchViewListen
             adapter = new ViewPagerAdapter(getSupportFragmentManager(), getNewBundle(s));
             viewPager.setAdapter(adapter);
             viewPager.setOffscreenPageLimit(1);
-           adapter.addFragment(new ProductListFragment(), "Product");
-           adapter.addFragment(new DeviceListFragment(), "Device");
-           adapter.addFragment(new AsinListFragment(), "ASIN");
+            adapter.addFragment(new ProductListFragment(), "Product");
+            adapter.addFragment(new DeviceListFragment(), "Device");
+//           adapter.addFragment(new AsinListFragment(), "ASIN");
 
             adapter.notifyChangeInPosition(1);
             adapter.notifyDataSetChanged();
@@ -191,7 +187,7 @@ public class TabActivity extends AppCompatActivity implements OnSearchViewListen
 
     @Override
     public void onQueryTextChange(String s) {
-        System.out.println("4");
+        System.out.println("=========onQueryTextChange");
     }
 
     private void forwardToSannerActivity(String pid) {

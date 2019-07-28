@@ -14,6 +14,7 @@ public class DeviceData implements Comparable<DeviceData> {
     private String asin;
     private String model;
     private TechSpec tech;
+    private String stech;
 
     public DeviceData(String manufacturer, String type){
         this.manufacturer =manufacturer;
@@ -39,6 +40,15 @@ public class DeviceData implements Comparable<DeviceData> {
         this.manufacturer = manufacturer;
         this.asin = asin;
         this.model = model;
+    }
+
+    public DeviceData(String pi_id, String manufacturer, String name, String type, String model, String tech) {
+        this.pi_id = pi_id;
+        this.manufacturer = manufacturer;
+        this.name = name;
+        this.type = type;
+        this.model = model;
+        this.stech = tech;
     }
 
     public String getPi_id() {
@@ -88,6 +98,15 @@ public class DeviceData implements Comparable<DeviceData> {
     public void setTech(TechSpec tech) {
         this.tech = tech;
     }
+
+    public String getsTech() {
+        return stech;
+    }
+
+    public void setsTech(String stech) {
+        this.stech = stech;
+    }
+
 
     public String getModel() {
         return model;

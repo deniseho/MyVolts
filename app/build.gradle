@@ -47,6 +47,7 @@ dependencies {
     compile 'com.github.michaelye.easydialog:easydialog:1.4'
     compile 'com.github.claudiodegio:MsvSearch:1.0.0'
     testCompile 'junit:junit:4.12'
+    implementation 'com.google.code.gson:gson:2.8.5'
     //apt 'com.jakewharton:butterknife-compiler:8.0.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.0.1'
 }

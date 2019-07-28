@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.example.cassie.myvolts.R;
 import com.example.cassie.myvolts.ScannerActivity;
 import com.example.cassie.myvolts.adapter.DeviceListAdapter;
+import com.example.cassie.myvolts.db.DbHelp;
 import com.example.cassie.myvolts.dto.DeviceData;
 import com.example.cassie.myvolts.dto.ProductData;
 import com.example.cassie.myvolts.util.HttpUtils;
@@ -33,14 +34,8 @@ import com.example.cassie.myvolts.util.RegexUtil;
 import com.example.cassie.myvolts.util.TestUtil;
 import com.github.clans.fab.FloatingActionButton;
 
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
-
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import uk.ac.shef.wit.simmetrics.similaritymetrics.JaroWinkler;
@@ -78,7 +73,7 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnScroll
     View no_result,no_internet;
 
     GetDeviceByName db;
-
+    DbHelp dbHelp;
 
     private EditText mailTo;
     private EditText mailSubject;
@@ -119,11 +114,11 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnScroll
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     TestUtil.storeSearchClicks(sharedPreferences, editor, "resultsListClick");
-                    if(pis.size() > 0) {
-                        DeviceData device = pis.get(position);
-                        GetProductByAsin getProductByAsin = new GetProductByAsin();
-                        getProductByAsin.execute(device.getAsin());
-                    }
+//                    if(pis.size() > 0) {
+//                        DeviceData device = pis.get(position);
+//                        GetProductByAsin getProductByAsin = new GetProductByAsin();
+//                        getProductByAsin.execute(device.getAsin());
+//                    }
                 }
             });
             devicefrag = (FrameLayout) view.findViewById(R.id.device_fragment);
@@ -158,7 +153,7 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnScroll
     private void updataData(){
         db = new GetDeviceByName();
         db.execute(RegexUtil.spliteRegex(""));
-        Toast.makeText(getActivity(), "update data from productListFrag", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "update data from deviceListFrag", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -234,8 +229,8 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnScroll
                             ft.detach(DeviceListFragment.this).attach(DeviceListFragment.this).commit();
                             ProductListFragment productListFragment = (ProductListFragment) getFragmentManager().findFragmentByTag("android:switcher:"+R.id.viewpager+":0");
                             productListFragment.updateView();
-                            AsinListFragment asinListFragment = (AsinListFragment) getFragmentManager().findFragmentByTag("android:switcher:"+R.id.viewpager+":2");
-                            asinListFragment.updateView();
+//                            AsinListFragment asinListFragment = (AsinListFragment) getFragmentManager().findFragmentByTag("android:switcher:"+R.id.viewpager+":2");
+//                            asinListFragment.updateView();
                         }
                     }
                 });
@@ -304,6 +299,56 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnScroll
     }
 
 
+//    public class GetDeviceByName extends AsyncTask<String, Void, String> {
+//
+//        ProgressDialog p = new ProgressDialog(getActivity());
+//
+//        @Override
+//        protected void onPreExecute() {
+//            // TODO Auto-generated method stub
+//            super.onPreExecute();
+//            p.setMessage("Loading...");
+//            p.show();
+//        }
+//
+//        @Override
+//        protected String doInBackground(String... arg0) {
+//            String result = "";
+//            String url = "https://api.myjson.com/bins/x6a9y"; //"http://api.myjson.com/bins/1hcph0"; //"http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/mv2.54/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0ASELECT%20%20distinct%20%3Fprod_id%20%20%3Fpname%20%3Ftype%20%0AWHERE%20%0A%7B%20%0A%20%3Fprod_id%20%3Aproduct_name%20%3Fpname%20.%0A%20%3Fprod_id%20%3AisOfTypeCategory%20%3Ftype%20.%0A%0A%20filter%20(regex(%3Fpname%2C%20%22" + arg0[0] + "%22%2C%20%22i%22)" + args + ")%20.%0A%7D%0Aorder%20by%20%3Fpname%0ALIMIT%2010"+ offset +"&limit=100&infer=true&";
+//            result = HttpUtils.doGet(url);
+//            return result;
+//        }
+//
+//        List<DeviceData> deviceData = new ArrayList<>();
+//
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+////            List<DeviceData> allDeviceData = dbHelp.getALlDeviceData(result);
+////
+////            dbHelp.deleteDevices();
+////            dbHelp.saveDeviceList(allDeviceData);
+//
+//            deviceData = dbHelp.getSearchedDevices(searchStr);
+//
+//            if(searchStr != null)
+//                        Collections.sort(deviceData);
+//
+//                    if (adapter == null) {
+//                        adapter = new DeviceListAdapter(pis, getContext(), searchStr);
+//                        listView.setAdapter(adapter);
+//                        if(loadMoreView3 == null) {
+//                            loadMoreView3 = getActivity().getLayoutInflater().inflate(R.layout.load_more, null);
+//                            loadmorebutton = (TextView) loadMoreView3.findViewById(R.id.loadMoreButton);
+//                            listView.addFooterView(loadmorebutton);
+//                        }
+//                    }
+//
+//                    pis.addAll(deviceData);
+//                    adapter.setDatas(pis);
+//
+//        }
+//    }
+
     public class GetDeviceByName extends AsyncTask<String, Void, String> {
 
         ProgressDialog p = new ProgressDialog(getActivity());
@@ -319,27 +364,27 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnScroll
         @Override
         protected String doInBackground(String... arg0) {
             // TODO Auto-generated method stub
-            String offset = "";
-            if(curPage > 0) {
-                offset = "%0AOFFSET%20" + curPage * 10;
-            }
-            curPage++;
+//            String offset = "";
+//            if(curPage > 0) {
+//                offset = "%0AOFFSET%20" + curPage * 10;
+//            }
+//            curPage++;
+//            String result = "";
+//            if(searchStr != null && !searchStr.equals("")) {
+//                String args = "";
+//                for(int i = 1; i < arg0.length; i++){
+//                    args = args + "%20%7C%7C%20%20regex(%3Fdname%2C%20%22" + arg0[i] + "%22%2C%20%22i%22)";
+//                }
+
+//                String url = "https://api.myjson.com/bins/x6a9y";//"http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/mv2.53/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0A%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0A%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0A%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0A%0ASELECT%20distinct%20%3Fpi_id%20%3Fmname%20%3Fdname%20%3Fmodel%20%3Fasin%20WHERE%20%7B%0A%0A%3Fpi_id%20%3AisManufacturedBy%20%3Fman%20.%0A%0A%3Fman%20%3Amanufacturer_name%20%3Fmname%20.%0A%0A%3Fpi_id%20%3Api_name%20%3Fdname%20.%0A%0A%3Fpi_id%20%3ApiModel_name%20%3Fmodel%20.%0A%0A%3Fpi_id%20%3Api_asin%20%3Fasin%20.%0A%0AFILTER%20(regex(%3Fdname%2C%20%22" + arg0[0] + "%22%2C%20%22i%22)" + args + ")%20.%0AFilter(%3Fasin%20!%3D%20%22%22)%0A%7D%0AOrder%20By%20%3Fdname%0ALIMIT%2010" + offset +"&limit=100&infer=true&";
+//
+//                result = HttpUtils.doGet(url);
+//            }
+//
+//            return result;
             String result = "";
-            if(searchStr != null && !searchStr.equals("")) {
-                String args = "";
-                for(int i = 1; i < arg0.length; i++){
-                    args = args + "%20%7C%7C%20%20regex(%3Fdname%2C%20%22" + arg0[i] + "%22%2C%20%22i%22)";
-                }
-
-                String url = "http://api.myjson.com/bins/1hcph0";//"http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/mv2.53/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0A%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0A%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0A%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0A%0ASELECT%20distinct%20%3Fpi_id%20%3Fmname%20%3Fdname%20%3Fmodel%20%3Fasin%20WHERE%20%7B%0A%0A%3Fpi_id%20%3AisManufacturedBy%20%3Fman%20.%0A%0A%3Fman%20%3Amanufacturer_name%20%3Fmname%20.%0A%0A%3Fpi_id%20%3Api_name%20%3Fdname%20.%0A%0A%3Fpi_id%20%3ApiModel_name%20%3Fmodel%20.%0A%0A%3Fpi_id%20%3Api_asin%20%3Fasin%20.%0A%0AFILTER%20(regex(%3Fdname%2C%20%22" + arg0[0] + "%22%2C%20%22i%22)" + args + ")%20.%0AFilter(%3Fasin%20!%3D%20%22%22)%0A%7D%0AOrder%20By%20%3Fdname%0ALIMIT%2010" + offset +"&limit=100&infer=true&";
-
-                result = HttpUtils.doGet(url);
-                System.out.println("================result");
-                System.out.println(result);
-
-
-            }
-
+            String url = "https://api.myjson.com/bins/x6a9y"; //"http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/mv2.54/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0ASELECT%20%20distinct%20%3Fprod_id%20%20%3Fpname%20%3Ftype%20%0AWHERE%20%0A%7B%20%0A%20%3Fprod_id%20%3Aproduct_name%20%3Fpname%20.%0A%20%3Fprod_id%20%3AisOfTypeCategory%20%3Ftype%20.%0A%0A%20filter%20(regex(%3Fpname%2C%20%22" + arg0[0] + "%22%2C%20%22i%22)" + args + ")%20.%0A%7D%0Aorder%20by%20%3Fpname%0ALIMIT%2010"+ offset +"&limit=100&infer=true&";
+            result = HttpUtils.doGet(url);
             return result;
         }
 
@@ -349,60 +394,81 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnScroll
             super.onPostExecute(result);
             p.dismiss();
 
-            List<DeviceData> newData = new ArrayList<>();
+//            List<DeviceData> newData = new ArrayList<>();
 
-            String pi_id = "";
-            String dname = "";
-            String asin= "";
-            String model = "";
-            String mname = "";
-            Document doc = null;
+//            String pi_id = "";
+//            String dname = "";
+//            String asin= "";
+//            String model = "";
+//            String mname = "";
+//            Document doc = null;
 
             if(result != null && !result.equals("")) {
 
-                try {
-                    doc = DocumentHelper.parseText(result);
-                    Element rootElt = doc.getRootElement();
-                    Iterator iter = rootElt.elementIterator("results");
-                    while (iter.hasNext()) {
+//                try {
+//                    doc = DocumentHelper.parseText(result);
+//                    Element rootElt = doc.getRootElement();
+//                    Iterator iter = rootElt.elementIterator("mv_db");
+//                    while (iter.hasNext()) {
+//
+//                        Element resultRecord = (Element) iter.next();
+//                        Iterator itersElIterator = resultRecord.elementIterator("result");
+//                        if (!itersElIterator.hasNext() && count == 0) {
+//                            removeListViewToNoResults();
+//                            break;
+//                        }else if (!itersElIterator.hasNext()) {
+//                            //Toast.makeText(getContext(), "No more results...", Toast.LENGTH_SHORT).show();
+//                        }
+//                        count++;
+//                        while (itersElIterator.hasNext()) {
+//                            Element itemEle = (Element) itersElIterator.next();
+//                            Iterator literLIterator = itemEle.elementIterator("binding");
+//                            while (literLIterator.hasNext()) {
+//                                Element ele = (Element) literLIterator.next();
+//                                if ("pi_id".equals(ele.attributeValue("name"))) {
+//                                    pi_id = ele.elementTextTrim("uri");
+//                                } else if ("model".equals(ele.attributeValue("name"))) {
+//                                    model = ele.elementTextTrim("literal");
+//                                } else if ("asin".equals(ele.attributeValue("name"))) {
+//                                    asin = ele.elementTextTrim("literal");
+//                                } else if ("mname".equals(ele.attributeValue("name"))) {
+//                                    mname = ele.elementTextTrim("literal");
+//                                } else if ("dname".equals(ele.attributeValue("name"))) {
+//                                    dname = ele.elementTextTrim("literal");
+//                                }
+//                            }
+//
+//                            DeviceData data = new DeviceData(pi_id, dname, mname, asin, model);
+//                            newData.add(data);
+//                        }
 
-                        Element resultRecord = (Element) iter.next();
-                        Iterator itersElIterator = resultRecord.elementIterator("result");
-                        if (!itersElIterator.hasNext() && count == 0) {
-                            removeListViewToNoResults();
-                            break;
-                        }else if (!itersElIterator.hasNext()) {
-                            //Toast.makeText(getContext(), "No more results...", Toast.LENGTH_SHORT).show();
-                        }
-                        count++;
-                        while (itersElIterator.hasNext()) {
-                            Element itemEle = (Element) itersElIterator.next();
-                            Iterator literLIterator = itemEle.elementIterator("binding");
-                            while (literLIterator.hasNext()) {
-                                Element ele = (Element) literLIterator.next();
-                                if ("pi_id".equals(ele.attributeValue("name"))) {
-                                    pi_id = ele.elementTextTrim("uri");
-                                } else if ("model".equals(ele.attributeValue("name"))) {
-                                    model = ele.elementTextTrim("literal");
-                                } else if ("asin".equals(ele.attributeValue("name"))) {
-                                    asin = ele.elementTextTrim("literal");
-                                } else if ("mname".equals(ele.attributeValue("name"))) {
-                                    mname = ele.elementTextTrim("literal");
-                                } else if ("dname".equals(ele.attributeValue("name"))) {
-                                    dname = ele.elementTextTrim("literal");
-                                }
-                            }
 
-                            DeviceData data = new DeviceData(pi_id, dname, mname, asin, model);
-                            newData.add(data);
-                        }
-                    }
+                String pi_id = sharedPreferences.getString("pid", null);
+                String manufacturer = sharedPreferences.getString("manufacturer", null);
+                String name = sharedPreferences.getString("name", null);
+                String type = sharedPreferences.getString("type", null);
+                String model = sharedPreferences.getString("model", null);
+                String tech = sharedPreferences.getString("tech", null);
 
+                DeviceData data = new DeviceData(pi_id, manufacturer, name, type, model, tech);
+//                DeviceData data = new DeviceData("53", "Sharp", "TV and monitor", "TV", "Aquos LC-13S1U-S", "4");
+                List<DeviceData> deviceData = new ArrayList<>();//dbHelp.getSearchedDevices(searchStr);
+
+//                String str = sharedPreferences.getString("deviceData", "");
+//                if (!str.isEmpty()) {
+//                    DeviceData device = new GsonBuilder()
+//                            .serializeNulls()
+//                            .create()
+//                            .fromJson(str, DeviceData.class);
+//                    System.out.println(device);
+//                }
+
+                deviceData.add(data);
                     if(searchStr != null)
-                        Collections.sort(newData);
+                        Collections.sort(deviceData);
 
                     if (adapter == null) {
-                        adapter = new DeviceListAdapter(pis, getContext(), searchStr);
+                        adapter = new DeviceListAdapter(deviceData, getContext(), searchStr);
                         listView.setAdapter(adapter);
                         if(loadMoreView3 == null) {
                             loadMoreView3 = getActivity().getLayoutInflater().inflate(R.layout.load_more, null);
@@ -411,90 +477,90 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnScroll
                         }
                     }
 
-                    pis.addAll(newData);
-                    adapter.setDatas(pis);
-
-                } catch (DocumentException e) {
-                    e.printStackTrace();
-                }
+//                    pis.addAll(deviceData);
+                    adapter.setDatas(deviceData);
+//
+//                } catch (DocumentException e) {
+//                    e.printStackTrace();
+//                }
             }else{
                 removeListViewToNoResults();
             }
         }
     }
 
-    public class GetProductByAsin extends AsyncTask<String, Void, String> {
-
-        ProgressDialog p = new ProgressDialog(getActivity(),
-                R.style.SpinnerTheme);
-
-        @Override
-        protected void onPreExecute() {
-            // TODO Auto-generated method stub
-            super.onPreExecute();
-            p.setMessage("Loading...");
-            p.show();
-        }
-
-        @Override
-        protected String doInBackground(String... arg0) {
-            // TODO Auto-generated method stub
-            String url = "http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/29.03mv2.4/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0A%0ASELECT%20%20Distinct%20%3Fprod_id%20%3Fpname%20%3Fx%20%3Fy%20%3Fz%0AWHERE%0A%7B%20%0A%20%3Fpi_id%20%3AHasTechSpec%20%3Fts_id%20.%0A%20%3Fprod_id%20%3ASupports%20%3Fts_id%20.%0A%20%3Fts_id%20%3AVoltage%20%3Fx%20.%0A%20%3Fts_id%20%3AAmperage%20%3Fy%20.%0A%20%3Fts_id%20%3ATip_length%20%3Fz%20.%0A%20%3Fprod_id%20%3AProduct_name%20%3Fpname%20.%0A%20%3Fpi_id%20%3APi_asin%20%22" + arg0[0] + "%22%20.%0A%7D%0AORDER%20BY%20%3Fpname&limit=100&infer=true&";
-            //System.out.println(url);
-            String result = "";
-            try {
-                result = HttpUtils.doGet(url);
-            }catch(RuntimeException rt){
-
-            }
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            // TODO Auto-generated method stub
-            super.onPostExecute(result);
-            p.dismiss();
-
-            System.out.println(result);
-
-
-            Document doc = null;
-            String product_id = "";
-
-            if(result != null && !result.equals("")) {
-                try {
-                    doc = DocumentHelper.parseText(result);
-                    Element rootElt = doc.getRootElement();
-                    Iterator iter = rootElt.elementIterator("results");
-
-                    while (iter.hasNext()) {
-                        Element resultRecord = (Element) iter.next();
-                        Iterator itersElIterator = resultRecord.elementIterator("result");
-
-                        while (itersElIterator.hasNext()) {
-                            Element itemEle = (Element) itersElIterator.next();
-                            Iterator literLIterator = itemEle.elementIterator("binding");
-                            while (literLIterator.hasNext()) {
-                                Element ele = (Element) literLIterator.next();
-                                if ("prod_id".equals(ele.attributeValue("name"))) {
-                                    product_id = ele.elementTextTrim("uri");
-                                }
-                            }
-                        }
-                    }
-                    pdata = new ProductData();
-                    pdata.setProductId(product_id);
-                    ForwardPdataToScannerActivity(pdata);
-                } catch (DocumentException e) {
-                    e.printStackTrace();
-                }
-
-            } else {
-                doNoInternet();
-            }
-        }
-    }
+//    public class GetProductByAsin extends AsyncTask<String, Void, String> {
+//
+//        ProgressDialog p = new ProgressDialog(getActivity(),
+//                R.style.SpinnerTheme);
+//
+//        @Override
+//        protected void onPreExecute() {
+//            // TODO Auto-generated method stub
+//            super.onPreExecute();
+//            p.setMessage("Loading...");
+//            p.show();
+//        }
+//
+//        @Override
+//        protected String doInBackground(String... arg0) {
+//            // TODO Auto-generated method stub
+//            String url = "http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/29.03mv2.4/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0A%0ASELECT%20%20Distinct%20%3Fprod_id%20%3Fpname%20%3Fx%20%3Fy%20%3Fz%0AWHERE%0A%7B%20%0A%20%3Fpi_id%20%3AHasTechSpec%20%3Fts_id%20.%0A%20%3Fprod_id%20%3ASupports%20%3Fts_id%20.%0A%20%3Fts_id%20%3AVoltage%20%3Fx%20.%0A%20%3Fts_id%20%3AAmperage%20%3Fy%20.%0A%20%3Fts_id%20%3ATip_length%20%3Fz%20.%0A%20%3Fprod_id%20%3AProduct_name%20%3Fpname%20.%0A%20%3Fpi_id%20%3APi_asin%20%22" + arg0[0] + "%22%20.%0A%7D%0AORDER%20BY%20%3Fpname&limit=100&infer=true&";
+//            //System.out.println(url);
+//            String result = "";
+//            try {
+//                result = HttpUtils.doGet(url);
+//            }catch(RuntimeException rt){
+//
+//            }
+//            return result;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            // TODO Auto-generated method stub
+//            super.onPostExecute(result);
+//            p.dismiss();
+//
+//            System.out.println(result);
+//
+//
+//            Document doc = null;
+//            String product_id = "";
+//
+//            if(result != null && !result.equals("")) {
+//                try {
+//                    doc = DocumentHelper.parseText(result);
+//                    Element rootElt = doc.getRootElement();
+//                    Iterator iter = rootElt.elementIterator("results");
+//
+//                    while (iter.hasNext()) {
+//                        Element resultRecord = (Element) iter.next();
+//                        Iterator itersElIterator = resultRecord.elementIterator("result");
+//
+//                        while (itersElIterator.hasNext()) {
+//                            Element itemEle = (Element) itersElIterator.next();
+//                            Iterator literLIterator = itemEle.elementIterator("binding");
+//                            while (literLIterator.hasNext()) {
+//                                Element ele = (Element) literLIterator.next();
+//                                if ("prod_id".equals(ele.attributeValue("name"))) {
+//                                    product_id = ele.elementTextTrim("uri");
+//                                }
+//                            }
+//                        }
+//                    }
+//                    pdata = new ProductData();
+//                    pdata.setProductId(product_id);
+//                    ForwardPdataToScannerActivity(pdata);
+//                } catch (DocumentException e) {
+//                    e.printStackTrace();
+//                }
+//
+//            } else {
+//                doNoInternet();
+//            }
+//        }
+//    }
 
 
     private void removeListViewToNoResults() {
