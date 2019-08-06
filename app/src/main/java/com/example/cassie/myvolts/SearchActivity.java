@@ -107,7 +107,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         autoAdapter = new ArrayAdapter<>(this,
 //                R.layout.item_data, R.id.item_name,dbHelp.getAllProductName());
 //                R.layout.item_data, R.id.item_name,BRANDS);
-                  R.layout.item_data, R.id.item_name, dbHelp.getInitTestData(search.getText().toString()));
+                  R.layout.item_data, R.id.item_name, dbHelp.getInitData(search.getText().toString()));
 
         search.setAdapter(autoAdapter);
 

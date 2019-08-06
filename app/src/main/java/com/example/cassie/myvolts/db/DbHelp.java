@@ -18,6 +18,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -35,28 +36,17 @@ public class DbHelp{
         mwcdb = dbHelper.getWritableDatabase();
     }
 
-    public List<String> getInitTestData(String searchText){
+    public List<String> getInitData(String input){
         List<String> datas = new ArrayList<>();
-
-        //todo: select from database
-        datas.add("Sony DVD player DVP-FX720 Compatible Power Supply Cable & in Car Charger");
-        datas.add("Korg Tuner Pitchblack Compatible Power Supply Cable & in Car Charger");
-        datas.add("Korg PSU part KA-183 Compatible Power Supply Cable & in Car Charger");
-        datas.add("Dymo Label printer LT-100H Compatible Power Supply Plug Charger");
-        datas.add("Seagate PSU part FreeAgent 9NK2AE-500 Compatible Power Supply Plug Charger");
-
-//        if(mwcdb!=null){
-//            Cursor cursor= mwcdb.rawQuery("select testData from initTestData",new String[]{});
-//            while(cursor.moveToNext()){
-//                datas.add(cursor.getString(1));
-//            }
-//        }
-
+        if(mwcdb!=null){
+            Cursor cursor= mwcdb.rawQuery("select manufacturer, name, model from device",new String[]{});
+            while(cursor.moveToNext()){
+                datas.add(cursor.getString(0) + ", " + cursor.getString(1) + ", " + cursor.getString(2)  );
+            }
+        }
         return datas;
     }
 
-
-    //--------------------------------------
 
     public List<HistoryData> getHisData(){
         List<HistoryData> datas=new ArrayList<>();
@@ -141,7 +131,7 @@ public class DbHelp{
         }
     }
 
-    public List<ProductData> getALlProductData(String result) {
+    public List<ProductData> getProductData(String result) {
         JSONArray output_arr = new JSONArray();
         List<ProductData> newData = new ArrayList<>();
 
@@ -179,7 +169,8 @@ public class DbHelp{
     }
 
 
-    public List<DeviceData> getALlDeviceData(String result){
+
+    public List<DeviceData> getAllDeviceData(String result){
         JSONArray output_arr = new JSONArray();
         List<DeviceData> newData = new ArrayList<>();
 
@@ -234,9 +225,13 @@ public class DbHelp{
     }
 
     public List<ProductData> getSearchedProducts(String searchStr){
+        String value = searchStr.split(",")[2].trim();
+
         List<ProductData> datas=new ArrayList<>();
         if(mwcdb!=null){
-            Cursor cursor= mwcdb.rawQuery("select * from product where name like '%" + searchStr + "%'",new String[]{});
+//            Cursor cursor= mwcdb.rawQuery("select * from product where name like '%" + searchStr + "%'",new String[]{});
+            Cursor cursor= mwcdb.rawQuery("select  product.name, product.pid from product, device where product.pid = device.pid AND device.model = ?",new String[]{value});
+
             while(cursor.moveToNext()){
                 datas.add(new ProductData(cursor.getString(cursor.getColumnIndex("name")),
                         cursor.getString(cursor.getColumnIndex("pid"))));
