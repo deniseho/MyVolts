@@ -374,7 +374,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
         dialog.setPositiveButton("Search for cables", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                search(searchStr.split(",")[2].trim());
+                search(searchStr);
                 editText = (EditText) findViewById(R.id.search);
                 editText.setSelection(editText.getText().length());
                 editText.requestFocus();
