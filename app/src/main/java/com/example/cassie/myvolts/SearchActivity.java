@@ -358,17 +358,23 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private EditText editText;
-    private void showAlertDialog(final String brand) {
+    private void showAlertDialog(final String searchStr) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.fragment_confirm, null);
         dialog.setView(dialogView);
         TextView brandTextView = (TextView)dialogView.findViewById(R.id.brand_name);
-        brandTextView.setText(brand);
+        brandTextView.setText(searchStr.split(",")[0].trim());
+
+        TextView deviceTextView = (TextView)dialogView.findViewById(R.id.device_name);
+        deviceTextView.setText(searchStr.split(",")[1].trim());
+
+        TextView modelTextView = (TextView)dialogView.findViewById(R.id.device_model);
+        modelTextView.setText(searchStr.split(",")[2].trim());
 
         dialog.setPositiveButton("Search for cables", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                search(brand);
+                search(searchStr.split(",")[2].trim());
                 editText = (EditText) findViewById(R.id.search);
                 editText.setSelection(editText.getText().length());
                 editText.requestFocus();

@@ -32,8 +32,6 @@ import com.example.cassie.myvolts.util.RegexUtil;
 import com.example.cassie.myvolts.util.TestUtil;
 import com.github.clans.fab.FloatingActionButton;
 
-import org.json.JSONArray;
-
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -279,31 +277,20 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-//            List<ProductData> productDataList = dbHelp.getProductData(result);
-//            List<DeviceData> allDeviceData = dbHelp.getAllDeviceData(result);
-//
-//            dbHelp.deleteProducts();
-//            dbHelp.deleteDevices();
-//            dbHelp.saveProductList(productDataList);
-//            dbHelp.saveDeviceList(allDeviceData);
+            List<ProductData> productDataList = dbHelp.getProductData(result);
+            List<DeviceData> allDeviceData = dbHelp.getAllDeviceData(result);
+
+            dbHelp.deleteProducts();
+            dbHelp.deleteDevices();
+            dbHelp.saveProductList(productDataList);
+            dbHelp.saveDeviceList(allDeviceData);
 
             List<ProductData> productData = dbHelp.getSearchedProducts(searchStr);
             List<DeviceData> deviceData = new ArrayList<>();
-            JSONArray deviceDatajson = new JSONArray();
 
             for(int i=0; i < productData.size(); i++) {
                 deviceData.addAll(dbHelp.getSearchedDevices(productData.get(i).getProductId()));
             }
-
-//          for(int i=0; i < deviceData.size(); i++){
-//              deviceDatajson.put("pid", deviceData.get(i).getPi_id());
-//              deviceDatajson.put("manufacturer", deviceData.get(i).getManufacturer());
-//              deviceDatajson.put("name", deviceData.get(i).getName());
-//              deviceDatajson.put("type", deviceData.get(i).getType());
-//              deviceDatajson.put("model", deviceData.get(i).getModel());
-//              deviceDatajson.put("tech", deviceData.get(i).getsTech());
-//              editor.putString("deviceData", new GsonBuilder().create().toJson(deviceData.get(i)));
-//          }
 
             for(int i=0; i < deviceData.size(); i++) {
 

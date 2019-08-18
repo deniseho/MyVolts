@@ -12,7 +12,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Device"
+            android:text="Brand"
             android:textSize="18sp"/>
 
         <TextView
@@ -20,21 +20,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="30sp" />
-            <!--<Button-->
-                <!--android:id="@+id/confirm_search"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginTop="40dp"-->
-                <!--android:text="Search for Cable"-->
-                <!--android:background="@color/app_primary"-->
-                <!--android:textColor="@color/white"/>-->
 
-            <!--<Button-->
-                <!--android:id="@+id/confirm_cancel"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:background="@color/grey"-->
-                <!--android:text="Cancel"-->
-                <!--android:layout_marginTop="6dp"/>-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Device"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/device_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Model"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/device_model"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30sp" />
 
 </LinearLayout>

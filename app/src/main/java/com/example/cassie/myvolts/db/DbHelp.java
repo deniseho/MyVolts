@@ -230,7 +230,7 @@ public class DbHelp{
         List<ProductData> datas=new ArrayList<>();
         if(mwcdb!=null){
 //            Cursor cursor= mwcdb.rawQuery("select * from product where name like '%" + searchStr + "%'",new String[]{});
-            Cursor cursor= mwcdb.rawQuery("select  product.name, product.pid from product, device where product.pid = device.pid AND device.model = ?",new String[]{value});
+            Cursor cursor= mwcdb.rawQuery("select product.name, product.pid from product, device where product.pid = device.pid AND device.model = ?",new String[]{value});
 
             while(cursor.moveToNext()){
                 datas.add(new ProductData(cursor.getString(cursor.getColumnIndex("name")),
