@@ -184,8 +184,6 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnScroll
 
         }else {
             doWithInternet(searchStr);
-            Toast.makeText(getActivity(), searchStr, Toast.LENGTH_SHORT).show();
-
         }
     }
 
