@@ -3,11 +3,14 @@ package com.example.cassie.myvolts.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +18,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +36,10 @@ import com.example.cassie.myvolts.util.RegexUtil;
 import com.example.cassie.myvolts.util.TestUtil;
 import com.github.clans.fab.FloatingActionButton;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -91,7 +99,36 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
             type = bundle.getString("device");
             model = bundle.getString("model");
         }
+
+
     }
+
+    private class ProductImageFromInternet extends AsyncTask<String, Void, Bitmap> {
+        ImageView imageView;
+
+        public ProductImageFromInternet(ImageView imageView) {
+            this.imageView = imageView;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String imageURL = urls[0];
+            Bitmap bimage = null;
+            try {
+                InputStream in = new java.net.URL(imageURL).openStream();
+                bimage = BitmapFactory.decodeStream(in);
+
+            } catch (Exception e) {
+                Log.e("Error Message", e.getMessage());
+                e.printStackTrace();
+            }
+            return bimage;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            imageView.setImageBitmap(result);
+        }
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -116,7 +153,7 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
 
         initInternetStatusPage(searchStr);
         setFab();
-
+        
         return view;
     }
 

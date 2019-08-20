@@ -2,11 +2,16 @@ package com.example.cassie.myvolts;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -28,6 +33,7 @@ import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
+import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -41,6 +47,8 @@ public class ScannerActivity extends AppCompatActivity {
 
     @BindView(R.id.product_name)
     TextView pro_name;
+    @BindView(R.id.link)
+    TextView prod_link;
     @BindView(R.id.why)
     RelativeLayout why;
     @BindView(R.id.warranty)
@@ -92,7 +100,44 @@ public class ScannerActivity extends AppCompatActivity {
         }
 
 //        testTask1();
+        prod_link.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view)
+            {
+                Intent browser= new Intent(Intent.ACTION_VIEW, Uri.parse("https://myvolts.co.uk/product/" + prod_id));
+                startActivity(browser);
+            }
+        });
 
+        new ProductImageFromInternet(product_photo)
+                .execute("https://myvolts.co.uk/imgs/prd/455/3/Desktop_Power_Adapter_250x250_250x250.jpg");
+
+    }
+
+    public class ProductImageFromInternet extends AsyncTask<String, Void, Bitmap> {
+        ImageView imageView;
+
+        public ProductImageFromInternet(ImageView imageView) {
+            this.imageView = imageView;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String imageURL = urls[0];
+            Bitmap bimage = null;
+            try {
+                InputStream in = new java.net.URL(imageURL).openStream();
+                bimage = BitmapFactory.decodeStream(in);
+
+            } catch (Exception e) {
+                Log.e("Error Message", e.getMessage());
+                e.printStackTrace();
+            }
+            return bimage;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            imageView.setImageBitmap(result);
+        }
     }
 
     private void NormalListDialogNoTitle() {
