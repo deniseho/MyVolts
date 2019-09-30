@@ -15,25 +15,19 @@ public final class FeedReaderContract {
         public static final String _ID = "id";
         public static final String PRODUCT_TABLE_NAME = "product";
         public static final String PRODUCT_COLUMN_NAME = "name";
-        public static final String PRODUCT_COLUMN_ID = "pid";
+        public static final String PRODUCT_COLUMN_DESC = "desc";
+        public static final String PRODUCT_COLUMN_FILE = "file";
+        public static final String PRODUCT_COLUMN_ID = "productId";
 
-//        private static final String SQL_CREATE_DEVICE_ENTRIES =
-//"CREATE TABLE " + FeedReaderContract.FeedEntry.DEVICE_TABLE_NAME + " (" +
-//        FeedReaderContract.FeedEntry._ID + " INTEGER PRIMARY KEY," +
-//        FeedReaderContract.FeedEntry.DEVICE_COLUMN_PID + " TEXT," +
-//        FeedReaderContract.FeedEntry.DEVICE_COLUMN_MANU + " TEXT," +
-//        FeedReaderContract.FeedEntry.DEVICE_COLUMN_NAME + " TEXT," +
-//        FeedReaderContract.FeedEntry.DEVICE_COLUMN_TYPE + " TEXT," +
-//        FeedReaderContract.FeedEntry.DEVICE_COLUMN_MODEL + " TEXT," +
-//        FeedReaderContract.FeedEntry.DEVICE_COLUMN_TECH + " TEXT)";
-//
+
         public static final String DEVICE_TABLE_NAME = "device";
-        public static final String DEVICE_COLUMN_PID = "pid";
+        public static final String DEVICE_COLUMN_PID = "p_id";
         public static final String DEVICE_COLUMN_MANU = "manufacturer";
         public static final String DEVICE_COLUMN_NAME = "name";
-        public static final String DEVICE_COLUMN_TYPE = "type";
         public static final String DEVICE_COLUMN_MODEL = "model";
-        public static final String DEVICE_COLUMN_TECH = "tech";
+        public static final String DEVICE_COLUMN_MV_UK = "mv_uk";
+        public static final String DEVICE_COLUMN_MV_DE = "mv_de";
+        public static final String DEVICE_COLUMN_MV_US = "mv_us";
 
         public static final String TABLE_NAME_HISTORY = "his";
         public static final String HISTORY_COLUMN_NAME_HISTORY_NAME = "name";

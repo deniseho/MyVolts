@@ -36,10 +36,7 @@ import com.example.cassie.myvolts.util.RegexUtil;
 import com.example.cassie.myvolts.util.TestUtil;
 import com.github.clans.fab.FloatingActionButton;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -153,7 +150,15 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
 
         initInternetStatusPage(searchStr);
         setFab();
-        
+//        try {
+//            ImageView i = (ImageView)view.findViewById(R.id.img);
+//            Bitmap bitmap = BitmapFactory.decodeStream((InputStream)new URL(imageUrl).getContent());
+//            i.setImageBitmap(bitmap);
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         return view;
     }
 
@@ -197,16 +202,16 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
                 no_internet.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(NetworkUtil.isNetworkAvailable(getActivity()) == true) {
-                            no_internet.setVisibility(View.GONE);
-                            listView.setVisibility(View.VISIBLE);
-                            FragmentTransaction ft = getFragmentManager().beginTransaction();
-                            ft.detach(ProductListFragment.this).attach(ProductListFragment.this).commit();
+                    if(NetworkUtil.isNetworkAvailable(getActivity()) == true) {
+                        no_internet.setVisibility(View.GONE);
+                        listView.setVisibility(View.VISIBLE);
+                        FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        ft.detach(ProductListFragment.this).attach(ProductListFragment.this).commit();
 //                            DeviceListFragment deviceListFragment = (DeviceListFragment)getFragmentManager().findFragmentByTag("android:switcher:"+R.id.viewpager+":1");
 //                            deviceListFragment.updateView();
-                            //AsinListFragment asinListFragment = (AsinListFragment) getFragmentManager().findFragmentByTag("android:switcher:"+R.id.viewpager+":2");
-                            //asinListFragment.updateView();
-                        }
+                        //AsinListFragment asinListFragment = (AsinListFragment) getFragmentManager().findFragmentByTag("android:switcher:"+R.id.viewpager+":2");
+                        //asinListFragment.updateView();
+                    }
                     }
                 });
             }
@@ -305,7 +310,7 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
         @Override
         protected String doInBackground(String... arg0) {
             String result = "";
-            String url = "https://api.myjson.com/bins/x6a9y"; //"http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/mv2.54/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0ASELECT%20%20distinct%20%3Fprod_id%20%20%3Fpname%20%3Ftype%20%0AWHERE%20%0A%7B%20%0A%20%3Fprod_id%20%3Aproduct_name%20%3Fpname%20.%0A%20%3Fprod_id%20%3AisOfTypeCategory%20%3Ftype%20.%0A%0A%20filter%20(regex(%3Fpname%2C%20%22" + arg0[0] + "%22%2C%20%22i%22)" + args + ")%20.%0A%7D%0Aorder%20by%20%3Fpname%0ALIMIT%2010"+ offset +"&limit=100&infer=true&";
+            String url = "http://frodo.digidave.co.uk/api/RipApp/result.php?start=0&limit=10";
             result = HttpUtils.doGet(url);
             return result;
 
@@ -331,12 +336,13 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
 
             for(int i=0; i < deviceData.size(); i++) {
 
-                editor.putString("pid", deviceData.get(i).getPi_id());
+                editor.putString("p_id", deviceData.get(i).getP_id());
                 editor.putString("manufacturer", deviceData.get(i).getManufacturer());
                 editor.putString("name", deviceData.get(i).getName());
-                editor.putString("type", deviceData.get(i).getType());
                 editor.putString("model", deviceData.get(i).getModel());
-                editor.putString("tech", deviceData.get(i).getsTech());
+                editor.putString("mv_uk", deviceData.get(i).getMv_uk());
+                editor.putString("mv_de", deviceData.get(i).getMv_de());
+                editor.putString("mv_us", deviceData.get(i).getMv_us());
 
             }
 //            editor.putString("deviceData", deviceDatajson.toString());

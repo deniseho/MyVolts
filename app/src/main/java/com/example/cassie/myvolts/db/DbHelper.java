@@ -1,8 +1,21 @@
 package com.example.cassie.myvolts.db;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.AsyncTask;
+
+import com.example.cassie.myvolts.dto.ProductData;
+import com.example.cassie.myvolts.util.HttpUtils;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by cassie on 23/05/2017.
@@ -10,7 +23,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DbHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 7;
     public static final String DATABASE_NAME = "mwc.db";
 
     private static DbHelper dbHelp=null;
@@ -22,7 +35,9 @@ public class DbHelper extends SQLiteOpenHelper {
             "CREATE TABLE " + FeedReaderContract.FeedEntry.PRODUCT_TABLE_NAME + " (" +
                     FeedReaderContract.FeedEntry._ID + " INTEGER PRIMARY KEY," +
                     FeedReaderContract.FeedEntry.PRODUCT_COLUMN_ID + " TEXT," +
-                    FeedReaderContract.FeedEntry.PRODUCT_COLUMN_NAME + " TEXT)";
+                    FeedReaderContract.FeedEntry.PRODUCT_COLUMN_NAME + " TEXT," +
+                    FeedReaderContract.FeedEntry.PRODUCT_COLUMN_DESC + " TEXT," +
+                    FeedReaderContract.FeedEntry.PRODUCT_COLUMN_FILE+ " TEXT)";
 
     private static final String SQL_CREATE_DEVICE_ENTRIES =
             "CREATE TABLE " + FeedReaderContract.FeedEntry.DEVICE_TABLE_NAME + " (" +
@@ -30,9 +45,10 @@ public class DbHelper extends SQLiteOpenHelper {
                     FeedReaderContract.FeedEntry.DEVICE_COLUMN_PID + " TEXT," +
                     FeedReaderContract.FeedEntry.DEVICE_COLUMN_MANU + " TEXT," +
                     FeedReaderContract.FeedEntry.DEVICE_COLUMN_NAME + " TEXT," +
-                    FeedReaderContract.FeedEntry.DEVICE_COLUMN_TYPE + " TEXT," +
                     FeedReaderContract.FeedEntry.DEVICE_COLUMN_MODEL + " TEXT," +
-                    FeedReaderContract.FeedEntry.DEVICE_COLUMN_TECH + " TEXT)";
+                    FeedReaderContract.FeedEntry.DEVICE_COLUMN_MV_UK + " TEXT," +
+                    FeedReaderContract.FeedEntry.DEVICE_COLUMN_MV_DE + " TEXT," +
+                    FeedReaderContract.FeedEntry.DEVICE_COLUMN_MV_US + " TEXT)";
 
 
     private static final String SQL_CREATE_HIS_ENTRIES =
@@ -192,87 +208,86 @@ public class DbHelper extends SQLiteOpenHelper {
 //        }
 //    }
 
-//    public class CacheProductName extends AsyncTask<Object, Void, JSONArray> {
-//
-//        @Override
-//        protected void onPreExecute() {
-//            // TODO Auto-generated method stub
-//            super.onPreExecute();
-//        }
-//
-//
-//        @Override
-//        protected JSONArray doInBackground(Object... arg0) {
-//            // TODO Auto-generated method stub
-//            JSONArray output_arr = new JSONArray();
-//
-//            String result = "";
-//
-//            String url = "http://api.myjson.com/bins/1hcph0"; //"http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/mv2.54/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0ASELECT%20%20distinct%20%3Fprod_id%20%20%3Fpname%20%3Ftype%20%0AWHERE%20%0A%7B%20%0A%20%3Fprod_id%20%3Aproduct_name%20%3Fpname%20.%0A%20%3Fprod_id%20%3AisOfTypeCategory%20%3Ftype%20.%0A%0A%20filter%20(regex(%3Fpname%2C%20%22" + arg0[0] + "%22%2C%20%22i%22)" + args + ")%20.%0A%7D%0Aorder%20by%20%3Fpname%0ALIMIT%2010"+ offset +"&limit=100&infer=true&";
-//
-//            result = HttpUtils.doGet(url);
-//
-//
-//            try {
-//                JSONObject obj = new JSONObject(result);
-//                JSONArray mv_db_arr = obj.getJSONArray("mv_db");
-//                JSONArray mv_db_arr2 = mv_db_arr.getJSONArray(0);
-//
-//
-//                for(int i=0; i<mv_db_arr2.length(); i++) {
-//
-//                    JSONObject item = (JSONObject) mv_db_arr2.get(i);
-//                    Iterator<String> keys = item.keys();
-//
-//                    String category = keys.next();
-//                    if(category.equals("product")){
-//                        String category_val = item.optString(category);
-//                        output_arr.put(category_val);
-//                    }
-//                }
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//
-//            return output_arr;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(JSONArray result) {
-//            // TODO Auto-generated method stub
-//            super.onPostExecute(result);
-//
-//            List<ProductData> newData = new ArrayList<>();
-//
-//            try {
-//                for(int i=0; i<result.length(); i++){
-//                    JSONObject jsonObject = new JSONObject(result.getString(i));
-//                    System.out.println("----------------------------sjson object");
-//                    System.out.println(jsonObject);
+    public class CacheProductName extends AsyncTask<Object, Void, JSONArray> {
+
+        @Override
+        protected void onPreExecute() {
+            // TODO Auto-generated method stub
+            super.onPreExecute();
+        }
+
+
+        @Override
+        protected JSONArray doInBackground(Object... arg0) {
+            // TODO Auto-generated method stub
+            JSONArray output_arr = new JSONArray();
+
+            String result = "";
+
+            String url = "http://frodo.digidave.co.uk/api/RipApp/result.php?start=0&limit=10"; //"http://api.myjson.com/bins/1hcph0";
+            result = HttpUtils.doGet(url);
+
+
+            try {
+                JSONObject obj = new JSONObject(result);
+                JSONArray mv_db_arr = obj.getJSONArray("mv_db");
+                JSONArray mv_db_arr2 = mv_db_arr.getJSONArray(0);
+
+
+                for(int i=0; i<mv_db_arr2.length(); i++) {
+
+                    JSONObject item = (JSONObject) mv_db_arr2.get(i);
+                    Iterator<String> keys = item.keys();
+
+                    String category = keys.next();
+                    if(category.equals("product")){
+                        String category_val = item.optString(category);
+                        output_arr.put(category_val);
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return output_arr;
+        }
+
+        @Override
+        protected void onPostExecute(JSONArray result) {
+            // TODO Auto-generated method stub
+            super.onPostExecute(result);
+
+            List<ProductData> newData = new ArrayList<>();
+
+            try {
+                for(int i=0; i<result.length(); i++){
+                    JSONObject jsonObject = new JSONObject(result.getString(i));
+                    System.out.println("----------------------------sjson object");
+                    System.out.println(jsonObject);
 //
 //                    String name = jsonObject.getString("name");
 //                    String productId = jsonObject.getString("productId");
 //                    newData.add(new ProductData(productId, name, null));
-//                }
-//
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//
-//            saveToDB(newData);
-//        }
-//    }
-//
-//    public void saveToDB(List<ProductData> products) {
-//        ContentValues values = new ContentValues();
-//
-//        for(int i=0; i<products.size(); i++) {
-//            ProductData product = products.get(i);
-//            values.put(FeedReaderContract.FeedEntry.PRODUCT_COLUMN_ID, product.getProductId());
-//            values.put(FeedReaderContract.FeedEntry.PRODUCT_COLUMN_NAME, product.getName());
-//            db.insert(FeedReaderContract.FeedEntry.PRODUCT_TABLE_NAME, null, values);
-//        }
-//    }
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            saveToDB(newData);
+        }
+    }
+
+    public void saveToDB(List<ProductData> products) {
+        ContentValues values = new ContentValues();
+
+        for(int i=0; i<products.size(); i++) {
+            ProductData product = products.get(i);
+            values.put(FeedReaderContract.FeedEntry.PRODUCT_COLUMN_ID, product.getProductId());
+            values.put(FeedReaderContract.FeedEntry.PRODUCT_COLUMN_NAME, product.getName());
+            db.insert(FeedReaderContract.FeedEntry.PRODUCT_TABLE_NAME, null, values);
+        }
+    }
 
 //    public class CacheProductName extends AsyncTask<String, Void, String> {
 //        @Override

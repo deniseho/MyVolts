@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -35,6 +36,7 @@ import com.example.cassie.myvolts.util.DrawableUtil;
 import com.example.cassie.myvolts.util.TestUtil;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -84,6 +86,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
+
+    public static String sDefSystemLang;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,11 +144,19 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 searchByInput();
             }
         });
+
+        sDefSystemLang = Locale.getDefault().getLanguage();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        sDefSystemLang = newConfig.locale.getLanguage();
     }
 
     private void ForwardToSannerActivity(String pid) {
         Intent intent = new Intent(SearchActivity.this,ScannerActivity.class);
-        intent.putExtra("product_id", pid);
+        intent.putExtra("product", pid);
         startActivity(intent);
     }
 

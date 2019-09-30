@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.text.TextUtils;
 
 import com.example.cassie.myvolts.dto.DeviceData;
@@ -11,14 +12,16 @@ import com.example.cassie.myvolts.dto.HistoryData;
 import com.example.cassie.myvolts.dto.HotData;
 import com.example.cassie.myvolts.dto.ProductData;
 import com.example.cassie.myvolts.testing.TestingBean;
+import com.example.cassie.myvolts.util.HttpUtils;
+import com.example.cassie.myvolts.util.RegexUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -28,12 +31,14 @@ public class DbHelp{
     private SQLiteDatabase mwcdb=null;
 
     private DbHelper dbHelper;
+    GetProducts db;
 
     private DbManager manager = new DbManager();
 
     public DbHelp(Context context){
         dbHelper = new DbHelper(context);
         mwcdb = dbHelper.getWritableDatabase();
+        getInitData("");
     }
 
     public List<String> getInitData(String input){
@@ -131,6 +136,34 @@ public class DbHelp{
         }
     }
 
+    public class GetProducts extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected void onPreExecute() {
+            // TODO Auto-generated method stub
+            super.onPreExecute();
+        }
+
+
+        @Override
+        protected String doInBackground(String... arg0) {
+            String result = "";
+            String url = "http://frodo.digidave.co.uk/api/RipApp/result.php?start=0&limit=10";
+            result = HttpUtils.doGet(url);
+            return result;
+
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            System.out.println("=====================");
+            System.out.println(result);
+            System.out.println("=====================");
+
+        }
+    }
+
     public List<ProductData> getProductData(String result) {
         JSONArray output_arr = new JSONArray();
         List<ProductData> newData = new ArrayList<>();
@@ -157,8 +190,11 @@ public class DbHelp{
                 JSONObject jsonObject = new JSONObject(output_arr.getString(i));
 
                 String name = jsonObject.getString("name");
+                String desc = jsonObject.getString("desc");
+                String file = jsonObject.getString("file");
                 String productId = jsonObject.getString("productId");
-                newData.add(new ProductData(productId, name, null));
+
+                newData.add(new ProductData(name, desc, file, productId));
             }
 
         } catch (JSONException e) {
@@ -195,14 +231,15 @@ public class DbHelp{
             for(int i=0; i<output_arr.length(); i++){
                 JSONObject jsonObject = new JSONObject(output_arr.getString(i));
 
-                String pi_id = jsonObject.getString("p_id");
+                String p_id = jsonObject.getString("p_id");
                 String manufacturer = jsonObject.getString("manufacturer");
-                String type = jsonObject.getString("type");
                 String name = jsonObject.getString("name");
                 String model = jsonObject.getString("model");
-                String stech = jsonObject.getString("tech");
+                String mv_uk = jsonObject.getString("mv_uk");
+                String mv_de = jsonObject.getString("mv_de");
+                String mv_us = jsonObject.getString("mv_us");
 
-                newData.add(new DeviceData(pi_id, manufacturer, type, name, model, stech));
+                newData.add(new DeviceData(p_id, manufacturer, name, model, mv_uk, mv_de, mv_us));
             }
 
         } catch (JSONException e) {
@@ -230,28 +267,33 @@ public class DbHelp{
         List<ProductData> datas=new ArrayList<>();
         if(mwcdb!=null){
 //            Cursor cursor= mwcdb.rawQuery("select * from product where name like '%" + searchStr + "%'",new String[]{});
-            Cursor cursor= mwcdb.rawQuery("select product.name, product.pid from product, device where product.pid = device.pid AND device.model = ?",new String[]{value});
+            Cursor cursor= mwcdb.rawQuery("select product.name, product.productId from product, device where product.productId = device.p_id AND device.model = ?",new String[]{value});
 
             while(cursor.moveToNext()){
-                datas.add(new ProductData(cursor.getString(cursor.getColumnIndex("name")),
-                        cursor.getString(cursor.getColumnIndex("pid"))));
+                datas.add(new ProductData(
+                        cursor.getString(cursor.getColumnIndex("name")),
+                        cursor.getString(cursor.getColumnIndex("desc")),
+                        cursor.getString(cursor.getColumnIndex("file")),
+                        cursor.getString(cursor.getColumnIndex("productId"))
+                ));
             }
         }
         return datas;
     }
 
-    public List<DeviceData> getSearchedDevices(String pid){
+    public List<DeviceData> getSearchedDevices(String p_id){
         List<DeviceData> datas=new ArrayList<>();
         if(mwcdb!=null){
 //            Cursor cursor= mwcdb.rawQuery("select * from product where name like '%" + searchStr + "%'",new String[]{});
-            Cursor cursor= mwcdb.rawQuery("select * from device where pid =" + pid ,new String[]{});
+            Cursor cursor= mwcdb.rawQuery("select * from device where p_id =" + p_id ,new String[]{});
             while(cursor.moveToNext()){
-                datas.add(new DeviceData(cursor.getString(cursor.getColumnIndex("pid")),
+                datas.add(new DeviceData(cursor.getString(cursor.getColumnIndex("p_id")),
                         cursor.getString(cursor.getColumnIndex("manufacturer")),
-                        cursor.getString(cursor.getColumnIndex("type")),
                         cursor.getString(cursor.getColumnIndex("name")),
                         cursor.getString(cursor.getColumnIndex("model")),
-                        cursor.getString(cursor.getColumnIndex("tech"))
+                        cursor.getString(cursor.getColumnIndex("mv_uk")),
+                        cursor.getString(cursor.getColumnIndex("mv_de")),
+                        cursor.getString(cursor.getColumnIndex("mv_us"))
                 ));
             }
         }
@@ -274,12 +316,13 @@ public class DbHelp{
 
         for(int i=0; i<devices.size(); i++) {
             DeviceData device = devices.get(i);
-            values.put(FeedReaderContract.FeedEntry.DEVICE_COLUMN_PID, device.getPi_id());
+            values.put(FeedReaderContract.FeedEntry.DEVICE_COLUMN_PID, device.getP_id());
             values.put(FeedReaderContract.FeedEntry.DEVICE_COLUMN_MANU, device.getManufacturer());
             values.put(FeedReaderContract.FeedEntry.DEVICE_COLUMN_NAME, device.getName());
-            values.put(FeedReaderContract.FeedEntry.DEVICE_COLUMN_TYPE, device.getType());
             values.put(FeedReaderContract.FeedEntry.DEVICE_COLUMN_MODEL, device.getModel());
-            values.put(FeedReaderContract.FeedEntry.DEVICE_COLUMN_TECH, device.getsTech());
+            values.put(FeedReaderContract.FeedEntry.DEVICE_COLUMN_MV_UK, device.getMv_uk());
+            values.put(FeedReaderContract.FeedEntry.DEVICE_COLUMN_MV_DE, device.getMv_de());
+            values.put(FeedReaderContract.FeedEntry.DEVICE_COLUMN_MV_US, device.getMv_us());
             mwcdb.insert(FeedReaderContract.FeedEntry.DEVICE_TABLE_NAME, null, values);
         }
     }
@@ -360,12 +403,12 @@ public class DbHelp{
 
         if(cursor.moveToFirst()) {
             do {
-//                String id = cursor.getString(0);
-                String pid = cursor.getString(1);
-                String name = cursor.getString(2);
+                String name = cursor.getString(0);
+                String desc = cursor.getString(1);
+                String file = cursor.getString(2);
+                String productId = cursor.getString(3);
 
-                productData.add(new ProductData(pid, name, null));
-
+                productData.add(new ProductData(name, desc, file, productId));
             } while (cursor.moveToNext());
 
             cursor.close();

@@ -40,7 +40,6 @@ public class DbManager {
         values = new ContentValues();
 
         values.put(FeedReaderContract.FeedEntry.MADE_COLUMN_NAME_NAME, deviceData.getManufacturer());
-        values.put(FeedReaderContract.FeedEntry.MADE_COLUMN_NAME_TYPE, deviceData.getType());
 
         return values;
     }

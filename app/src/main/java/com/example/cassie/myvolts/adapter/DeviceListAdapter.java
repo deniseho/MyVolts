@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.example.cassie.myvolts.R;
 import com.example.cassie.myvolts.dto.DeviceData;
-import com.example.cassie.myvolts.dto.TechSpec;
 import com.example.cassie.myvolts.util.DigitUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -91,7 +90,6 @@ public class DeviceListAdapter extends BaseAdapter {
 
 
         final DeviceData e = list.get(position);
-        TechSpec tech = e.getTech();
 
         holder.name.setText(e.getName());
         holder.brand.setText(e.getManufacturer());
@@ -122,7 +120,7 @@ public class DeviceListAdapter extends BaseAdapter {
             holder.name.setText(e.getName());
         }
 
-        String mDrawableName = DigitUtil.getNumericPid(e.getPi_id());
+        String mDrawableName = DigitUtil.getNumericPid(e.getP_id());
         int resID = mContext.getResources().getIdentifier("pi" + mDrawableName , "drawable", mContext.getPackageName());
         if(resID != 0)
             holder.img.setImageResource(resID);

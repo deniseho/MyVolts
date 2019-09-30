@@ -381,7 +381,7 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnScroll
 //
 //            return result;
             String result = "";
-            String url = "https://api.myjson.com/bins/x6a9y"; //"http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/mv2.54/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0ASELECT%20%20distinct%20%3Fprod_id%20%20%3Fpname%20%3Ftype%20%0AWHERE%20%0A%7B%20%0A%20%3Fprod_id%20%3Aproduct_name%20%3Fpname%20.%0A%20%3Fprod_id%20%3AisOfTypeCategory%20%3Ftype%20.%0A%0A%20filter%20(regex(%3Fpname%2C%20%22" + arg0[0] + "%22%2C%20%22i%22)" + args + ")%20.%0A%7D%0Aorder%20by%20%3Fpname%0ALIMIT%2010"+ offset +"&limit=100&infer=true&";
+            String url = "http://frodo.digidave.co.uk/api/RipApp/result.php?start=0&limit=10";
             result = HttpUtils.doGet(url);
             return result;
         }
@@ -441,14 +441,15 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnScroll
 //                        }
 
 
-                String pi_id = sharedPreferences.getString("pid", null);
+                String p_id = sharedPreferences.getString("p_id", null);
                 String manufacturer = sharedPreferences.getString("manufacturer", null);
                 String name = sharedPreferences.getString("name", null);
-                String type = sharedPreferences.getString("type", null);
                 String model = sharedPreferences.getString("model", null);
-                String tech = sharedPreferences.getString("tech", null);
+                String mv_uk = sharedPreferences.getString("mv_uk", null);
+                String mv_de = sharedPreferences.getString("mv_de", null);
+                String mv_us= sharedPreferences.getString("mv_us", null);
 
-                DeviceData data = new DeviceData(pi_id, manufacturer, name, type, model, tech);
+                DeviceData data = new DeviceData(p_id, manufacturer, name, model, mv_uk, mv_de, mv_us);
 //                DeviceData data = new DeviceData("53", "Sharp", "TV and monitor", "TV", "Aquos LC-13S1U-S", "4");
                 List<DeviceData> deviceData = new ArrayList<>();//dbHelp.getSearchedDevices(searchStr);
 

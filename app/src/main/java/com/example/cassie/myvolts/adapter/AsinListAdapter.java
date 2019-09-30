@@ -3,8 +3,6 @@ package com.example.cassie.myvolts.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +15,6 @@ import android.widget.TextView;
 
 import com.example.cassie.myvolts.R;
 import com.example.cassie.myvolts.dto.DeviceData;
-import com.example.cassie.myvolts.dto.TechSpec;
 import com.example.cassie.myvolts.util.DigitUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -90,36 +87,13 @@ public class AsinListAdapter extends BaseAdapter {
 
 
         final DeviceData e = list.get(position);
-        TechSpec tech = e.getTech();
-
-        System.out.println(position);
-        System.out.println(e.getAsin());
 
         holder.name.setText(e.getName());
         holder.brand.setText(e.getManufacturer());
         int chageTextColor;
         ForegroundColorSpan redSpan = new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorPrimaryDark));
 
-        SpannableStringBuilder builder = new SpannableStringBuilder(e.getAsin());
-        if (!searchStr.equals("")) {
-            chageTextColor = e.getAsin().toLowerCase().indexOf(searchStr.toLowerCase());
-            if (chageTextColor != -1) {
-                redSpan = new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent));
-                builder.setSpan(redSpan, chageTextColor, chageTextColor
-                                + searchStr.length(),
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
-
-            holder.asin.setText(builder);
-        } else{
-            holder.asin.setText(mContext.getResources().getString(R.string.asin) + " " + e.getAsin());
-        }
-
-        holder.x.setText(mContext.getResources().getString(R.string.voltage) + tech.getVol());
-        holder.y.setText(mContext.getResources().getString(R.string.amp) + tech.getAmp());
-        holder.z.setText(mContext.getResources().getString(R.string.tip_lenght) + tech.getTip());
-
-        String mDrawableName = DigitUtil.getNumericPid(e.getPi_id());
+        String mDrawableName = DigitUtil.getNumericPid(e.getP_id());
         int resID = mContext.getResources().getIdentifier("pi" + mDrawableName , "drawable", mContext.getPackageName());
         if(resID != 0)
             holder.img.setImageResource(resID);

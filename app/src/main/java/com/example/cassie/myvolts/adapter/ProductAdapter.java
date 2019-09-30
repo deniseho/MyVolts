@@ -30,7 +30,7 @@ public class ProductAdapter extends DataAdapter<ProductData> {
         ProductData item = getItem(position);
         holder=new ViewHolder(convertView);
         holder.itemName.setText(item.getName());
-        holder.made.setText(item.getMade());
+        holder.made.setText(item.getDesc());
         return convertView;
     }
 

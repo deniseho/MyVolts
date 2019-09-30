@@ -43,6 +43,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.example.cassie.myvolts.SearchActivity.sDefSystemLang;
+
 public class ScannerActivity extends AppCompatActivity {
 
     @BindView(R.id.product_name)
@@ -74,8 +76,10 @@ public class ScannerActivity extends AppCompatActivity {
     private ArrayList<DialogMenuItem> mMenuItems = new ArrayList<>();
 
     private String prod_id;
+    private String prod_file;
 
     private DbHelp dbHelp;
+    public String baseUrl = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,28 +93,39 @@ public class ScannerActivity extends AppCompatActivity {
 //        String pid = getIntent().getStringExtra("productId");
         ProductData pdata = (ProductData) getIntent().getExtras().getSerializable("product");
         prod_id = pdata.getProductId();
-        getproductById getproductById = new getproductById();
         dbHelp = new DbHelp(this);
        if(pdata != null && prod_id != null && !prod_id.equals("")) {
            pro_name.setText(pdata.getName());
            prod_id = pdata.getProductId();
-           getproductById.execute(URLEncoder.encode(prod_id));
+           prod_file = pdata.getFile();
+           new getproductById().execute(URLEncoder.encode(prod_id));
        } else{
             shownorecord();
         }
 
 //        testTask1();
+        switch (sDefSystemLang){
+            case "en":
+                baseUrl = "http://myvolts.co.uk";
+                break;
+            case "de":
+                baseUrl = "http://myvolts.de";
+                break;
+            case "fr":
+                baseUrl = "http://myvolts.fr";
+                break;
+        }
         prod_link.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view)
             {
-                Intent browser= new Intent(Intent.ACTION_VIEW, Uri.parse("https://myvolts.co.uk/product/" + prod_id));
+                Intent browser= new Intent(Intent.ACTION_VIEW, Uri.parse(baseUrl + "/product/" + prod_file));
                 startActivity(browser);
             }
         });
 
         new ProductImageFromInternet(product_photo)
-                .execute("https://myvolts.co.uk/imgs/prd/455/3/Desktop_Power_Adapter_250x250_250x250.jpg");
+                .execute("http://myvolts.co.uk/imgs/prd/455/3/Desktop_Power_Adapter_250x250_250x250.jpg");
 
     }
 
