@@ -1,21 +1,8 @@
 package com.example.cassie.myvolts.db;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.AsyncTask;
-
-import com.example.cassie.myvolts.dto.ProductData;
-import com.example.cassie.myvolts.util.HttpUtils;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Created by cassie on 23/05/2017.
@@ -23,7 +10,7 @@ import java.util.List;
 
 public class DbHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 7;
+    public static final int DATABASE_VERSION = 2019110202;
     public static final String DATABASE_NAME = "mwc.db";
 
     private static DbHelper dbHelp=null;
@@ -208,86 +195,86 @@ public class DbHelper extends SQLiteOpenHelper {
 //        }
 //    }
 
-    public class CacheProductName extends AsyncTask<Object, Void, JSONArray> {
-
-        @Override
-        protected void onPreExecute() {
-            // TODO Auto-generated method stub
-            super.onPreExecute();
-        }
-
-
-        @Override
-        protected JSONArray doInBackground(Object... arg0) {
-            // TODO Auto-generated method stub
-            JSONArray output_arr = new JSONArray();
-
-            String result = "";
-
-            String url = "http://frodo.digidave.co.uk/api/RipApp/result.php?start=0&limit=10"; //"http://api.myjson.com/bins/1hcph0";
-            result = HttpUtils.doGet(url);
-
-
-            try {
-                JSONObject obj = new JSONObject(result);
-                JSONArray mv_db_arr = obj.getJSONArray("mv_db");
-                JSONArray mv_db_arr2 = mv_db_arr.getJSONArray(0);
-
-
-                for(int i=0; i<mv_db_arr2.length(); i++) {
-
-                    JSONObject item = (JSONObject) mv_db_arr2.get(i);
-                    Iterator<String> keys = item.keys();
-
-                    String category = keys.next();
-                    if(category.equals("product")){
-                        String category_val = item.optString(category);
-                        output_arr.put(category_val);
-                    }
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            return output_arr;
-        }
-
-        @Override
-        protected void onPostExecute(JSONArray result) {
-            // TODO Auto-generated method stub
-            super.onPostExecute(result);
-
-            List<ProductData> newData = new ArrayList<>();
-
-            try {
-                for(int i=0; i<result.length(); i++){
-                    JSONObject jsonObject = new JSONObject(result.getString(i));
-                    System.out.println("----------------------------sjson object");
-                    System.out.println(jsonObject);
+//    public class CacheProductName extends AsyncTask<Object, Void, JSONArray> {
 //
-//                    String name = jsonObject.getString("name");
-//                    String productId = jsonObject.getString("productId");
-//                    newData.add(new ProductData(productId, name, null));
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            saveToDB(newData);
-        }
-    }
-
-    public void saveToDB(List<ProductData> products) {
-        ContentValues values = new ContentValues();
-
-        for(int i=0; i<products.size(); i++) {
-            ProductData product = products.get(i);
-            values.put(FeedReaderContract.FeedEntry.PRODUCT_COLUMN_ID, product.getProductId());
-            values.put(FeedReaderContract.FeedEntry.PRODUCT_COLUMN_NAME, product.getName());
-            db.insert(FeedReaderContract.FeedEntry.PRODUCT_TABLE_NAME, null, values);
-        }
-    }
+//        @Override
+//        protected void onPreExecute() {
+//            // TODO Auto-generated method stub
+//            super.onPreExecute();
+//        }
+//
+//
+//        @Override
+//        protected JSONArray doInBackground(Object... arg0) {
+//            // TODO Auto-generated method stub
+//            JSONArray output_arr = new JSONArray();
+//
+//            String result = "";
+//
+//            String url = "http://frodo.digidave.co.uk/api/RipApp/result.php?start=0&limit=10"; //"http://api.myjson.com/bins/1hcph0";
+//            result = HttpUtils.doGet(url);
+//
+//
+//            try {
+//                JSONObject obj = new JSONObject(result);
+//                JSONArray mv_db_arr = obj.getJSONArray("mv_db");
+//                JSONArray mv_db_arr2 = mv_db_arr.getJSONArray(0);
+//
+//
+//                for(int i=0; i<mv_db_arr2.length(); i++) {
+//
+//                    JSONObject item = (JSONObject) mv_db_arr2.get(i);
+//                    Iterator<String> keys = item.keys();
+//
+//                    String category = keys.next();
+//                    if(category.equals("product")){
+//                        String category_val = item.optString(category);
+//                        output_arr.put(category_val);
+//                    }
+//                }
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//
+//            return output_arr;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(JSONArray result) {
+//            // TODO Auto-generated method stub
+//            super.onPostExecute(result);
+//
+//            List<ProductData> newData = new ArrayList<>();
+//
+//            try {
+//                for(int i=0; i<result.length(); i++){
+//                    JSONObject jsonObject = new JSONObject(result.getString(i));
+//                    System.out.println("----------------------------sjson object");
+//                    System.out.println(jsonObject);
+////
+////                    String name = jsonObject.getString("name");
+////                    String productId = jsonObject.getString("productId");
+////                    newData.add(new ProductData(productId, name, null));
+//                }
+//
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//
+//            saveToDB(newData);
+//        }
+//    }
+//
+//    public void saveToDB(List<ProductData> products) {
+//        ContentValues values = new ContentValues();
+//
+//        for(int i=0; i<products.size(); i++) {
+//            ProductData product = products.get(i);
+//            values.put(FeedReaderContract.FeedEntry.PRODUCT_COLUMN_ID, product.getProductId());
+//            values.put(FeedReaderContract.FeedEntry.PRODUCT_COLUMN_NAME, product.getName());
+//            db.insert(FeedReaderContract.FeedEntry.PRODUCT_TABLE_NAME, null, values);
+//        }
+//    }
 
 //    public class CacheProductName extends AsyncTask<String, Void, String> {
 //        @Override

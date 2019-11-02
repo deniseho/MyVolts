@@ -38,6 +38,18 @@ public class DbHelp{
     public DbHelp(Context context){
         dbHelper = new DbHelper(context);
         mwcdb = dbHelper.getWritableDatabase();
+
+//        if(db != null && db.isOpen()) {
+//            CacheManu cacheManu = new CacheManu();
+//            cacheManu.execute();
+//            GetProducts cacheProducts = new GetProducts();
+//            cacheProducts.execute();
+
+            GetDevices cacheDevices = new GetDevices();
+            cacheDevices.execute();
+
+//        }
+
         getInitData("");
     }
 
@@ -136,7 +148,7 @@ public class DbHelp{
         }
     }
 
-    public class GetProducts extends AsyncTask<String, Void, String> {
+    public class GetDevices extends AsyncTask<Object, Void, JSONArray> {
 
         @Override
         protected void onPreExecute() {
@@ -146,23 +158,171 @@ public class DbHelp{
 
 
         @Override
-        protected String doInBackground(String... arg0) {
-            String result = "";
-            String url = "http://frodo.digidave.co.uk/api/RipApp/result.php?start=0&limit=10";
-            result = HttpUtils.doGet(url);
-            return result;
+        protected JSONArray doInBackground(Object... arg0) {
+            // TODO Auto-generated method stub
+            JSONArray output_arr = new JSONArray();
 
+
+
+            String url = "http://frodo.digidave.co.uk/api/RipApp/result.php?start=0&limit=3"; //"http://api.myjson.com/bins/1hcph0";
+            String result = HttpUtils.doGet(url);
+
+
+            try {
+                JSONObject obj = new JSONObject(result);
+                JSONArray mv_db_arr = obj.getJSONArray("mv_db");
+
+                for(int i=0; i<mv_db_arr.length(); i++) {
+                    JSONArray itemArray = mv_db_arr.getJSONArray(i);
+                    JSONObject item = itemArray.getJSONObject(0);
+
+                    Iterator<String> keys = item.keys();
+
+                    String category = keys.next();
+                    if(category.equals("device")){
+                        String device = item.optString(category);
+                        output_arr.put(device);
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return output_arr;
         }
 
         @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            System.out.println("=====================");
-            System.out.println(result);
-            System.out.println("=====================");
+        protected void onPostExecute(JSONArray result) {
 
+
+            // TODO Auto-generated method stub
+            super.onPostExecute(result);
+
+            List<DeviceData> newData = new ArrayList<>();
+
+            try {
+                for(int i=0; i<result.length(); i++){
+                    JSONObject jsonObject = new JSONObject(result.getString(i));
+
+                    String p_id = jsonObject.getString("p_id");
+                    String manufacturer = jsonObject.getString("manufacturer");
+                    String name = jsonObject.getString("name");
+                    String model = jsonObject.getString("model");
+                    String mv_uk = jsonObject.getString("mv_uk");
+                    String mv_de = jsonObject.getString("mv_de");
+                    String mv_us = jsonObject.getString("mv_us");
+
+                    newData.add(new DeviceData(p_id, manufacturer, name, model, mv_uk, mv_de, mv_us));
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            saveDeviceToDB(newData);
         }
     }
+
+    public void saveDeviceToDB(List<DeviceData> devices) {
+        ContentValues values = new ContentValues();
+
+        for(int i=0; i<devices.size(); i++) {
+            DeviceData device = devices.get(i);
+            values.put(FeedReaderContract.FeedEntry.DEVICE_COLUMN_PID, device.getP_id());
+            values.put(FeedReaderContract.FeedEntry.DEVICE_COLUMN_MANU, device.getManufacturer());
+            values.put(FeedReaderContract.FeedEntry.DEVICE_COLUMN_NAME, device.getName());
+            values.put(FeedReaderContract.FeedEntry.DEVICE_COLUMN_MODEL, device.getModel());
+            values.put(FeedReaderContract.FeedEntry.DEVICE_COLUMN_MV_UK, device.getMv_uk());
+            values.put(FeedReaderContract.FeedEntry.DEVICE_COLUMN_MV_DE, device.getMv_de());
+            values.put(FeedReaderContract.FeedEntry.DEVICE_COLUMN_MV_US, device.getMv_us());
+            mwcdb.insert(FeedReaderContract.FeedEntry.DEVICE_TABLE_NAME, null, values);
+        }
+    }
+
+
+
+    public class GetProducts extends AsyncTask<Object, Void, JSONArray> {
+
+        @Override
+        protected void onPreExecute() {
+            // TODO Auto-generated method stub
+            super.onPreExecute();
+        }
+
+
+        @Override
+        protected JSONArray doInBackground(Object... arg0) {
+            // TODO Auto-generated method stub
+            JSONArray output_arr = new JSONArray();
+
+            String url = "http://frodo.digidave.co.uk/api/RipApp/result.php?start=0&limit=3"; //"http://api.myjson.com/bins/1hcph0";
+            String result = HttpUtils.doGet(url);
+
+
+            try {
+                JSONObject obj = new JSONObject(result);
+                JSONArray mv_db_arr = obj.getJSONArray("mv_db");
+
+                for(int i=0; i<mv_db_arr.length(); i++) {
+                    JSONArray itemArray = mv_db_arr.getJSONArray(i);
+                    JSONObject item = itemArray.getJSONObject(0);
+
+                    Iterator<String> keys = item.keys();
+
+                    String category = keys.next();
+                    if(category.equals("product")){
+                        String product = item.optString(category);
+                        output_arr.put(product);
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return output_arr;
+        }
+
+        @Override
+        protected void onPostExecute(JSONArray result) {
+
+
+            // TODO Auto-generated method stub
+            super.onPostExecute(result);
+
+            List<ProductData> newData = new ArrayList<>();
+
+            try {
+                for(int i=0; i<result.length(); i++){
+                    JSONObject jsonObject = new JSONObject(result.getString(i));
+
+                    String name = jsonObject.getString("name");
+                    String productId = jsonObject.getString("productId");
+                    String desc = jsonObject.getString("desc");
+                    String file = jsonObject.getString("file");
+                    newData.add(new ProductData(name, desc, file, productId));
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            saveProductToDB(newData);
+        }
+    }
+
+    public void saveProductToDB(List<ProductData> products) {
+        ContentValues values = new ContentValues();
+
+        for(int i=0; i<products.size(); i++) {
+            ProductData product = products.get(i);
+            values.put(FeedReaderContract.FeedEntry.PRODUCT_COLUMN_ID, product.getProductId());
+            values.put(FeedReaderContract.FeedEntry.PRODUCT_COLUMN_NAME, product.getName());
+            values.put(FeedReaderContract.FeedEntry.PRODUCT_COLUMN_DESC, product.getFile());
+            values.put(FeedReaderContract.FeedEntry.PRODUCT_COLUMN_FILE, product.getFile());
+            mwcdb.insert(FeedReaderContract.FeedEntry.PRODUCT_TABLE_NAME, null, values);
+        }
+    }
+
 
     public List<ProductData> getProductData(String result) {
         JSONArray output_arr = new JSONArray();
