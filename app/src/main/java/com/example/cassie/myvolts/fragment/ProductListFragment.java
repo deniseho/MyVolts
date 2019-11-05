@@ -319,13 +319,13 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            List<ProductData> productDataList = dbHelp.getProductData(result);
-            List<DeviceData> allDeviceData = dbHelp.getAllDeviceData(result);
+//            List<ProductData> productDataList = dbHelp.getProductData(result);
+//            List<DeviceData> allDeviceData = dbHelp.getAllDeviceData(result);
 
-            dbHelp.deleteProducts();
-            dbHelp.deleteDevices();
-            dbHelp.saveProductList(productDataList);
-            dbHelp.saveDeviceList(allDeviceData);
+//            dbHelp.deleteProducts();
+//            dbHelp.deleteDevices();
+//            dbHelp.saveProductList(productDataList);
+//            dbHelp.saveDeviceList(allDeviceData);
 
             List<ProductData> productData = dbHelp.getSearchedProducts(searchStr);
             List<DeviceData> deviceData = new ArrayList<>();

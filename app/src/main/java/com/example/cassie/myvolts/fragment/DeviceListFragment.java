@@ -296,57 +296,6 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnScroll
 
     }
 
-
-//    public class GetDeviceByName extends AsyncTask<String, Void, String> {
-//
-//        ProgressDialog p = new ProgressDialog(getActivity());
-//
-//        @Override
-//        protected void onPreExecute() {
-//            // TODO Auto-generated method stub
-//            super.onPreExecute();
-//            p.setMessage("Loading...");
-//            p.show();
-//        }
-//
-//        @Override
-//        protected String doInBackground(String... arg0) {
-//            String result = "";
-//            String url = "https://api.myjson.com/bins/x6a9y"; //"http://api.myjson.com/bins/1hcph0"; //"http://theme-e.adaptcentre.ie/openrdf-workbench/repositories/mv2.54/query?action=exec&queryLn=SPARQL&query=PREFIX%20%20%3A%20%3Chttp%3A%2F%2Fmyvolts.com%23%3E%0APREFIX%20owl%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23%3E%0APREFIX%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0APREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0ASELECT%20%20distinct%20%3Fprod_id%20%20%3Fpname%20%3Ftype%20%0AWHERE%20%0A%7B%20%0A%20%3Fprod_id%20%3Aproduct_name%20%3Fpname%20.%0A%20%3Fprod_id%20%3AisOfTypeCategory%20%3Ftype%20.%0A%0A%20filter%20(regex(%3Fpname%2C%20%22" + arg0[0] + "%22%2C%20%22i%22)" + args + ")%20.%0A%7D%0Aorder%20by%20%3Fpname%0ALIMIT%2010"+ offset +"&limit=100&infer=true&";
-//            result = HttpUtils.doGet(url);
-//            return result;
-//        }
-//
-//        List<DeviceData> deviceData = new ArrayList<>();
-//
-//        protected void onPostExecute(String result) {
-//            super.onPostExecute(result);
-////            List<DeviceData> allDeviceData = dbHelp.getALlDeviceData(result);
-////
-////            dbHelp.deleteDevices();
-////            dbHelp.saveDeviceList(allDeviceData);
-//
-//            deviceData = dbHelp.getSearchedDevices(searchStr);
-//
-//            if(searchStr != null)
-//                        Collections.sort(deviceData);
-//
-//                    if (adapter == null) {
-//                        adapter = new DeviceListAdapter(pis, getContext(), searchStr);
-//                        listView.setAdapter(adapter);
-//                        if(loadMoreView3 == null) {
-//                            loadMoreView3 = getActivity().getLayoutInflater().inflate(R.layout.load_more, null);
-//                            loadmorebutton = (TextView) loadMoreView3.findViewById(R.id.loadMoreButton);
-//                            listView.addFooterView(loadmorebutton);
-//                        }
-//                    }
-//
-//                    pis.addAll(deviceData);
-//                    adapter.setDatas(pis);
-//
-//        }
-//    }
-
     public class GetDeviceByName extends AsyncTask<String, Void, String> {
 
         ProgressDialog p = new ProgressDialog(getActivity());
@@ -450,7 +399,6 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnScroll
                 String mv_us= sharedPreferences.getString("mv_us", null);
 
                 DeviceData data = new DeviceData(p_id, manufacturer, name, model, mv_uk, mv_de, mv_us);
-//                DeviceData data = new DeviceData("53", "Sharp", "TV and monitor", "TV", "Aquos LC-13S1U-S", "4");
                 List<DeviceData> deviceData = new ArrayList<>();//dbHelp.getSearchedDevices(searchStr);
 
 //                String str = sharedPreferences.getString("deviceData", "");

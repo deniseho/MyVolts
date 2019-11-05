@@ -276,13 +276,16 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
         super.onActivityResult(requestCode, resultCode, data);
 
-        }
+         }
 
-    private void search(String st) {
+    private void search(String searchStr) {
 
         Intent intent = new Intent(SearchActivity.this,
                 TabActivity.class);
-        intent.putExtra("search",st.trim());
+        intent.putExtra("search",searchStr.trim());
+        intent.putExtra("made",searchStr.split(",")[0].trim());
+        intent.putExtra("type",searchStr.split(",")[1].trim());
+        intent.putExtra("model",searchStr.split(",")[2].trim());
         startActivity(intent);
     }
 

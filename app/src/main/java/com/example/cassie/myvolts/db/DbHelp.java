@@ -13,14 +13,12 @@ import com.example.cassie.myvolts.dto.HotData;
 import com.example.cassie.myvolts.dto.ProductData;
 import com.example.cassie.myvolts.testing.TestingBean;
 import com.example.cassie.myvolts.util.HttpUtils;
-import com.example.cassie.myvolts.util.RegexUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -38,17 +36,15 @@ public class DbHelp{
     public DbHelp(Context context){
         dbHelper = new DbHelper(context);
         mwcdb = dbHelper.getWritableDatabase();
+//            deleteProducts();
+//            deleteDevices();
 
 //        if(db != null && db.isOpen()) {
 //            CacheManu cacheManu = new CacheManu();
 //            cacheManu.execute();
-//            GetProducts cacheProducts = new GetProducts();
-//            cacheProducts.execute();
-
-            GetDevices cacheDevices = new GetDevices();
-            cacheDevices.execute();
-
 //        }
+//        GetProducts cacheProducts = new GetProducts();
+//        cacheProducts.execute();
 
         getInitData("");
     }
@@ -241,7 +237,7 @@ public class DbHelp{
 
 
 
-    public class GetProducts extends AsyncTask<Object, Void, JSONArray> {
+    public class GetProducts extends AsyncTask<String, Void, String> {
 
         @Override
         protected void onPreExecute() {
@@ -251,13 +247,25 @@ public class DbHelp{
 
 
         @Override
-        protected JSONArray doInBackground(Object... arg0) {
+        protected String doInBackground(String... arg0) {
             // TODO Auto-generated method stub
-            JSONArray output_arr = new JSONArray();
 
             String url = "http://frodo.digidave.co.uk/api/RipApp/result.php?start=0&limit=3"; //"http://api.myjson.com/bins/1hcph0";
             String result = HttpUtils.doGet(url);
 
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+
+            // TODO Auto-generated method stub
+            super.onPostExecute(result);
+
+            JSONArray product_arr = new JSONArray();
+            JSONArray device_arr = new JSONArray();
+            List<ProductData> newProductData = new ArrayList<>();
+            List<DeviceData> newDeviceData = new ArrayList<>();
 
             try {
                 JSONObject obj = new JSONObject(result);
@@ -268,45 +276,70 @@ public class DbHelp{
                     JSONObject item = itemArray.getJSONObject(0);
 
                     Iterator<String> keys = item.keys();
-
                     String category = keys.next();
+
                     if(category.equals("product")){
                         String product = item.optString(category);
-                        output_arr.put(product);
+                        product_arr.put(product);
+                    }
+
+                    if(category.equals("device")){
+                        String device = item.optString(category);
+                        device_arr.put(device);
                     }
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+                System.out.println("=======product_arr=======");
+                System.out.println(product_arr);
+                System.out.println("=======device_arr=======");
+                System.out.println(device_arr);
 
-            return output_arr;
-        }
+                for(int i=0; i<product_arr.length(); i++){
+                    JSONObject productObject = new JSONObject(product_arr.getString(i));
 
-        @Override
-        protected void onPostExecute(JSONArray result) {
-
-
-            // TODO Auto-generated method stub
-            super.onPostExecute(result);
-
-            List<ProductData> newData = new ArrayList<>();
-
-            try {
-                for(int i=0; i<result.length(); i++){
-                    JSONObject jsonObject = new JSONObject(result.getString(i));
-
-                    String name = jsonObject.getString("name");
-                    String productId = jsonObject.getString("productId");
-                    String desc = jsonObject.getString("desc");
-                    String file = jsonObject.getString("file");
-                    newData.add(new ProductData(name, desc, file, productId));
+                    String name = productObject.getString("name");
+                    String productId = productObject.getString("productId");
+                    String desc = productObject.getString("desc");
+                    String file = productObject.getString("file");
+                    newProductData.add(new ProductData(name, desc, file, productId));
                 }
 
-            } catch (JSONException e) {
+
+                for(int i=0; i<device_arr.length(); i++) {
+                    JSONObject deviceObject = new JSONObject(device_arr.getString(i));
+                    String p_id = deviceObject.getString("p_id");
+                    String manufacturer = deviceObject.getString("manufacturer");
+                    String name = deviceObject.getString("name");
+                    String model = deviceObject.getString("model");
+                    String mv_uk = deviceObject.getString("mv_uk");
+                    String mv_de = deviceObject.getString("mv_de");
+                    String mv_us = deviceObject.getString("mv_us");
+
+                    newDeviceData.add(new DeviceData(p_id, manufacturer, name, model, mv_uk, mv_de, mv_us));
+                }
+
+                } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-            saveProductToDB(newData);
+            saveProductToDB(newProductData);
+            saveDeviceToDB(newDeviceData);
+
+//            List<ProductData> newData = new ArrayList<>();
+//
+//            try {
+//                for(int i=0; i<result.length(); i++){
+//                    String name = jsonObject.getString("name");
+//                    String productId = jsonObject.getString("productId");
+//                    String desc = jsonObject.getString("desc");
+//                    String file = jsonObject.getString("file");
+//                    newData.add(new ProductData(name, desc, file, productId));
+//                }
+//
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+
+//            saveProductToDB(newData);
         }
     }
 
