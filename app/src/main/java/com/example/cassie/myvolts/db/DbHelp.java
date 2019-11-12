@@ -144,80 +144,80 @@ public class DbHelp{
         }
     }
 
-    public class GetDevices extends AsyncTask<Object, Void, JSONArray> {
-
-        @Override
-        protected void onPreExecute() {
-            // TODO Auto-generated method stub
-            super.onPreExecute();
-        }
-
-
-        @Override
-        protected JSONArray doInBackground(Object... arg0) {
-            // TODO Auto-generated method stub
-            JSONArray output_arr = new JSONArray();
-
-
-
-            String url = "http://frodo.digidave.co.uk/api/RipApp/result.php?start=0&limit=3"; //"http://api.myjson.com/bins/1hcph0";
-            String result = HttpUtils.doGet(url);
-
-
-            try {
-                JSONObject obj = new JSONObject(result);
-                JSONArray mv_db_arr = obj.getJSONArray("mv_db");
-
-                for(int i=0; i<mv_db_arr.length(); i++) {
-                    JSONArray itemArray = mv_db_arr.getJSONArray(i);
-                    JSONObject item = itemArray.getJSONObject(0);
-
-                    Iterator<String> keys = item.keys();
-
-                    String category = keys.next();
-                    if(category.equals("device")){
-                        String device = item.optString(category);
-                        output_arr.put(device);
-                    }
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            return output_arr;
-        }
-
-        @Override
-        protected void onPostExecute(JSONArray result) {
-
-
-            // TODO Auto-generated method stub
-            super.onPostExecute(result);
-
-            List<DeviceData> newData = new ArrayList<>();
-
-            try {
-                for(int i=0; i<result.length(); i++){
-                    JSONObject jsonObject = new JSONObject(result.getString(i));
-
-                    String p_id = jsonObject.getString("p_id");
-                    String manufacturer = jsonObject.getString("manufacturer");
-                    String name = jsonObject.getString("name");
-                    String model = jsonObject.getString("model");
-                    String mv_uk = jsonObject.getString("mv_uk");
-                    String mv_de = jsonObject.getString("mv_de");
-                    String mv_us = jsonObject.getString("mv_us");
-
-                    newData.add(new DeviceData(p_id, manufacturer, name, model, mv_uk, mv_de, mv_us));
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            saveDeviceToDB(newData);
-        }
-    }
+//    public class GetDevices extends AsyncTask<Object, Void, JSONArray> {
+//
+//        @Override
+//        protected void onPreExecute() {
+//            // TODO Auto-generated method stub
+//            super.onPreExecute();
+//        }
+//
+//
+//        @Override
+//        protected JSONArray doInBackground(Object... arg0) {
+//            // TODO Auto-generated method stub
+//            JSONArray output_arr = new JSONArray();
+//
+//
+//
+//            String url = "http://frodo.digidave.co.uk/api/RipApp/result.php?start=0&limit=3"; //"http://api.myjson.com/bins/1hcph0";
+//            String result = HttpUtils.doGet(url);
+//
+//
+//            try {
+//                JSONObject obj = new JSONObject(result);
+//                JSONArray mv_db_arr = obj.getJSONArray("mv_db");
+//
+//                for(int i=0; i<mv_db_arr.length(); i++) {
+//                    JSONArray itemArray = mv_db_arr.getJSONArray(i);
+//                    JSONObject item = itemArray.getJSONObject(0);
+//
+//                    Iterator<String> keys = item.keys();
+//
+//                    String category = keys.next();
+//                    if(category.equals("device")){
+//                        String device = item.optString(category);
+//                        output_arr.put(device);
+//                    }
+//                }
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//
+//            return output_arr;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(JSONArray result) {
+//
+//
+//            // TODO Auto-generated method stub
+//            super.onPostExecute(result);
+//
+//            List<DeviceData> newData = new ArrayList<>();
+//
+//            try {
+//                for(int i=0; i<result.length(); i++){
+//                    JSONObject jsonObject = new JSONObject(result.getString(i));
+//
+//                    String p_id = jsonObject.getString("p_id");
+//                    String manufacturer = jsonObject.getString("manufacturer");
+//                    String name = jsonObject.getString("name");
+//                    String model = jsonObject.getString("model");
+//                    String mv_uk = jsonObject.getString("mv_uk");
+//                    String mv_de = jsonObject.getString("mv_de");
+//                    String mv_us = jsonObject.getString("mv_us");
+//
+//                    newData.add(new DeviceData(p_id, manufacturer, name, model, mv_uk, mv_de, mv_us));
+//                }
+//
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//
+//            saveDeviceToDB(newData);
+//        }
+//    }
 
     public void saveDeviceToDB(List<DeviceData> devices) {
         ContentValues values = new ContentValues();
@@ -270,24 +270,26 @@ public class DbHelp{
             try {
                 JSONObject obj = new JSONObject(result);
                 JSONArray mv_db_arr = obj.getJSONArray("mv_db");
+if(mv_db_arr != null ){
+    for(int i=0; i<mv_db_arr.length(); i++) {
+        JSONArray itemArray = mv_db_arr.getJSONArray(i);
+        JSONObject item = itemArray.getJSONObject(0);
 
-                for(int i=0; i<mv_db_arr.length(); i++) {
-                    JSONArray itemArray = mv_db_arr.getJSONArray(i);
-                    JSONObject item = itemArray.getJSONObject(0);
+        Iterator<String> keys = item.keys();
+        String category = keys.next();
 
-                    Iterator<String> keys = item.keys();
-                    String category = keys.next();
+        if(category.equals("product")){
+            String product = item.optString(category);
+            product_arr.put(product);
+        }
 
-                    if(category.equals("product")){
-                        String product = item.optString(category);
-                        product_arr.put(product);
-                    }
+        if(category.equals("device")){
+            String device = item.optString(category);
+            device_arr.put(device);
+        }
+    }
+}
 
-                    if(category.equals("device")){
-                        String device = item.optString(category);
-                        device_arr.put(device);
-                    }
-                }
                 System.out.println("=======product_arr=======");
                 System.out.println(product_arr);
                 System.out.println("=======device_arr=======");
@@ -455,12 +457,12 @@ public class DbHelp{
     }
 
     public List<ProductData> getSearchedProducts(String searchStr){
-        String value = searchStr.split(",")[2].trim();
+        String value = "ProSafe FS105";//searchStr.split(",")[2].trim();
 
         List<ProductData> datas=new ArrayList<>();
         if(mwcdb!=null){
 //            Cursor cursor= mwcdb.rawQuery("select * from product where name like '%" + searchStr + "%'",new String[]{});
-            Cursor cursor= mwcdb.rawQuery("select product.name, product.productId from product, device where product.productId = device.p_id AND device.model = ?",new String[]{value});
+            Cursor cursor= mwcdb.rawQuery("select * from product, device where product.productId = device.p_id AND device.model = ?",new String[]{value});
 
             while(cursor.moveToNext()){
                 datas.add(new ProductData(

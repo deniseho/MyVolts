@@ -147,7 +147,7 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
             });
             product = (FrameLayout) view.findViewById(R.id.product_fragment);
         }
-
+//
         initInternetStatusPage(searchStr);
         setFab();
 //        try {
@@ -174,20 +174,23 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
     }
 
     private void doWithInternet(String searchStr) {
-
+        System.out.println("-----------System.out.println(searchStr)");
+        System.out.println(searchStr);
         db = new GetProducts();
         if (searchStr != null && !searchStr.equals("")) {
             try {
-                db.execute(RegexUtil.spliteRegex(searchStr));
+                db.execute();
             }catch(Exception ex){
-
+                System.out.println("-----------doWithInternet ex1");
+                System.out.println(ex);
             }
         } else {
             if(made != null && type != null && model != null)
                 try {
-                    db.execute(URLEncoder.encode(made), URLEncoder.encode(type, "UTF-8"), URLEncoder.encode(model, "UTF-8"));
+//                    db.execute(URLEncoder.encode(made), URLEncoder.encode(type, "UTF-8"), URLEncoder.encode(model, "UTF-8"));
                 }catch(Exception ex){
-
+                    System.out.println("-----------doWithInternet ex2");
+                    System.out.println(ex);
                 }
         }
 
@@ -310,7 +313,7 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
         @Override
         protected String doInBackground(String... arg0) {
             String result = "";
-            String url = "http://frodo.digidave.co.uk/api/RipApp/result.php?start=0&limit=10";
+            String url = "http://frodo.digidave.co.uk/api/RipApp/result.php?start=0&limit=3";
             result = HttpUtils.doGet(url);
             return result;
 
@@ -319,13 +322,13 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-//            List<ProductData> productDataList = dbHelp.getProductData(result);
-//            List<DeviceData> allDeviceData = dbHelp.getAllDeviceData(result);
+            List<ProductData> productDataList = dbHelp.getProductData(result);
+            List<DeviceData> allDeviceData = dbHelp.getAllDeviceData(result);
 
 //            dbHelp.deleteProducts();
 //            dbHelp.deleteDevices();
-//            dbHelp.saveProductList(productDataList);
-//            dbHelp.saveDeviceList(allDeviceData);
+            dbHelp.saveProductList(productDataList);
+            dbHelp.saveDeviceList(allDeviceData);
 
             List<ProductData> productData = dbHelp.getSearchedProducts(searchStr);
             List<DeviceData> deviceData = new ArrayList<>();

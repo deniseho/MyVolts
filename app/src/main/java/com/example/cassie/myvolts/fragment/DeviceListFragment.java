@@ -330,7 +330,7 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnScroll
 //
 //            return result;
             String result = "";
-            String url = "http://frodo.digidave.co.uk/api/RipApp/result.php?start=0&limit=10";
+            String url = "http://frodo.digidave.co.uk/api/RipApp/result.php?start=0&limit=3";
             result = HttpUtils.doGet(url);
             return result;
         }

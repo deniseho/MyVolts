@@ -90,7 +90,7 @@ public class ScannerActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("base64", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
-//        String pid = getIntent().getStringExtra("productId");
+        String pid = getIntent().getStringExtra("productId");
         ProductData pdata = (ProductData) getIntent().getExtras().getSerializable("product");
         prod_id = pdata.getProductId();
         dbHelp = new DbHelp(this);
