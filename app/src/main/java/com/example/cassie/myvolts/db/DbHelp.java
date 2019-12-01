@@ -43,8 +43,8 @@ public class DbHelp{
 //            CacheManu cacheManu = new CacheManu();
 //            cacheManu.execute();
 //        }
-//        GetProducts cacheProducts = new GetProducts();
-//        cacheProducts.execute();
+        GetProducts cacheProducts = new GetProducts();
+        cacheProducts.execute();
 
         getInitData("");
     }
@@ -270,30 +270,26 @@ public class DbHelp{
             try {
                 JSONObject obj = new JSONObject(result);
                 JSONArray mv_db_arr = obj.getJSONArray("mv_db");
-if(mv_db_arr != null ){
-    for(int i=0; i<mv_db_arr.length(); i++) {
-        JSONArray itemArray = mv_db_arr.getJSONArray(i);
-        JSONObject item = itemArray.getJSONObject(0);
 
-        Iterator<String> keys = item.keys();
-        String category = keys.next();
+                if(mv_db_arr != null ){
+                    for(int i=0; i<mv_db_arr.length(); i++) {
+                        JSONArray itemArray = mv_db_arr.getJSONArray(i);
+                        JSONObject item = itemArray.getJSONObject(0);
 
-        if(category.equals("product")){
-            String product = item.optString(category);
-            product_arr.put(product);
-        }
+                        Iterator<String> keys = item.keys();
+                        String category = keys.next();
 
-        if(category.equals("device")){
-            String device = item.optString(category);
-            device_arr.put(device);
-        }
-    }
-}
+                        if(category.equals("product")){
+                            String product = item.optString(category);
+                            product_arr.put(product);
+                        }
 
-                System.out.println("=======product_arr=======");
-                System.out.println(product_arr);
-                System.out.println("=======device_arr=======");
-                System.out.println(device_arr);
+                        if(category.equals("device")){
+                            String device = item.optString(category);
+                            device_arr.put(device);
+                        }
+                    }
+                }
 
                 for(int i=0; i<product_arr.length(); i++){
                     JSONObject productObject = new JSONObject(product_arr.getString(i));
@@ -325,23 +321,6 @@ if(mv_db_arr != null ){
 
             saveProductToDB(newProductData);
             saveDeviceToDB(newDeviceData);
-
-//            List<ProductData> newData = new ArrayList<>();
-//
-//            try {
-//                for(int i=0; i<result.length(); i++){
-//                    String name = jsonObject.getString("name");
-//                    String productId = jsonObject.getString("productId");
-//                    String desc = jsonObject.getString("desc");
-//                    String file = jsonObject.getString("file");
-//                    newData.add(new ProductData(name, desc, file, productId));
-//                }
-//
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-
-//            saveProductToDB(newData);
         }
     }
 
@@ -456,72 +435,19 @@ if(mv_db_arr != null ){
         return datas;
     }
 
-    public List<ProductData> getSearchedProducts(String searchStr){
-        String value = "ProSafe FS105";//searchStr.split(",")[2].trim();
-
+    public List<ProductData> getProductListByPid(String pid){
         List<ProductData> datas=new ArrayList<>();
         if(mwcdb!=null){
-//            Cursor cursor= mwcdb.rawQuery("select * from product where name like '%" + searchStr + "%'",new String[]{});
-            Cursor cursor= mwcdb.rawQuery("select * from product, device where product.productId = device.p_id AND device.model = ?",new String[]{value});
-
+            Cursor cursor= mwcdb.rawQuery("select distinct p.productId, p.name, p.desc, p.file from product as p, device  as d where p.productId in (select p_id from device where device.manufacturer = ? )",new String[]{pid});
             while(cursor.moveToNext()){
-                datas.add(new ProductData(
-                        cursor.getString(cursor.getColumnIndex("name")),
-                        cursor.getString(cursor.getColumnIndex("desc")),
-                        cursor.getString(cursor.getColumnIndex("file")),
-                        cursor.getString(cursor.getColumnIndex("productId"))
-                ));
+                datas.add(new ProductData(cursor.getString(cursor.getColumnIndex("name")),
+                cursor.getString(cursor.getColumnIndex("desc")),
+                cursor.getString(cursor.getColumnIndex("file")),
+                cursor.getString(cursor.getColumnIndex("productId"))));
             }
         }
         return datas;
     }
-
-    public List<DeviceData> getSearchedDevices(String p_id){
-        List<DeviceData> datas=new ArrayList<>();
-        if(mwcdb!=null){
-//            Cursor cursor= mwcdb.rawQuery("select * from product where name like '%" + searchStr + "%'",new String[]{});
-            Cursor cursor= mwcdb.rawQuery("select * from device where p_id =" + p_id ,new String[]{});
-            while(cursor.moveToNext()){
-                datas.add(new DeviceData(cursor.getString(cursor.getColumnIndex("p_id")),
-                        cursor.getString(cursor.getColumnIndex("manufacturer")),
-                        cursor.getString(cursor.getColumnIndex("name")),
-                        cursor.getString(cursor.getColumnIndex("model")),
-                        cursor.getString(cursor.getColumnIndex("mv_uk")),
-                        cursor.getString(cursor.getColumnIndex("mv_de")),
-                        cursor.getString(cursor.getColumnIndex("mv_us"))
-                ));
-            }
-        }
-        return datas;
-    }
-
-    public void saveProductList(List<ProductData> products) {
-        ContentValues values = new ContentValues();
-
-        for(int i=0; i<products.size(); i++) {
-            ProductData product = products.get(i);
-            values.put(FeedReaderContract.FeedEntry.PRODUCT_COLUMN_ID, product.getProductId());
-            values.put(FeedReaderContract.FeedEntry.PRODUCT_COLUMN_NAME, product.getName());
-            mwcdb.insert(FeedReaderContract.FeedEntry.PRODUCT_TABLE_NAME, null, values);
-        }
-    }
-
-    public void saveDeviceList(List<DeviceData> devices) {
-        ContentValues values = new ContentValues();
-
-        for(int i=0; i<devices.size(); i++) {
-            DeviceData device = devices.get(i);
-            values.put(FeedReaderContract.FeedEntry.DEVICE_COLUMN_PID, device.getP_id());
-            values.put(FeedReaderContract.FeedEntry.DEVICE_COLUMN_MANU, device.getManufacturer());
-            values.put(FeedReaderContract.FeedEntry.DEVICE_COLUMN_NAME, device.getName());
-            values.put(FeedReaderContract.FeedEntry.DEVICE_COLUMN_MODEL, device.getModel());
-            values.put(FeedReaderContract.FeedEntry.DEVICE_COLUMN_MV_UK, device.getMv_uk());
-            values.put(FeedReaderContract.FeedEntry.DEVICE_COLUMN_MV_DE, device.getMv_de());
-            values.put(FeedReaderContract.FeedEntry.DEVICE_COLUMN_MV_US, device.getMv_us());
-            mwcdb.insert(FeedReaderContract.FeedEntry.DEVICE_TABLE_NAME, null, values);
-        }
-    }
-
 
     public String getProductIdByName(String name){
         String id = "";
@@ -534,27 +460,6 @@ if(mv_db_arr != null ){
         return id;
     }
 
-    public List<ProductData> searchProduct(String st, String made, String type){
-        List<ProductData> datas=new ArrayList<>();
-        if(mwcdb!=null){
-            String sql="select * from product where 1=1";
-            if(!TextUtils.isEmpty(st)){
-                sql+=" and name like '%"+st+"%'";
-            }
-            if(!TextUtils.isEmpty(made)){
-                sql+=" and made = '"+made+"'";
-            }
-            if(!TextUtils.isEmpty(type)){
-                sql+=" and type = '"+type+"'";
-            }
-            Cursor cursor= mwcdb.rawQuery(sql,new String[]{});
-            while(cursor.moveToNext()){
-                //datas.add(new ProductData(cursor.getString(cursor.getColumnIndex("name")),cursor.getString(cursor.getColumnIndex("made")),cursor.getString(cursor.getColumnIndex("type"))));
-            }
-        }
-        return datas;
-    }
-
     public List<String> getMade(){
         List<String> datas=new ArrayList<>();
         if(mwcdb!=null){
@@ -562,16 +467,6 @@ if(mv_db_arr != null ){
             Cursor cursor= mwcdb.rawQuery("select DISTINCT name from manu order by name",new String[]{});
             while(cursor.moveToNext()){
                 System.out.println("dsf" + cursor.getString(0));
-                datas.add(cursor.getString(0));
-            }
-        }
-        return datas;
-    }
-    public List<String> getType(String made){
-        List<String> datas=new ArrayList<>();
-        if(mwcdb!=null){
-            Cursor cursor= mwcdb.rawQuery("select DISTINCT type from made where name=? order by type",new String[]{made});
-            while(cursor.moveToNext()){
                 datas.add(cursor.getString(0));
             }
         }
@@ -591,29 +486,6 @@ if(mv_db_arr != null ){
         return datas;
     }
 
-    public List<ProductData> searchProducts(String searchStr) {
-        List<ProductData> productData = new ArrayList<ProductData>();
-        String param = "%" + searchStr + "%";
-        Cursor cursor= mwcdb.rawQuery("SELECT * FROM product WHERE name LIKE '" + param + "'", null);
-
-        if(cursor.moveToFirst()) {
-            do {
-                String name = cursor.getString(0);
-                String desc = cursor.getString(1);
-                String file = cursor.getString(2);
-                String productId = cursor.getString(3);
-
-                productData.add(new ProductData(name, desc, file, productId));
-            } while (cursor.moveToNext());
-
-            cursor.close();
-            mwcdb.close();
-        }
-
-        return productData;
-    }
-
-
     public void clearHis(){
         if(mwcdb!=null){
             mwcdb.execSQL("delete from his");
@@ -625,34 +497,5 @@ if(mv_db_arr != null ){
             mwcdb.execSQL("delete from his where name=?", new String[]{name});
         }
     }
-
-    public void deleteProducts(){
-        if(mwcdb!=null){
-            mwcdb.execSQL("delete from product");
-        }
-    }
-
-
-    public void deleteDevices(){
-        if(mwcdb!=null){
-            mwcdb.execSQL("delete from device");
-        }
-    }
-/*
-
-    public void addInitManuData(ManufactorData manu){
-        if(mwcdb!=null) {
-            long insert = mwcdb.insert(FeedReaderContract.FeedEntry.TABLE_NAME_MANU, null, manager.generateManuValues(manu));
-        }
-    }
-*/
-
-//    public String searchCable(String searchInput){
-//        if(mwcdb!=null){
-//            mwcdb.execSQL(("select * from "));
-//        }
-//
-//        return "";
-//    }
 
 }

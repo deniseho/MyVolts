@@ -28,16 +28,12 @@ import com.example.cassie.myvolts.ScannerActivity;
 import com.example.cassie.myvolts.adapter.ProductListAdapter;
 import com.example.cassie.myvolts.db.DbHelp;
 import com.example.cassie.myvolts.db.DbManager;
-import com.example.cassie.myvolts.dto.DeviceData;
 import com.example.cassie.myvolts.dto.ProductData;
-import com.example.cassie.myvolts.util.HttpUtils;
 import com.example.cassie.myvolts.util.NetworkUtil;
-import com.example.cassie.myvolts.util.RegexUtil;
 import com.example.cassie.myvolts.util.TestUtil;
 import com.github.clans.fab.FloatingActionButton;
 
 import java.io.InputStream;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -69,7 +65,7 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
 
     View no_result,no_internet;
 
-    GetProducts db;
+//    GetProducts db;
 
     DbHelp dbHelp;
     DbManager manager;
@@ -164,6 +160,7 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
 
     private void initInternetStatusPage(String searchStr) {
         boolean internetStatus = NetworkUtil.isNetworkAvailable(getActivity());
+        System.out.println("-----------internetStatus: " + internetStatus);
 
         if(internetStatus == false){
             doNoInternet();
@@ -174,23 +171,22 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
     }
 
     private void doWithInternet(String searchStr) {
-        System.out.println("-----------System.out.println(searchStr)");
-        System.out.println(searchStr);
-        db = new GetProducts();
+        System.out.println("-----------searchStr: " + searchStr);
+//        db = new GetProducts();
         if (searchStr != null && !searchStr.equals("")) {
             try {
-                db.execute();
+//                db.execute();
+                System.out.println("-----------getProducts");
+                getProducts();
             }catch(Exception ex){
-                System.out.println("-----------doWithInternet ex1");
-                System.out.println(ex);
+                System.out.println("-----------doWithInternet ex1: " + ex);
             }
         } else {
             if(made != null && type != null && model != null)
                 try {
 //                    db.execute(URLEncoder.encode(made), URLEncoder.encode(type, "UTF-8"), URLEncoder.encode(model, "UTF-8"));
                 }catch(Exception ex){
-                    System.out.println("-----------doWithInternet ex2");
-                    System.out.println(ex);
+                    System.out.println("-----------doWithInternet ex2: " + ex);
                 }
         }
 
@@ -243,13 +239,15 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-        db = new GetProducts();
+//        db = new GetProducts();
         int itemsLastIndex = adapter.getCount() - 1;
         int lastIndex = itemsLastIndex + 1;
         if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && visibleLastIndex == lastIndex) {
             if (searchStr != null && !searchStr.equals("")) {
                 if(adapter.getCount() % 10 == 0) {
-                    db.execute(RegexUtil.spliteRegex(searchStr));
+//                    GetProducts.getData();
+//                    db.execute(RegexUtil.spliteRegex(searchStr));
+                    getProducts();
                     adapter.notifyDataSetChanged();
                     listView.setSelection(visibleLastIndex - visibleItemCount + 1);
                 }else{
@@ -257,7 +255,7 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
                 }
             } else {
                 try {
-                    db.execute(URLEncoder.encode(made, "UTF-8"), URLEncoder.encode(type, "UTF-8"));
+//                    db.execute(URLEncoder.encode(made, "UTF-8"), URLEncoder.encode(type, "UTF-8"));
                     adapter.notifyDataSetChanged();
                     listView.setSelection(visibleLastIndex - visibleItemCount + 1);
                 } catch (Exception ex) {
@@ -300,62 +298,36 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
 
     }
 
+    private void getProducts() {
+        List<ProductData> productList = dbHelp.getProductListByPid(searchStr.split(",")[0].trim()); //todo
+        System.out.println("=========System.out.println(productList);");
 
-    public class GetProducts extends AsyncTask<String, Void, String> {
+        System.out.println(productList);
 
-        @Override
-        protected void onPreExecute() {
-            // TODO Auto-generated method stub
-            super.onPreExecute();
-        }
+//            List<DeviceData> deviceData = new ArrayList<>();
 
-
-        @Override
-        protected String doInBackground(String... arg0) {
-            String result = "";
-            String url = "http://frodo.digidave.co.uk/api/RipApp/result.php?start=0&limit=3";
-            result = HttpUtils.doGet(url);
-            return result;
-
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            List<ProductData> productDataList = dbHelp.getProductData(result);
-            List<DeviceData> allDeviceData = dbHelp.getAllDeviceData(result);
-
-//            dbHelp.deleteProducts();
-//            dbHelp.deleteDevices();
-            dbHelp.saveProductList(productDataList);
-            dbHelp.saveDeviceList(allDeviceData);
-
-            List<ProductData> productData = dbHelp.getSearchedProducts(searchStr);
-            List<DeviceData> deviceData = new ArrayList<>();
-
-            for(int i=0; i < productData.size(); i++) {
-                deviceData.addAll(dbHelp.getSearchedDevices(productData.get(i).getProductId()));
-            }
-
-            for(int i=0; i < deviceData.size(); i++) {
-
-                editor.putString("p_id", deviceData.get(i).getP_id());
-                editor.putString("manufacturer", deviceData.get(i).getManufacturer());
-                editor.putString("name", deviceData.get(i).getName());
-                editor.putString("model", deviceData.get(i).getModel());
-                editor.putString("mv_uk", deviceData.get(i).getMv_uk());
-                editor.putString("mv_de", deviceData.get(i).getMv_de());
-                editor.putString("mv_us", deviceData.get(i).getMv_us());
-
-            }
+//            for(int i=0; i < productData.size(); i++) {
+//                deviceData.addAll(dbHelp.getSearchedDevices(productData.get(i).getProductId()));
+//            }
+//
+//            for(int i=0; i < deviceData.size(); i++) {
+//                editor.putString("p_id", deviceData.get(i).getP_id());
+//                editor.putString("manufacturer", deviceData.get(i).getManufacturer());
+//                editor.putString("name", deviceData.get(i).getName());
+//                editor.putString("model", deviceData.get(i).getModel());
+//                editor.putString("mv_uk", deviceData.get(i).getMv_uk());
+//                editor.putString("mv_de", deviceData.get(i).getMv_de());
+//                editor.putString("mv_us", deviceData.get(i).getMv_us());
+//
+//            }
 //            editor.putString("deviceData", deviceDatajson.toString());
-                editor.apply();
+//            editor.apply();
 
             if(searchStr != null)
-                Collections.sort(productData);
+                Collections.sort(productList);
 
             if (adapter == null) {
-                adapter = new ProductListAdapter(products, getContext(), searchStr);
+                adapter = new ProductListAdapter(productList, getContext(), searchStr);
                 listView.setAdapter(adapter);
                 if(loadMoreView == null) {
                     loadMoreView = getActivity().getLayoutInflater().inflate(R.layout.load_more, null);
@@ -364,10 +336,80 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
                 }
             }
 
-            products.addAll(productData);
-            adapter.setDatas(products);
+//            products.addAll(productList);
+            adapter.setDatas(productList);
         }
-    }
+
+//    public class GetProducts extends AsyncTask<String, Void, String> {
+//
+//        @Override
+//        protected void onPreExecute() {
+//            // TODO Auto-generated method stub
+//            super.onPreExecute();
+//        }
+//
+//
+//        @Override
+//        protected String doInBackground(String... arg0) {
+//            String result = "";
+//            String url = "http://frodo.digidave.co.uk/api/RipApp/result.php?start=0&limit=3";
+//            result = HttpUtils.doGet(url);
+//            return result;
+//
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+////            List<ProductData> productDataList = dbHelp.getProductData(result);
+////            List<DeviceData> allDeviceData = dbHelp.getAllDeviceData(result);
+////
+////            dbHelp.deleteProducts();
+////            dbHelp.deleteDevices();
+////            dbHelp.saveProductList(productDataList);
+////            dbHelp.saveDeviceList(allDeviceData);
+//
+//            List<ProductData> productData = dbHelp.getSearchedProducts(searchStr);
+//            List<DeviceData> deviceData = new ArrayList<>();
+//
+//            System.out.println("============productData");
+//            System.out.println(productData);
+//
+//            for(int i=0; i < productData.size(); i++) {
+//                deviceData.addAll(dbHelp.getSearchedDevices(productData.get(i).getProductId()));
+//            }
+//
+//            for(int i=0; i < deviceData.size(); i++) {
+//
+//                editor.putString("p_id", deviceData.get(i).getP_id());
+//                editor.putString("manufacturer", deviceData.get(i).getManufacturer());
+//                editor.putString("name", deviceData.get(i).getName());
+//                editor.putString("model", deviceData.get(i).getModel());
+//                editor.putString("mv_uk", deviceData.get(i).getMv_uk());
+//                editor.putString("mv_de", deviceData.get(i).getMv_de());
+//                editor.putString("mv_us", deviceData.get(i).getMv_us());
+//
+//            }
+////            editor.putString("deviceData", deviceDatajson.toString());
+//                editor.apply();
+//
+//            if(searchStr != null)
+//                Collections.sort(productData);
+//
+//            if (adapter == null) {
+//                adapter = new ProductListAdapter(products, getContext(), searchStr);
+//                listView.setAdapter(adapter);
+//                if(loadMoreView == null) {
+//                    loadMoreView = getActivity().getLayoutInflater().inflate(R.layout.load_more, null);
+//                    loadmorebutton = (TextView) loadMoreView.findViewById(R.id.loadMoreButton);
+//                    listView.addFooterView(loadmorebutton);
+//                }
+//            }
+//
+//            products.addAll(productData);
+//            adapter.setDatas(products);
+//        }
+//    }
 
     private void removeListViewToNoResults() {
         if (null != listView) {
