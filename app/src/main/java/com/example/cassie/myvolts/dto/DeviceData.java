@@ -16,7 +16,7 @@ public class DeviceData implements Comparable<DeviceData> {
     private String mv_us;
 
     public DeviceData(String p_id, String manufacturer, String name, String model,
-                      String mv_uk, String mv_de, String mv_us) {
+                           String mv_uk, String mv_de, String mv_us) {
         this.p_id = p_id;
         this.manufacturer = manufacturer;
         this.name = name;

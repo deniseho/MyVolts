@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.example.cassie.myvolts.db.DbHelp;
 import com.example.cassie.myvolts.testing.TestingTasksSelection;
 
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
 
     private int[] pager = new int[]{R.drawable.s1, R.drawable.s2, R.drawable.s3};
     private List<View> pagerview = new ArrayList<>();
+    DbHelp dbHelp;
 
 /*    private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;*/
@@ -58,6 +60,8 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
 
         viewpager.setAdapter(new WPagerAdapter());
 
+        dbHelp = new DbHelp(this);
+        dbHelp.getInitData();
         /*sharedPreferences = getSharedPreferences("base64", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();*/
     }

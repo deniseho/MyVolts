@@ -7,14 +7,14 @@ import java.io.Serializable;
 public class ProductData extends DataBase implements Serializable, Comparable<ProductData>{
     public ProductData(){}
 
-//    public ProductData(String name) {
-//        this.name = name;
-//    }
-//
-//    public ProductData(String name, String productId) {
-//        this.productId = productId;
-//        this.name = name;
-//    }
+    public ProductData(String name) {
+        this.name = name;
+    }
+
+    public ProductData(String name, String productId) {
+        this.productId = productId;
+        this.name = name;
+    }
 //
 //    public ProductData(String productId, String name, List<TechSpec> tech) {
 //        this.productId = productId;

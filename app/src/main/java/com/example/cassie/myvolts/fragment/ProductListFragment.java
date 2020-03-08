@@ -3,9 +3,6 @@ package com.example.cassie.myvolts.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -17,8 +14,8 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,13 +24,11 @@ import com.example.cassie.myvolts.R;
 import com.example.cassie.myvolts.ScannerActivity;
 import com.example.cassie.myvolts.adapter.ProductListAdapter;
 import com.example.cassie.myvolts.db.DbHelp;
-import com.example.cassie.myvolts.db.DbManager;
 import com.example.cassie.myvolts.dto.ProductData;
 import com.example.cassie.myvolts.util.NetworkUtil;
 import com.example.cassie.myvolts.util.TestUtil;
 import com.github.clans.fab.FloatingActionButton;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -61,14 +56,13 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
 
     ListView listView;
     FloatingActionButton mFab;
-    FrameLayout product;
+    FrameLayout productfrag;
 
-    View no_result,no_internet;
-
-//    GetProducts db;
+    View no_result,no_internet,email;
 
     DbHelp dbHelp;
-    DbManager manager;
+    private static final String TAG = "ProductListFragment";
+
 
     public ProductListFragment() {
         // Required empty public constructor
@@ -92,34 +86,6 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
             type = bundle.getString("device");
             model = bundle.getString("model");
         }
-
-
-    }
-
-    private class ProductImageFromInternet extends AsyncTask<String, Void, Bitmap> {
-        ImageView imageView;
-
-        public ProductImageFromInternet(ImageView imageView) {
-            this.imageView = imageView;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String imageURL = urls[0];
-            Bitmap bimage = null;
-            try {
-                InputStream in = new java.net.URL(imageURL).openStream();
-                bimage = BitmapFactory.decodeStream(in);
-
-            } catch (Exception e) {
-                Log.e("Error Message", e.getMessage());
-                e.printStackTrace();
-            }
-            return bimage;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            imageView.setImageBitmap(result);
-        }
     }
 
 
@@ -131,36 +97,29 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
             view = inflater.inflate(R.layout.fragment_product_list, container,false);
             mFab = (FloatingActionButton) view.findViewById(R.id.fab);
             listView = (ListView) view.findViewById(R.id.productlist);
+
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    TestUtil.storeSearchClicks(sharedPreferences, editor, "resultsListClick");
-                    if(products.size() > 0) {
-                        ProductData productData = products.get(position);
-                        ForwardPdataToScannerActivity(productData);
-                    }
+
+                TestUtil.storeSearchClicks(sharedPreferences, editor, "resultsListClick");
+                if(products.size() > 0) {
+                    ProductData productData = products.get(position);
+                    ForwardPdataToScannerActivity(productData);
+                }
                 }
             });
-            product = (FrameLayout) view.findViewById(R.id.product_fragment);
+            productfrag = (FrameLayout) view.findViewById(R.id.product_fragment);
         }
-//
+
         initInternetStatusPage(searchStr);
         setFab();
-//        try {
-//            ImageView i = (ImageView)view.findViewById(R.id.img);
-//            Bitmap bitmap = BitmapFactory.decodeStream((InputStream)new URL(imageUrl).getContent());
-//            i.setImageBitmap(bitmap);
-//        } catch (MalformedURLException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+
         return view;
     }
 
     private void initInternetStatusPage(String searchStr) {
         boolean internetStatus = NetworkUtil.isNetworkAvailable(getActivity());
-        System.out.println("-----------internetStatus: " + internetStatus);
 
         if(internetStatus == false){
             doNoInternet();
@@ -171,25 +130,15 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
     }
 
     private void doWithInternet(String searchStr) {
-        System.out.println("-----------searchStr: " + searchStr);
-//        db = new GetProducts();
+
         if (searchStr != null && !searchStr.equals("")) {
             try {
-//                db.execute();
-                System.out.println("-----------getProducts");
+                Log.d(TAG, "getProducts");
                 getProducts();
             }catch(Exception ex){
-                System.out.println("-----------doWithInternet ex1: " + ex);
+                Log.d(TAG, "getProducts ex" + ex);
             }
-        } else {
-            if(made != null && type != null && model != null)
-                try {
-//                    db.execute(URLEncoder.encode(made), URLEncoder.encode(type, "UTF-8"), URLEncoder.encode(model, "UTF-8"));
-                }catch(Exception ex){
-                    System.out.println("-----------doWithInternet ex2: " + ex);
-                }
         }
-
         listView.setOnScrollListener(this);
     }
 
@@ -197,7 +146,7 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
         if (null != listView) {
             if (null == no_internet) {
                 no_internet = getActivity().getLayoutInflater().inflate(R.layout.no_internet, null);
-                product.addView(no_internet);
+                productfrag.addView(no_internet);
                 no_internet.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -206,8 +155,8 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
                         listView.setVisibility(View.VISIBLE);
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
                         ft.detach(ProductListFragment.this).attach(ProductListFragment.this).commit();
-//                            DeviceListFragment deviceListFragment = (DeviceListFragment)getFragmentManager().findFragmentByTag("android:switcher:"+R.id.viewpager+":1");
-//                            deviceListFragment.updateView();
+                            DeviceListFragment deviceListFragment = (DeviceListFragment)getFragmentManager().findFragmentByTag("android:switcher:"+R.id.viewpager+":1");
+                            deviceListFragment.updateView();
                         //AsinListFragment asinListFragment = (AsinListFragment) getFragmentManager().findFragmentByTag("android:switcher:"+R.id.viewpager+":2");
                         //asinListFragment.updateView();
                     }
@@ -299,30 +248,19 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
     }
 
     private void getProducts() {
-        List<ProductData> productList = dbHelp.getProductListByPid(searchStr.split(",")[0].trim()); //todo
-        System.out.println("=========System.out.println(productList);");
+        List<ProductData> productList =  new ArrayList<>();
+        List<String> pids = dbHelp.getPidByDevice(made, model);
+        Log.d(TAG, "pid: "  + pids);
 
-        System.out.println(productList);
+        for(int i=0; i<pids.size(); i++) {
+            productList.add(dbHelp.getProductById(pids.get(i)));
+        }
 
-//            List<DeviceData> deviceData = new ArrayList<>();
+        Log.d(TAG, "productList size: "  + productList.size());
 
-//            for(int i=0; i < productData.size(); i++) {
-//                deviceData.addAll(dbHelp.getSearchedDevices(productData.get(i).getProductId()));
-//            }
-//
-//            for(int i=0; i < deviceData.size(); i++) {
-//                editor.putString("p_id", deviceData.get(i).getP_id());
-//                editor.putString("manufacturer", deviceData.get(i).getManufacturer());
-//                editor.putString("name", deviceData.get(i).getName());
-//                editor.putString("model", deviceData.get(i).getModel());
-//                editor.putString("mv_uk", deviceData.get(i).getMv_uk());
-//                editor.putString("mv_de", deviceData.get(i).getMv_de());
-//                editor.putString("mv_us", deviceData.get(i).getMv_us());
-//
-//            }
-//            editor.putString("deviceData", deviceDatajson.toString());
-//            editor.apply();
-
+        if (productList.size() == 0 ) {
+            removeListViewToNoResults();
+        } else {
             if(searchStr != null)
                 Collections.sort(productList);
 
@@ -336,87 +274,43 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
                 }
             }
 
-//            products.addAll(productList);
+            products.addAll(productList);
             adapter.setDatas(productList);
         }
-
-//    public class GetProducts extends AsyncTask<String, Void, String> {
-//
-//        @Override
-//        protected void onPreExecute() {
-//            // TODO Auto-generated method stub
-//            super.onPreExecute();
-//        }
-//
-//
-//        @Override
-//        protected String doInBackground(String... arg0) {
-//            String result = "";
-//            String url = "http://frodo.digidave.co.uk/api/RipApp/result.php?start=0&limit=3";
-//            result = HttpUtils.doGet(url);
-//            return result;
-//
-//        }
-//
-//        @Override
-//        protected void onPostExecute(String result) {
-//            super.onPostExecute(result);
-////            List<ProductData> productDataList = dbHelp.getProductData(result);
-////            List<DeviceData> allDeviceData = dbHelp.getAllDeviceData(result);
-////
-////            dbHelp.deleteProducts();
-////            dbHelp.deleteDevices();
-////            dbHelp.saveProductList(productDataList);
-////            dbHelp.saveDeviceList(allDeviceData);
-//
-//            List<ProductData> productData = dbHelp.getSearchedProducts(searchStr);
-//            List<DeviceData> deviceData = new ArrayList<>();
-//
-//            System.out.println("============productData");
-//            System.out.println(productData);
-//
-//            for(int i=0; i < productData.size(); i++) {
-//                deviceData.addAll(dbHelp.getSearchedDevices(productData.get(i).getProductId()));
-//            }
-//
-//            for(int i=0; i < deviceData.size(); i++) {
-//
-//                editor.putString("p_id", deviceData.get(i).getP_id());
-//                editor.putString("manufacturer", deviceData.get(i).getManufacturer());
-//                editor.putString("name", deviceData.get(i).getName());
-//                editor.putString("model", deviceData.get(i).getModel());
-//                editor.putString("mv_uk", deviceData.get(i).getMv_uk());
-//                editor.putString("mv_de", deviceData.get(i).getMv_de());
-//                editor.putString("mv_us", deviceData.get(i).getMv_us());
-//
-//            }
-////            editor.putString("deviceData", deviceDatajson.toString());
-//                editor.apply();
-//
-//            if(searchStr != null)
-//                Collections.sort(productData);
-//
-//            if (adapter == null) {
-//                adapter = new ProductListAdapter(products, getContext(), searchStr);
-//                listView.setAdapter(adapter);
-//                if(loadMoreView == null) {
-//                    loadMoreView = getActivity().getLayoutInflater().inflate(R.layout.load_more, null);
-//                    loadmorebutton = (TextView) loadMoreView.findViewById(R.id.loadMoreButton);
-//                    listView.addFooterView(loadmorebutton);
-//                }
-//            }
-//
-//            products.addAll(productData);
-//            adapter.setDatas(products);
-//        }
-//    }
+    }
 
     private void removeListViewToNoResults() {
         if (null != listView) {
             no_result = getActivity().getLayoutInflater().inflate(R.layout.no_results, null);
             listView.setVisibility(View.GONE);
-            product.addView(no_result);
+            productfrag.addView(no_result);
+
+            Button buttonUpdateData = (Button) no_result.findViewById(R.id.updateDataButton);
+            Button buttonOpenEmailView = (Button) no_result.findViewById(R.id.openEmailView);
+
+
+            buttonUpdateData.setOnClickListener(new View.OnClickListener(){
+                public void onClick(View v){
+                    updataData();
+                }
+            });
+
+            buttonOpenEmailView.setOnClickListener(new View.OnClickListener(){
+                public void onClick(View v){
+                    no_result.setVisibility(View.GONE);
+                    email = getActivity().getLayoutInflater().inflate(R.layout.activity_email, null);
+                    productfrag.addView(email);
+                }
+            });
+
+
         }
     }
+
+    private void updataData(){
+        dbHelp.loadData();
+    }
+
+
 
 }

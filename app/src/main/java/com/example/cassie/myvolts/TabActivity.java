@@ -13,13 +13,10 @@ import android.view.View;
 
 import com.claudiodegio.msv.BaseMaterialSearchView;
 import com.claudiodegio.msv.OnSearchViewListener;
-import com.claudiodegio.msv.SuggestionMaterialSearchView;
 import com.example.cassie.myvolts.adapter.ViewPagerAdapter;
 import com.example.cassie.myvolts.db.DbHelp;
 import com.example.cassie.myvolts.fragment.DeviceListFragment;
 import com.example.cassie.myvolts.fragment.ProductListFragment;
-
-import java.util.List;
 
 //import com.example.cassie.myvolts.fragment.AsinListFragment;
 
@@ -66,14 +63,14 @@ public class TabActivity extends AppCompatActivity implements OnSearchViewListen
 
         dbHelp = new DbHelp(this);
 
-        List<String> list=
-                dbHelp.getAllProductName();
-        String[] stockArr = new String[list.size()];
-        stockArr = list.toArray(stockArr);
-
-        SuggestionMaterialSearchView cast = (SuggestionMaterialSearchView)mSearchView;
-        cast.setSuggestion(stockArr);
-        mSearchView.setOnSearchViewListener(this);
+//        List<String> list=
+//                dbHelp.getAllProductName();
+//        String[] stockArr = new String[list.size()];
+//        stockArr = list.toArray(stockArr);
+//
+//        SuggestionMaterialSearchView cast = (SuggestionMaterialSearchView)mSearchView;
+//        cast.setSuggestion(stockArr);
+//        mSearchView.setOnSearchViewListener(this);
     }
 
     private void initValue(){
@@ -148,12 +145,10 @@ public class TabActivity extends AppCompatActivity implements OnSearchViewListen
 
     @Override
     public void onSearchViewShown() {
-        System.out.println("=========onSearchViewShown");
     }
 
     @Override
     public void onSearchViewClosed() {
-        System.out.println("=============onSearchViewClosed");
     }
 
     @Override
@@ -187,7 +182,6 @@ public class TabActivity extends AppCompatActivity implements OnSearchViewListen
 
     @Override
     public void onQueryTextChange(String s) {
-        System.out.println("=========onQueryTextChange");
     }
 
     private void forwardToSannerActivity(String pid) {

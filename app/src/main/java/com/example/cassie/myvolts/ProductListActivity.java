@@ -201,8 +201,6 @@ public class ProductListActivity extends ActionBarActivity implements AbsListVie
     }
 
     public void testTask2() {
-        System.out.println(sharedPreferences.getString("testmode", ""));
-        System.out.println(sharedPreferences.getInt("task", 0));
         if (null != sharedPreferences) {
             String testmode = sharedPreferences.getString("testmode", "");
             int taskId = sharedPreferences.getInt("task", 0);
@@ -405,8 +403,7 @@ public class ProductListActivity extends ActionBarActivity implements AbsListVie
         layout3.setVisibility(View.GONE);
         search.revealFromMenuItem(R.id.search, this);
 
-        List<String> list=
-                dbHelp.getAllProductName();
+        List<String> list= dbHelp.getAutoCompleteOptions();
         for(int i = 0; i < list.size(); i++){
             SearchResult option = new SearchResult(list.get(i), getResources().getDrawable(R.drawable.ic_search));
             search.addSearchable(option);

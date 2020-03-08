@@ -22,24 +22,13 @@
         android:layout_marginTop="60dp"
         android:text="Update data" />
 
-    <!--<Button-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="65dp"-->
-        <!--android:layout_gravity="center"-->
-        <!--android:text="Send Email"-->
-        <!--android:id="@+id/sendEmail"/>-->
 
-    <!--<ScrollView-->
-<!--android:layout_width="match_parent"-->
-<!--android:layout_height="match_parent"-->
-<!--android:layout_below="@id/updateDataButton">-->
-<!--<TextView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:padding="5dp"-->
-    <!--android:textSize="24sp"-->
-    <!--android:id="@+id/updatedData" />-->
-<!--</ScrollView>-->
-
+    <Button
+        android:id="@+id/openEmailView"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:text="Contact us" />
 
 </LinearLayout>

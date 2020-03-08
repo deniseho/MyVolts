@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -82,6 +83,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     View v1, v2;
 
+    private static final String TAG = "SearchActivity";
+
     private static final int REQUEST_CODE = 1234;
 
     private SharedPreferences sharedPreferences;
@@ -107,11 +110,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
         hisAdapter.setDatas(dbHelp.getHisData());
 
-        //todo: add custom filter
         autoAdapter = new ArrayAdapter<>(this,
-//                R.layout.item_data, R.id.item_name,dbHelp.getAllProductName());
-//                R.layout.item_data, R.id.item_name,BRANDS);
-                  R.layout.item_data, R.id.item_name, dbHelp.getInitData(search.getText().toString()));
+                  R.layout.item_data, R.id.item_name, dbHelp.getAutoCompleteOptions());
 
         search.setAdapter(autoAdapter);
 
@@ -121,8 +121,9 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 TestUtil.storeSearchClicks(sharedPreferences, editor, "searchItemClick");
                 String data = autoAdapter.getItem(position);
                 String pid = dbHelp.getProductIdByName(data);
-                dbHelp.saveHis(search.getText().toString(), "1", pid);
-                hisAdapter.addDatas(new HistoryData(search.getText().toString(), "1", pid));
+                dbHelp.saveHis(search.getText().toString(), "0", "");
+                hisAdapter.addDatas(new HistoryData(search.getText().toString(), "0", ""));
+                hisAdapter.notifyDataSetChanged();
                 ForwardToSannerActivity(pid);
             }
         });
@@ -202,6 +203,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         if(hisitem.getIsWholeProduct().equals("0")) {
             search.setText(hisitem.name);
             search.dismissDropDown();
+            //TODO
             showAlertDialog(hisitem.name);
 //            search(hisitem.name);
         }else if(hisitem.getIsWholeProduct().equals("1")){
@@ -279,13 +281,22 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
          }
 
     private void search(String searchStr) {
-
         Intent intent = new Intent(SearchActivity.this,
                 TabActivity.class);
         intent.putExtra("search",searchStr.trim());
         intent.putExtra("made",searchStr.split(",")[0].trim());
         intent.putExtra("type",searchStr.split(",")[1].trim());
         intent.putExtra("model",searchStr.split(",")[2].trim());
+        startActivity(intent);
+    }
+
+    private void searchSimilar(String searchStr) {
+        Intent intent = new Intent(SearchActivity.this,
+                TabActivity.class);
+        intent.putExtra("search",searchStr.trim());
+        intent.putExtra("made", searchStr.trim());
+        intent.putExtra("type",searchStr.trim());
+        intent.putExtra("model",searchStr.trim());
         startActivity(intent);
     }
 
@@ -359,17 +370,17 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private void searchByInput() {
         String searchInput = search.getText().toString();
         if (!TextUtils.isEmpty(searchInput.trim())) {
-            dbHelp.saveHis(search.getText().toString(), "0", "");
-            hisAdapter.addDatas(new HistoryData(search.getText().toString(), "0", ""));
-            hisAdapter.notifyDataSetChanged();
-            //search(st);
+            if (searchInput.indexOf(",") == -1) {
+                Log.v(TAG, "without comma");
+                searchSimilar(searchInput);
+            } else {
+                Log.v(TAG, "has comma");
+                showAlertDialog(searchInput);
+            }
             search.clearFocus();
-
         } else {
             Toast.makeText(this, "please fill the search box...", Toast.LENGTH_SHORT).show();
         }
-
-        showAlertDialog(searchInput);
     }
 
     private EditText editText;
@@ -378,6 +389,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.fragment_confirm, null);
         dialog.setView(dialogView);
+
         TextView brandTextView = (TextView)dialogView.findViewById(R.id.brand_name);
         brandTextView.setText(searchStr.split(",")[0].trim());
 
