@@ -159,7 +159,7 @@ public class DbHelp{
         protected String doInBackground(String... arg0) {
             // TODO Auto-generated method stub
 
-            String url = "http://frodo.digidave.co.uk/api/RipApp/result.php?start=0&limit=20";
+            String url = "http://frodo.digidave.co.uk/api/RipApp/result.php";
             String result = HttpUtils.doGet(url);
 
             if(result != null){

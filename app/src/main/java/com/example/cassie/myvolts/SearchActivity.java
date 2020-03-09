@@ -203,7 +203,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         if(hisitem.getIsWholeProduct().equals("0")) {
             search.setText(hisitem.name);
             search.dismissDropDown();
-            //TODO
             showAlertDialog(hisitem.name);
 //            search(hisitem.name);
         }else if(hisitem.getIsWholeProduct().equals("1")){
@@ -353,8 +352,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             dbHelp.clearHis();
             hisAdapter.setDatas(dbHelp.getHisData());
             hisAdapter.notifyDataSetChanged();
-                Toast.makeText(SearchActivity.this, "All history record has been cleared!", Toast.LENGTH_SHORT)
-                        .show();
+            Toast.makeText(SearchActivity.this, "All history record has been cleared!", Toast.LENGTH_SHORT)
+                    .show();
 
             }
           });
@@ -375,6 +374,9 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 searchSimilar(searchInput);
             } else {
                 Log.v(TAG, "has comma");
+                dbHelp.saveHis(search.getText().toString(), "0", "");
+                hisAdapter.addDatas(new HistoryData(search.getText().toString(), "0", ""));
+                hisAdapter.notifyDataSetChanged();
                 showAlertDialog(searchInput);
             }
             search.clearFocus();
@@ -401,18 +403,18 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
         dialog.setPositiveButton("Search for cables", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                search(searchStr);
-                editText = (EditText) findViewById(R.id.search);
-                editText.setSelection(editText.getText().length());
-                editText.requestFocus();
+            search(searchStr);
+            editText = (EditText) findViewById(R.id.search);
+            editText.setSelection(editText.getText().length());
+            editText.requestFocus();
             }
         }) ;
         dialog.setNegativeButton("cancel",new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                editText = (EditText) findViewById(R.id.search);
-                editText.setSelection(editText.getText().length());
-                editText.requestFocus();
+            editText = (EditText) findViewById(R.id.search);
+            editText.setSelection(editText.getText().length());
+            editText.requestFocus();
             }
         });
         AlertDialog alertDialog=dialog.create();
