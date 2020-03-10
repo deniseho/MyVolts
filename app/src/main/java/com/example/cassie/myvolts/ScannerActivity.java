@@ -64,9 +64,11 @@ public class ScannerActivity extends AppCompatActivity {
     private String prod_id;
     private String prod_file;
     private String prod_desc;
+    private String url;
 
     private DbHelp dbHelp;
     public String baseUrl = "";
+    private static final String TAG = "ScannerActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +80,9 @@ public class ScannerActivity extends AppCompatActivity {
         editor = sharedPreferences.edit();
 
         ProductData pdata = (ProductData) getIntent().getExtras().getSerializable("product");
+        String made = getIntent().getStringExtra("made");
+        String model = getIntent().getStringExtra("model");
+
         prod_id = pdata.getProductId();
         dbHelp = new DbHelp(this);
        if(pdata != null && prod_id != null && !prod_id.equals("")) {
@@ -85,7 +90,6 @@ public class ScannerActivity extends AppCompatActivity {
            prod_id = pdata.getProductId();
            prod_file = pdata.getFile();
            prod_desc = pdata.getDesc();
-//           new getproductById().execute(URLEncoder.encode(prod_id));
        } else{
             shownorecord();
         }
@@ -94,19 +98,22 @@ public class ScannerActivity extends AppCompatActivity {
         switch (sDefSystemLang){
             case "en":
                 baseUrl = "http://myvolts.co.uk";
+                url = dbHelp.getUrlByPid(prod_id, "mv_uk", made, model);
                 break;
             case "de":
                 baseUrl = "http://myvolts.de";
+                url = dbHelp.getUrlByPid(prod_id, "mv_de", made, model);
                 break;
-            case "fr":
-                baseUrl = "http://myvolts.fr";
+            case "us":
+                baseUrl = "http://myvolts.com";
+                url = dbHelp.getUrlByPid(prod_id, "mv_us", made, model);
                 break;
         }
         prod_link.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view)
             {
-                Intent browser= new Intent(Intent.ACTION_VIEW, Uri.parse(baseUrl + "/product/" + prod_id));
+                Intent browser= new Intent(Intent.ACTION_VIEW, Uri.parse(baseUrl + "/product/" + url));
                 startActivity(browser);
             }
         });

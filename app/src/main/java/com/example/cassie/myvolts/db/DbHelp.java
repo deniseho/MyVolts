@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.cassie.myvolts.dto.DeviceData;
@@ -125,10 +124,21 @@ public class DbHelp{
         }
     }
 
-    public void saveDeviceToDB() {
-        Log.d(TAG, "saveDeviceToDB: Adding " + devices);
-        Log.d(TAG, "saveDeviceToDB: Adding " + devices);
+    public String getUrlByPid(String pid, String country, String made, String model) {
+        String url = "";
 
+        if(mwcdb!=null){
+            Cursor cursor= mwcdb.rawQuery("select " + country + " from device where p_id =? and manufacturer=? and model=?", new String[]{ pid, made, model});
+            while(cursor.moveToNext()){
+                url = cursor.getString(0);
+            }
+        }
+        Log.v(TAG,"url: " + url);
+
+        return url;
+    }
+
+    public void saveDeviceToDB() {
         ContentValues values = new ContentValues();
 
         for(int i=0; i<devices.size(); i++) {
@@ -159,7 +169,7 @@ public class DbHelp{
         protected String doInBackground(String... arg0) {
             // TODO Auto-generated method stub
 
-            String url = "http://frodo.digidave.co.uk/api/RipApp/result.php";
+            String url = "http://frodo.digidave.co.uk/api/RipApp/result.php?start=0&limit=40";
             String result = HttpUtils.doGet(url);
 
             if(result != null){
@@ -238,8 +248,6 @@ public class DbHelp{
     }
 
     public void saveProductToDB() {
-        Log.d(TAG, "saveProductToDB: Adding " + products);
-
         ContentValues values = new ContentValues();
 
         for(int i=0; i<products.size(); i++) {
@@ -265,7 +273,6 @@ public class DbHelp{
 
     public List<String> getPidByDevice(String made, String model) {
         List<String> datas=new ArrayList<>();
-        Log.d(TAG, "made: " + made + ", model: " + model);
 
         if(mwcdb!=null){
             Cursor cursor= mwcdb.rawQuery("select DISTINCT p_id from device where device.manufacturer=? or device.model =?",new String[]{made, model});

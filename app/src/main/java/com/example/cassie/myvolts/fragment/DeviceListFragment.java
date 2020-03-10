@@ -9,15 +9,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -77,10 +74,6 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnScroll
     DbHelp dbHelp;
     private static final String TAG = "DeviceListFragment";
 
-    private EditText mailTo;
-    private EditText mailSubject;
-    private EditText mailMessage;
-
     public DeviceListFragment() {
         // Required empty public constructor
         pis = new ArrayList<>();
@@ -124,46 +117,11 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnScroll
                 }
             });
             devicefrag = (FrameLayout) view.findViewById(R.id.device_fragment);
-
-
-            mailTo = (EditText) view.findViewById(R.id.edit_text_id);
-            mailSubject = (EditText) view.findViewById(R.id.edit_text_subject);
-            mailMessage = (EditText) view.findViewById(R.id.edit_text_message);
-
-            Button buttonSend = (Button) view.findViewById(R.id.email_send);
-            buttonSend.setOnClickListener(new View.OnClickListener(){
-                public void onClick(View v){
-                    sendMail();
-                }
-            });
-
         }
 
         initInternetStatusPage(searchStr);
         setFab();
         return view;
-    }
-
-
-    private void updataData(){
-        Log.v(TAG, "updataData");
-    }
-
-
-    private void sendMail() {
-        String recipientList = mailTo.getText().toString();
-        String[] recipients = recipientList.split(",");
-
-        String subject = mailSubject.getText().toString();
-        String message = mailMessage.getText().toString();
-
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.putExtra(Intent.EXTRA_EMAIL, recipients);
-        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
-        intent.putExtra(Intent.EXTRA_TEXT, message);
-
-        intent.setType("message/rcf822");
-        startActivity(Intent.createChooser(intent,"Choose an email client"));
     }
 
 

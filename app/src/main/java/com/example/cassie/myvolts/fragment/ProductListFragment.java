@@ -15,6 +15,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -61,8 +62,12 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
     View no_result,no_internet,email;
 
     DbHelp dbHelp;
-    private static final String TAG = "ProductListFragment";
 
+    private EditText mailTo;
+    private EditText mailSubject;
+    private EditText mailMessage;
+
+    private static final String TAG = "ProductListFragment";
 
     public ProductListFragment() {
         // Required empty public constructor
@@ -105,7 +110,7 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
                 TestUtil.storeSearchClicks(sharedPreferences, editor, "resultsListClick");
                 if(products.size() > 0) {
                     ProductData productData = products.get(position);
-                    ForwardPdataToScannerActivity(productData);
+                    ForwardPdataToScannerActivity(productData, made, model);
                 }
                 }
             });
@@ -178,10 +183,12 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
         }
     }
 
-    private void ForwardPdataToScannerActivity(ProductData product) {
+    private void ForwardPdataToScannerActivity(ProductData product, String made, String model) {
         Bundle b = new Bundle();
         Intent intent = new Intent(getActivity(), ScannerActivity.class);
         b.putSerializable("product", product);
+        b.putSerializable("made", made);
+        b.putSerializable("model", model);
         intent.putExtras(b);
         startActivity(intent);
     }
@@ -300,12 +307,42 @@ public class ProductListFragment extends Fragment implements AbsListView.OnScrol
                     no_result.setVisibility(View.GONE);
                     email = getActivity().getLayoutInflater().inflate(R.layout.activity_email, null);
                     productfrag.addView(email);
+
+
+                    mailTo = (EditText) email.findViewById(R.id.edit_text_id);
+                    mailSubject = (EditText) email.findViewById(R.id.edit_text_subject);
+                    mailMessage = (EditText) email.findViewById(R.id.edit_text_message);
+
+                    Button buttonSend = (Button) email.findViewById(R.id.email_send);
+                    buttonSend.setOnClickListener(new View.OnClickListener(){
+                        public void onClick(View v){
+                            sendMail();
+                        }
+                    });
                 }
             });
 
-
         }
     }
+
+
+    private void sendMail() {
+        String recipientList = mailTo.getText().toString();
+        Log.v(TAG, recipientList);
+        String[] recipients = recipientList.split(",");
+
+        String subject = mailSubject.getText().toString();
+        String message = mailMessage.getText().toString();
+
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_EMAIL, recipients);
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        intent.putExtra(Intent.EXTRA_TEXT, message);
+
+        intent.setType("message/rcf822");
+        startActivity(Intent.createChooser(intent,"Choose an email client"));
+    }
+
 
     private void updataData(){
         dbHelp.loadData();
